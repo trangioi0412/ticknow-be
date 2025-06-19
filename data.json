@@ -1,0 +1,998 @@
+{
+    "genres": [
+        {
+          "name": "Tâm Lý"
+        },
+        {
+          "name": "Hồi Hộp"
+        },
+        {
+          "name": "Kinh Dị"
+        },
+        {
+          "name": "Phiêu Lưu"
+        },
+        {
+          "name": "Hành Động"
+        },
+        {
+          "name": "Tình Cảm"
+        },
+        {
+          "name": "Hài"
+        },
+        {
+          "name": "Hoạt Hình"
+        },
+        {
+          "name": "Khoa Học Viễn Tưởng"
+        }
+    ],
+
+    "movies": [
+        {
+            "name": "Buôn Thần Bán Thánh",
+            "release_date": "23-05-2025",
+            "nation": "Thái Lan",
+            "age": "16",
+            "duration": 125,
+            "description": "Vì muốn cứu cha, chàng trai Ake buộc phải bán đi bộ sưu tập bùa cổ của gia đình. Nhưng thật bất ngờ, trong đó lại có một báu vật liên quan đến vụ thanh trừng đẫm máu xa xưa của một ông trùm khét tiếng. Giờ đây, cậu bị cả thế giới chơi bùa lẫn những bóng ma quá khứ truy đuổi để tìm lại lá bùa thất lạc",
+            "director": "Pae Arak Amornsupasiri & Wutthiphong Sukanin",
+            "actor": "Ake, Muay, Seng, Victor, Suthorn, ...",
+            "trailer": "https://www.youtube.com/embed/miUjcCPpVGo?si=Di2B_c_zxgTCfqMw",
+            "image": "buon_than_ban_thanh.jpg",
+            "banner": "buon_than_ban_thanh_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+           "name": "Ma Móc Họng",
+           "release_date": "23-05-2025",
+           "nation": "Indonesia",
+           "age": "16",
+           "duration":  98,
+           "description": "Siêu phẩm mùa xuân tại xứ sở Vạn Đảo với hơn 3 triệu vé bán ra. Câu chuyện kể về chuyến leo núi của nhóm bạn Ita và Maya trong kỳ nghỉ lễ. Vì phạm phải điều kỵ, Ita trở thành con mồi của lũ quỷ trong rừng, chúng thay phiên nhập vào xác cô để khiến linh hồn cô bị giam cầm nơi đây. Tuy nhiên, con ma sống tại căn nhà của Ita cũng chớp thời cơ để đoạt lấy cơ thể cô. Cơ thể Ita chứa quá nhiều linh hồn ác độc mà mà tổn hại, khiến cho sinh mạng của cô chỉ được tính bằng ngày. Maya giờ đây cố tìm cách cứu lấy bạn mình khỏi bầy quỷ dữ.",
+           "director": "Azhar Kinoi Lubis",
+           "actor": "Arla Ailani, Adzana Ashel, Endy Arfian, Raihan Khan",
+           "trailer": "https://www.youtube.com/embed/JHmVJy_woX8?si=DlAyO_BgQ7GqTkKR",
+           "image": "ma_moc_hong.jpg",
+           "banner": "ma_moc_hong_banner.jpg",
+           "genre": "",
+           "status": "Đang Chiếu"
+
+        },
+        {
+            "name": "Mượn Hồn Đoạt Xác",
+            "release_date": "28-05-2025",
+            "nation": "Úc Hoa Kỳ",
+            "age": "18",
+            "duration": 103,
+            "description": "Sự trở lại của bộ óc sáng tạo đằng sau Talk to Me, Danny và Michael Philippou cùng A24 với một bộ phim kinh dị mới nhất Mượn Hồn Đoạt Xác. Nhiều người tin rằng linh hồn vẫn sẽ ở lại trong thân xác một thời gian trước khi rời đi, đây cũng là niềm tin đáng sợ cho nghi lễ ám ảnh nhất tháng 5.",
+            "director": "Danny Philippou, Michael Philippou",
+            "actor": "Billy Barratt, Sally Hawkins, Mischa Heywood",
+            "trailer": "https://www.youtube.com/embed/M0Lyg6CQcDs?si=HcgvKLCd9Wt9twiT",
+            "image": "muon_hon_doat_xac.jpg",
+            "banner": "muon_hon_doat_xac_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Nhiệm Vụ: Bất Khả Thi -  Nghiệp Báo Cuối Cùng",
+            "release_date": "30-05-2025",
+            "nation": "Hoa Kỳ",
+            "age": "16",
+            "duration": 169,
+            "description": "Cuộc đời là tất thảy những lựa chọn. Tom Cruise thủ vai Ethan Hunt trở lại trong Nhiệm Vụ: Bất Khả Thi – Nghiệp Báo Cuối Cùng.",
+            "director": "Christopher McQuarrie",
+            "actor": "Tom Cruise, Hayley Atwell, Vanessa Kirby, Ving Rhames, Simon Pegg.",
+            "trailer": "https://www.youtube.com/embed/Q_lLOjR3N3w?si=DaLG0GyLke4sFf9G",
+            "image": "nhiem_vu_bat_kha_thi.png",
+            "banner": "nhiem_vu_bat_kha_thi_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Năm Mười",
+            "release_date": "30-05-2025",
+            "nation": "Việt Nam",
+            "age": "18",
+            "duration": 80,
+            "description": "Lấy cảm hứng từ trò chơi quen thuộc Năm Mười, câu chuyện xoay quanh một nhóm bạn cùng nhau đi nghỉ dưỡng tại Đà Lạt. Chuyến đi tưởng như chữa lành bỗng nhiên trở thành tai hoạ khi họ cùng chơi trò Năm Mười và một bí mật kinh hoàng năm xưa được hé lộ.",
+            "director": "Tấn Hoàng Thông",
+            "actor": "Trần Phong, Huỳnh Tú Uyên, Trần Vân Anh, Nam Nam, Vương Thanh Tùng, Hồ Quang Mẫn, Raman Quốc Cường, Nguyễn Trung Huy.",
+            "trailer": "https://www.youtube.com/embed/c8k3yGvslEI?si=B5lB8-75YvG7wvsr",
+            "image": "nam_muoi",
+            "banner": "nam_muoi_banner",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Dính 'Thính' Là Yêu",
+            "release_date": "06-06-2025",
+            "nation": "Hàn Quốc",
+            "age": "13",
+            "duration": 92,
+            "description": "Dính “Thính” Là Yêu là bộ phim hài lãng mạn xoay quanh cô nàng Taek-seon (Bae Doo-na) - bộ trưởng bộ thờ ơ, chủ tịch hội vô cảm, trưởng nhóm anti tình yêu. Đang sống cuộc đời như một “tảng băng di động”, Taek-seon bất ngờ bị nhiễm “virus tình yêu” - cơn dịch bệnh kỳ lạ khiến con người không thể kiềm chế ham muốn yêu và được yêu. Nếu không tìm được tình yêu đích thực của đời mình trong vòng 5 ngày, người nhiễm virus sẽ chết… vì cô đơn, theo đúng nghĩa đen. Đứng trước những ngã rẽ là can đảm đi tìm tình yêu hay chấp nhận từ bỏ cuộc sống, Taek-seon đã gặp gỡ 3 người đàn ông với hi vọng họ có thể thay đổi số phận của cô. Đó là nhà nghiên cứu Nam Soo-pil (Son Suk-ku), bạn học cùng tiểu học Kim Yeon-woo (Chang Ki-ha) và chuyên gia y tế Lee Kyun (Kim Yoon-seok). Những phản ứng tình yêu “dở khóc dở cười” bắt đầu bùng nổ trên hành trình chữa bệnh của Taek-seon khiến cô phải tự hỏi: Liệu đây chỉ là triệu chứng mà virus mang lại hay đó chính là tình yêu thật sự?",
+            "director": "Kang Yi-kwan",
+            "actor": "Bae Doo-na, Son Seok-ku, Chang Ki-ha, Kim Yoon-seok",
+            "trailer": "https://www.youtube.com/embed/Zv7EZOUjAJ4?si=VKQCtgFxOXA-f-MQ",
+            "image": "dinh_thinh_la_yeu.webp",
+            "banner": "dinh_thinh_la_yeu_trailer.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Yêu Em... Em Cảm Ơn",
+            "release_date": "06-06-2025",
+            "nation": "Philippines",
+            "age": "16",
+            "duration": 105,
+            "description": "Sari, một cô gái tin rằng mình bị nguyền rủa khiến người đàn ông nào yêu cô đều biến mất, tình cờ cô gặp Jolo – một chủ nhà chán nản đang tìm cách thoát khỏi nỗi đau. Khi hai con người đầy tổn thương ấy gặp nhau, một mối liên kết dần nảy sinh, buộc họ phải đối mặt với nỗi sợ hãi của bản thân và trả lời câu hỏi: Liệu tình yêu có đáng để đánh đổi tất cả – kể cả khi nó có thể biến mất?",
+            "director": "Chad Vidanes",
+            "actor": "Kim Chiu, Paulo Avelino",
+            "trailer": "https://www.youtube.com/embed/hLVTdYQF37g?si=Ba9_ku6RAqv3xu8Q",
+            "image": "yeu_em_em_cam_on.webp",
+            "banner": "yeu_em_em_cam_on_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Từ Vũ Trụ John Wick: Ballerina",
+            "release_date": "06-06-2025",
+            "nation": "Hoa Kỳ",
+            "age": "18",
+            "duration": 125,
+            "description": "Lấy bối cảnh giữa sự kiện của Sát thủ John Wick: Phần 3 – Chuẩn Bị Chiến Tranh, bộ phim Từ Vũ Trụ John Wick: Ballerina theo chân Eve Macarro (thủ vai bởi Ana de Armas) trên hành trình trả thù cho cái chết của gia đình mình, dưới sự huấn luyện của tổ chức tội phạm Ruska Roma.",
+            "director": "Len Wiseman",
+            "actor": "Ana de Armas, Keanu Reeves, Catalina Sandino Moreno, ...",
+            "trailer": "https://www.youtube.com/embed/EJBi_Be6ccs?si=HjTxAn7Y--VBaRlT",
+            "image": "tu_vu_tru_john_wick_ballerina.webp",
+            "banner": "tu_vu_tru_john_wick_ballerina_banner.webp",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Quỷ Tha Ma Bắt",
+            "release_date": "13-06-2025",
+            "nation": "Đài Loan",
+            "age": "18",
+            "duration": 98,
+            "description": "Emma Schmidt, một phụ nữ 46 tuổi, đã phải chịu đựng suốt nhiều năm với các triệu chứng đáng sợ như mất ý thức, sợ hãi các vật thánh và nhiều biểu hiện kỳ lạ khác. Sau khi điều trị tâm thần không mang lại hiệu quả, một buổi trừ tà trang nghiêm đã được sắp xếp tại một tu viện hẻo lánh, do Cha Theophilus Riesinger thực hiện và Cha Steiger giám sát. Kể từ khi Emma đến, những hiện tượng kỳ quái bắt đầu xuất hiện, và chuỗi ngày thử thách kéo dài nhiều tháng đã đẩy tất cả những người liên quan đến giới hạn về tinh thần lẫn đức tin. Sau một phiên trừ tà căng thẳng kéo dài 72 giờ, Emma cuối cùng đã được giải thoát và sống phần đời còn lại trong yên bình. Trường hợp của cô vẫn là một trong những vụ trừ tà được ghi chép và công bố rộng rãi nhất trong lịch sử nước Mỹ..",
+            "director": "David Midell",
+            "actor": "Al Pacino, Dan Stevens, Ashley Greene, Abigail Cowen, Patrick Fabian, Patricia Heaton",
+            "trailer": "https://www.youtube.com/embed/K43yJxaB10c?si=zOYRTdGf1q0CBlQ3",
+            "image": "quy_tha_ma_bat.jpg",
+            "banner": "quy_tha_ma_bat_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Colorful Stage! Một Miku Không Thể Hát",
+            "release_date": "13-06-2025",
+            "nation": "Nhật Bản",
+            "age": "13",
+            "duration": 111,
+            "description": "Chuyển thể anime do hãng phim PA Works sản xuất do Hiroyuki Hata đạo diễn và Yoko Yonaiyama viết kịch bản. Bộ anime đã được khởi chiếu tại Nhật Bản vào ngày 17 tháng 1 năm nay, và thu về 230.000 vé tương đương 300 triệu yên trong ba ngày đầu tiên (17–19 tháng 1), đứng #2 phòng vé Nhật Bản lúc bấy giờ. Phim xoay quanh Ichika Hoshino, người nghe được một bài hát của Miku mà cô chưa bao giờ được nghe cũng như nhìn thấy một Hatsune Miku mà cô chưa từng được thấy. Ngay lúc này, Ichika đã gọi Miku và khi Miku nghe được giọng nói thì cô ấy đã biến mất ngay sau khi hai người chạm mắt. Từ lúc này, Miku bắt đầu xuất hiện trên điện thoại của Ichika và mong muốn truyền đạt bài hát của mình đến với mọi người, nhưng dù Miku có hát bao nhiêu, những bài hát ấy vẫn không thể được truyền tải. Sau khi thấy Ichika chạm đến trái tim mọi người qua một màn trình diễn trên đường phố, Miku đã quyết định nhờ Ichika giúp đỡ.",
+            "director": "Hiroyuki Hata",
+            "actor": "Akina, Yu Asakawa và Naoto Fuga.",
+            "trailer": "https://www.youtube.com/embed/KBctotT5R-g?si=7rm6Bq5QIaWgxUcN",
+            "image": "colorfull_stage_mot_miku_khong_the_hat.jpg",
+            "banner": "colorfull_stage_mot_miku_khong_the_hat_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Bí Kíp Luyện Rồng",
+            "release_date": "13-06-2026",
+            "nation": "Hoa Kỳ",
+            "age": "K",
+            "duration": 126,
+            "description": "Câu chuyện về một chàng trai trẻ với ước mơ trở thành thợ săn rồng, nhưng định mệnh lại đưa đẩy anh đến tình bạn bất ngờ với một chú rồng.",
+            "director": "Dean DeBlois",
+            "actor": "Mason Thames, Nico Parker, Gerard Butler",
+            "trailer": "https://youtu.be/JD-idNoeiPE?si=M4KmEwjStn3_TIKi",
+            "image": "bi_kip_luyen_rong.webp",
+            "banner": "bi_kip_luyen_rong.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Bộ 5 Siêu Đẳng Cấp",
+            "release_date": "13-06-2025",
+            "nation": "Hàn Quốc",
+            "age": "16",
+            "duration": 116,
+            "description": "HI.FIVE – bộ phim bom tấn siêu anh hùng châu Á, pha trộn hành động mãn nhãn và tiếng cười bùng nổ. Năm người bình thường bỗng dưng 'trúng số' — bất ngờ sở hữu siêu năng lực bá đạo sau một ca ghép tạng... kỳ quặc! Bị đời đẩy đưa trở thành siêu anh hùng bất đắc dĩ, họ vừa 'gánh team' cứu thế giới, phải học cách dùng năng lực đúng lúc để không phá banh mọi thứ xung quanh. Khi định mệnh ép bạn lên level – bạn có dám bung skill tới bến?",
+            "director": "Kang Hyung Cheol",
+            "actor": "Yoo Ah In, Ahn Jae Hong, Park Jin Young, Ra Mi Ran,...",
+            "trailer": "https://youtu.be/f6O6aSLG2gU?si=O7a0QnbM1mBv9SUN",
+            "image": "bo_5_sieu_dang_cap.jpg",
+            "banner": "bo_5_sieu_dang_cap_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Yadang: Ba Mặt Lật Kèo",
+            "release_date": "16/5/2025",
+            "nation": "Hàn Quốc",
+            "age": "18",
+            "duration": 122,
+            "description": "'Từ giờ trở đi, bạn là kẻ chỉ điểm của tôi.' Là “cầu nối” giữa thế giới ngầm và các cơ quan thực thi pháp luật, những kẻ chỉ điểm chuyên nghiệp được gọi là 'yadang' - người cung cấp thông tin bí mật về thế giới ma túy cho các công tố viên và cảnh sát. Khi một kẻ chỉ điểm ma túy “báo tin” về một bữa tiệc có sự tham dự của các VIP nổi tiếng và vô tình vướng vào một âm mưu nguy hiểm, hắn phải làm mọi thứ trong khả năng của mình không chỉ để sống sót,mà còn để phục thù.",
+            "director": "HWANG Byeong-gug",
+            "actor": "KANG Ha-neul, YOO Hai-jin, PARK Hae-joon, RYU Kyung-soo, CHAE Won-been",
+            "trailer": "https://www.youtube.com/embed/dCRFxqXYF_A?si=KWo-SioEwYfEI817",
+            "image": "yadang_ba_mat_lat_keo.jpg",
+            "banner": "yadang_ba_mat_lat_keo_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Biệt Đội Sấm Sét",
+            "release_date": "01-05-2025",
+            "nation": "Hoa Kỳ",
+            "age": "13",
+            "duration": 126,
+            "description": "Ai trong team này cũng từng làm việc ác, giờ là lúc làm việc ác cùng nhau. Các thành phần bất hảo trong vũ trụ điện ảnh Marvel giờ đây đã được triệu tập trở thành một nhóm gọi là “Biệt Đội Sấm Sét”, để làm những nhiệm vụ nguy hiểm bậc nhất mà có thể sẽ thay đổi con người, cuộc đời họ mãi mãi.",
+            "director": "Jake Schreier",
+            "actor": "Florence Pugh, Sebastian Stan, David Harbour, Wyatt Russell, Olga Kurylenko, Lewis Pullman, Geraldine Viswanathan, Chris Bauer, Wendell Edward Pierce, with David Harbour, with Hannah John-Kamen, Julia Louis-Dreyfus.",
+            "trailer": "https://www.youtube.com/embed/0ynGKjwOfW4?si=NREoJhveROGK77tp",
+            "image": "biet_doi_sam_set.jpg",
+            "banner": "biet_doi_sam_set_banner.jpg",
+            "genre": "",
+            "status": "Đang Chiếu"
+        },
+        {
+            "name": "Cuộn Băng Quỷ Ám",
+            "release_date": "13-06-2025",
+            "nation": "Nhật Bản",
+            "age": "18",
+            "duration": 99,
+            "description": "13 năm sau sự biến mất bí ẩn của em trai, Keita vẫn sống trong dằn vặt và hy vọng. Một cuộn băng VHS từ mẹ hé lộ hình ảnh cuối cùng của Hinata trước khi cậu bé mất tích trong căn nhà hoang trên núi Mushiro. Bất chấp lời cảnh báo từ người bạn cùng phòng có khả năng ngoại cảm, Keita cùng một phóng viên và người bạn đặc biệt bước vào hành trình tìm sự thật. Nhưng càng đi sâu, họ càng bị cuốn vào những bí ẩn siêu nhiên và nỗi đau bị chôn giấu. Liệu sự thật về Hinata là điều nên được phơi bày, hay là cánh cửa dẫn đến một cơn ác mộng chưa từng kết thúc?",
+            "director": "Ryota Kondo",
+            "actor": "Takashi Fujii, Amon Hirai, Kokoro Morita",
+            "trailer": "https://www.youtube.com/embed/h86H3yGCnj0?si=8GnHxPLWPOm8rnli",
+            "image": "cuon_bang_quy_am.jpg",
+            "banner": "cuon_bang_quy_am_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Elio Cậu Bé Đến Từ Trái Đất",
+            "release_date": "13-06-2025",
+            "nation": "Hoa Kỳ",
+            "age": "P",
+            "duration": 99,
+            "description": "Elio là một cậu bé đam mê vũ trụ với trí tưởng tượng phong phú. Một hôm, cậu bất ngờ phải tham gia một cuộc phiêu lưu ngoài vũ trụ, nơi cậu phải xây dựng mối quan hệ mới với các dạng sống ngoài hành tinh. Elio phải vượt qua cuộc chiến ở quy mô liên thiên hà và khám phá ra con người thực sự của mình.",
+            "director": "Adrian Molina, Madeline Sharafian, Domee Shi",
+            "actor": "Yonas Kibreab, Zoe Saldana, Brad Garrett",
+            "trailer": "https://www.youtube.com/embed/hLP1UPc7-tQ?si=dSeFwYJZiZzuhU5s",
+            "image": "elio_cau_be_den_tu_trai_dat.png",
+            "banner": "elio_cau_be_den_tu_trai_dat_banner_jpeg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Quỷ Rạch Mặt",
+            "release_date": "13-06-2025",
+            "nation": "Nhật Bản",
+            "age": "18",
+            "duration": 99,
+            "description": "May quyết định chuyển về căn nhà ngoại ô cùng với bạn trai, Gun. Ở đây, May bất ngờ nhận được tin dữ, mẹ kế của cô, bà Po đã qua đời, bị nghi là sát hại. May dang tay cưu mang người em gái, Noon, thế nhưng nào ngờ cô ã dẫn quỷ về nhà. Liên tục trải qua những cú sốc, May hầu như không còn tin vào chính mình khi thực thể tà ác đang muốn nuốt chửng cô và gia đình. Liệu cái kết nào sẽ giành cho những bi kịch đẫm máu tiếp theo?",
+            "director": "Sueb Boonsong Nakphoo",
+            "actor": "Kwan Usamanee Vaithayanon, Topz Nathanon Narathanyawirun, Tong Archariya Sritha, Yasaka Chaisorn",
+            "trailer": "https://www.youtube.com/embed/m_iSq5FKerc?si=G_CDhaPBGioG1YHs",
+            "image": "quy_rach_mat.jpg",
+            "banner": "quy_rach_mat_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Trạng Quỳnh Nhí: Truyền Thuyết Kim Ngưu",
+            "release_date": "20-06-2025",
+            "nation": "Việt Nam",
+            "age": "P",
+            "duration": 98,
+            "description": "Chú bé Quỳnh kiêu ngạo luôn cho rằng mình là trung tâm của vũ trụ. Thật không may bố mẹ Quỳnh bị nghi chiếm đoạt bảo vật của triều đình và bị truy nã. Trong cơn hỗn loạn, Quỳnh được đám bạn cùng làng và một em bé trâu to khoẻ giúp đỡ. Quỳnh phải tìm cách minh oan cho gia đình, qua đó phát hiện ra âm mưu của một thế lực hiểm ác muốn giải thoát sức mạnh của Cửu Vỹ Hồ nhằm gây hỗn loạn cho thế gian. Quỳnh và những bạn nhỏ bị cuốn vào một cuộc phiêu lưu cực kỳ nguy hiểm, lối thoát duy nhất là phải tìm được và nhờ cậy sự trợ giúp của thần Kim Ngưu, thế nhưng chỉ với năng lực của những đứa trẻ và một bạn trâu to khỏe nhưng ngờ nghệch, muôn vàn khó khăn đang chờ đón. Qua cuộc hành trình của mình, Quỳnh phát hiện ra mong muốn được giấu sâu trong tâm hồn là được kết bạn, thấu hiểu ý nghĩa của bạn bè và sẵn sàng hi sinh bản thân để chân thành kết bạn với mọi người.",
+            "director": "Trịnh Lâm Tùng",
+            "actor": "",
+            "trailer": "https://www.youtube.com/embed/C5_o_j2Dw-g?si=IwTxBKqZxk-4finZ",
+            "image": "trang_quynh_nhi.jpg",
+            "banner": "trang_quynh_nhi_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Út Linh: Oán Linh Giữ Của",
+            "release_date": "20-06-2025",
+            "nation": "Việt Nam",
+            "age": "18",
+            "duration": 99,
+            "description": "Sau sự ra đi của cha, Lan (Phương Thanh) về một vùng quê và ở đợ cho nhà ông Danh (Mạc Văn Khoa) - một người đàn ông góa vợ, không con cái. Ngay sau khi bước chân vào căn nhà, Lan phải đối mặt với hàng loạt hiện tượng kỳ dị và những cái chết bí ẩn liên tục xảy ra. Cùng với Sơn (Quốc Trường) - một nhà văn chuyên viết truyện kinh dị, Lan bắt đầu lật mở những bí mật kinh hoàng, khám phá lịch sử đen tối của căn nhà.",
+            "director": "Trần Trọng Dần",
+            "actor": "Quốc Trường, Mạc Văn Khoa,...",
+            "trailer": "https://www.youtube.com/embed/Y2F2VQw-u7s?si=zC96Mfv5SaTIBVqs",
+            "image": "ut_lan_oan_linh_giu_cua.jpg",
+            "banner": "ut_lan_oan_linh_giu_cua_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "M3GAN 2.0",
+            "release_date": "27-06-2025",
+            "nation": "Hoa Kỳ",
+            "age": "18",
+            "duration": 99,
+            "description": "Phim lấy bối cảnh 2 năm sau các sự kiện ở phần 1. Lúc này, Gemma phát hiện công nghệ sản xuất MEGAN đã bị đánh cắp. Kẻ gian đã tạo ra một robot AI khác với chức năng tương tự MEGAN, nhưng được trang bị sức mạnh chiến đấu 'khủng' hơn mang tên Amelia. Để 'đối đầu' với Amelia, Gemma buộc phải 'hồi sinh' và cải tiến MEGAN, hứa hẹn một trận chiến 'nảy lửa' trên màn ảnh vào năm 2025.",
+            "director": "Gerard Johnstone",
+            "actor": "Jemaine Clement; Amie Donald; Allison Williams",
+            "trailer": "https://www.youtube.com/embed/B5lA1GQ1N18?si=5Wrxv0TLy9BBAuND",
+            "image": "megan_2_0.jpg",
+            "banner": "megan_2_0_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "F1 ®",
+            "release_date": "27-06-2025",
+            "nation": "Hoa Kỳ",
+            "age": "13",
+            "duration": 99,
+            "description": "Sonny Hayes (Brad Pitt) được mệnh danh là 'Huyền thoại chưa từng được gọi tên' là ngôi sao sáng giá nhất của FORMULA 1 trong những năm 1990 cho đến khi một vụ tai nạn trên đường đua suýt nữa đã kết thúc sự nghiệp của anh.. Ba mươi năm sau, Sonny trở thành một tay đua tự do, cho đến khi người đồng đội cũ của anh, Ruben Cervantes (Javier Bardem), chủ sở hữu một đội đua F1 đang trên bờ vực sụp đổ, tìm đến anh. Ruben thuyết phục Sonny quay lại với F1® để có một cơ hội cuối cùng cứu lấy đội và khẳng định mình là tay đua xuất sắc nhất thế giới. Anh sẽ thi đấu cùng Joshua Pearce (Damson Idris), tay đua tân binh đầy tham vọng của đội, người luôn muốn tạo ra tốc độ của riêng mình. Tuy nhiên, khi động cơ gầm rú, quá khứ của Sonny sẽ đuổi theo anh và anh nhận ra rằng trong F1, người đồng đội chính là đối thủ cạnh tranh lớn nhất—và con đường chuộc lại lỗi lầm không phải là điều có thể đi một mình.",
+            "director": "Joseph Kosinski",
+            "actor": "Brad Pitt, Simone Ashley, Javier Bardem,...",
+            "trailer": "https://www.youtube.com/embed/SZ3rHRA_46k?si=zzYK5Gb2GrL9h2OZ",
+            "image": "F1.jpg",
+            "banner": "F1_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Thế Giới Khủng Long: Tái Sinh",
+            "release_date": "04-07-2025",
+            "nation": "Hoa Kỳ",
+            "age": "13",
+            "duration": 99,
+            "description": "Thế Giới Khủng Long: Tái Sinh lấy bối cảnh 5 năm sau phần phim Thế Giới Khủng Long: Lãnh Địa, môi trường Trái đất đã chứng tỏ phần lớn là không phù hợp với khủng long. Nhiều loài thằn lằn tiền sử được tái sinh đã chết. Những con chưa chết đã rút lui đến một vùng nhiệt đới hẻo lánh gần phòng thí nghiệm. Địa điểm đó chính là nơi bộ ba Scarlett Johansson, Mahershala Ali và Jonathan Bailey dấn thân vào một nhiệm vụ cực kỳ hiểm nguy.",
+            "director": "Gareth Edwards",
+            "actor": "Scarlett Johansson, Mahershala Ali, Jonathan Bailey",
+            "trailer": "https://www.youtube.com/embed/8QLAE-U9Lnk?si=4V_zOcPfR_4-Mt82",
+            "image": "TG_khung_long.webp",
+            "banner": "TG_khung_long_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Phim Xì Trum",
+            "release_date": "18-07-2025",
+            "nation": "Hoa Kỳ",
+            "age": "P",
+            "duration": 99,
+            "description": "Câu chuyện trở lại với ngôi làng Xì Trum, nơi mà mỗi ngày đều là lễ hội. Bỗng một ngày, sự yên bình của ngôi làng bị phá vỡ khi Tí Vua bị bắt cóc một cách bí ẩn bởi hai phù thủy độc ác Gà Mên và Cà Mên. Từ đây, Tí Cô Nương phải dẫn dắt các Tí đi vào thế giới thực để giải cứu ông. Với sự giúp đỡ của những người bạn mới, các Tí sẽ bước vào cuộc phiêu lưu khám phá định mệnh của mình để cứu lấy vũ trụ.",
+            "director": "Chris Miller",
+            "actor": "Rihanna (Smurfette), James Corden (Papa Smurf), Nick Offerman, Natasha Lyonne, Amy Sedaris, Nick Kroll, Daniel Levy và Octavia Spencer",
+            "trailer": "https://www.youtube.com/embed/DIQ4PIpFTKk?si=PsIrJuTOojkI1nip",
+            "image": "xi_trum.webp",
+            "banner": "xi_trum_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Băng Đảng Quái Kiệt 2",
+            "release_date": "01-08-2025",
+            "nation": "Hoa Kỳ",
+            "age": "P",
+            "duration": 99,
+            "description": "Biệt đội Bad Guys đang cố gắng lấy lại sự tin tưởng của mọi người sau khi hoàn lương, nhưng mọi nỗ lực sụp đổ khi họ bị kéo vào 'phi vụ cuối cùng' do nhóm Bad Girls cầm đầu. Liệu họ sẽ giữ vững lý tưởng chính nghĩa, hay lại bị cuốn vào con đường tội phạm đã từng cố gắng rời bỏ?",
+            "director": "Pierre Perifel, JP Sans",
+            "actor": "",
+            "trailer": "https://www.youtube.com/embed/_EJMcC1LjG8?si=r3XY7a4A6RLFJQPg",
+            "image": "bang_dan_quai_kiet_2.webp",
+            "banner": "bang_dan_quai_kiet_2_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        },
+        {
+            "name": "Tổ Đội Gấu Nhí: Du Hí 4 Phương",
+            "release_date": "06-07-2025",
+            "nation": "Hoa Kỳ",
+            "age": "P",
+            "duration": 87,
+            "description": "Vì một sai lầm đáng trách của shipper Cò, gấu Mic Mic tiếp tục phải lên đường tham gia vào một cuộc phiêu lưu bất đắc dĩ và không kém phần ly kỳ để tìm lại bé con của anh. Nhóm bạn lầy lội của Mic-Mic phải lao vào cuộc đua đổi trả em bé qua các châu lục, đối mặt với kangaroo nhảy nhót ở châu Đại Dương, hươu cao cổ kiêu kỳ ở savan châu Phi, dê núi tinh nghịch trên dãy Alps châu Âu, và thậm chí là một chú rồng phun lửa huyền thoại ở Trung Quốc cổ kính! Giữa những màn rượt đuổi nghẹt thở và tiếng cười nghiêng ngả, Mic-Mic phát hiện gấu con thật bị bắt cóc bởi con trăn gian xảo cùng hai kền kền lắm drama, buộc cả đội hợp sức với những người bạn khác để giải cứu. Liệu rằng Mic Mic sẽ bất lực trước hiện thực hay sẽ vùng lên để tìm kiếm hạnh phúc trọn vẹn cho cả gia đình?",
+            "director": "Vasiliy Rovenskiy",
+            "actor": "",
+            "trailer": "https://www.youtube.com/embed/9mH_FlO6oa0?si=o17ABR3OXD8Bl1R4",
+            "image": "to_doi_gau_nhi.webp",
+            "banner": "to_doi_gau_nhi_banner.jpg",
+            "genre": "",
+            "status": "Sắp Chiếu"
+        }
+    ],
+
+    "location": [
+        {
+            "name": "Hà Nội"
+        },
+        {
+            "name": "Hồ Chí Minh"
+        },
+        {
+            "name": "Đà Nẵng"
+        },
+        {
+            "name": "Bình Dương"
+        },
+        {
+            "name": "Lâm Đồng"
+        },
+        {
+            "name": "Đà Lạt"
+        }
+    ],
+
+    "cinemas": [
+        {
+            "name": "TickNow Lâm Đồng",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "713 QL20, Liên Nghĩa, Đức Trọng"
+            }
+        },
+        {
+            "name": "TickNow Đà Lạt",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "Quảng trường Lâm Viên, P10, TP.Đà Lạt"
+            }
+        },
+        {
+            "name": "TickNow Hà Nội",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "Tầng 4, TTTM Vincom Bà Triệu, Hai Bà Trưng, Hà Nội"
+            }
+        },
+        {
+            "name": "TickNow Hồ Chí Minh",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "Lầu 5, TTTM NowZone, Quận 1, TP.HCM"
+            }
+        },
+        {
+            "name": "TickNow Đà Nẵng",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "910A Ngô Quyền, Sơn Trà, Đà Nẵng"
+            }
+        },
+        {
+            "name": "TickNow Bình Dương",
+            "image": "",
+            "location": {
+                "id_location": "",
+                "deatil_location": "Tầng 3, TTTM AEON Mall, TP.Thuận An, Bình Dương"
+        }
+        }
+    ],
+
+
+    "room": [
+        {
+          "code_room": 1,
+          "id_thear": "684a4cc5a290f33e71b13b42",
+          "id": 1,
+          "diagram": {
+            "row": 13,
+            "colunm": 22,
+            "element_remove": {
+              "A": [7, 8],
+              "B": [7, 8],
+              "C": [7, 8],
+              "D": [7, 8],
+              "E": [7, 8, 22],
+              "F": [7, 8],
+              "G": [7, 8, 22],
+              "H": [7, 8],
+              "I": [7, 8],
+              "J": [7, 8, 22],
+              "K": [3, 6, 7, 8, 16]
+            },
+            "double_Chair": {
+              "L": [1, 2, 4, 5],
+              "M": [2, 3, 4]
+            },
+            "element_selected": {
+              "A": [10, 11]
+            },
+            "element_selecting": {}
+          }
+        },
+        {
+          "room_code": 3,
+          "id_thear": "684a4cc5a290f33e71b13b42",
+          "id": 2,
+          "diagram": {
+            "row": 9,
+            "colunm": 17,
+            "element_remove": {},
+            "element_selected": {},
+            "element_selecting": []
+          }
+        },
+        {
+          "room_code": 2,
+          "id_thear": "684a4cc5a290f33e71b13b42",
+          "diagram": {
+            "row": 12,
+            "colunm": 17,
+            "element_remove": {
+              "A": [1, 2, 3],
+              "B": [1, 2, 3]
+            },
+            "element_selected": {},
+            "element_selecting": []
+          }
+        },
+        {
+          "room_code": 1,
+          "id_thear": "684a4cc5a290f33e71b13b43",
+          "diagram": {
+            "row": 6,
+            "colunm": 8,
+            "element_remove": {
+              "A": [3, 4],
+              "B": [3, 4],
+              "C": [3, 4],
+              "D": [3, 4],
+              "E": [2, 3, 4, 7],
+              "F": [1, 2, 3, 4, 5, 7, 8]
+            },
+            "element_selected": {},
+            "element_selecting": []
+          }
+        },
+        {
+          "room_code": 2,
+          "id_thear": "684a4cc5a290f33e71b13b43",
+          "diagram": {
+            "row": 19,
+            "colunm": 17,
+            "element_remove": {
+              "A": [1, 2, 3, 4],
+              "B": [1, 2, 3, 4],
+              "C": [1, 2, 3, 4],
+              "D": [1, 2, 3, 4],
+              "E": [1, 2, 3, 4],
+              "F": [1, 2, 3, 4],
+              "G": [3, 4],
+              "H": [3, 4],
+              "J": [3, 4],
+              "K": [3, 4, 19],
+              "L": [3, 4],
+              "M": [3, 4, 19],
+              "N": [3, 4],
+              "O": [3, 4, 19],
+              "P": [3, 4],
+              "Q": [3, 4, 10, 11, 12]
+            },
+            "double_Chair": {
+              "R": [1, 2, 3, 4, 5, 6]
+            },
+            "element_selected": {
+              "F": [1, 2, 3, 4],
+              "P": [3, 4],
+              "A": [1, 2, 3, 4]
+            },
+            "element_selecting": []
+          }
+        },
+        {
+          "id": 6,
+          "code_room": 6,
+          "id_thear": 2,
+          "diagram": {
+            "row": 4,
+            "colunm": 5,
+            "element_remove": {
+              "E": [3]
+            },
+            "double_Chair": {},
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 1,
+          "id_thear": "684a4cc5a290f33e71b13b44",
+          "diagram": {
+            "row": 13,
+            "colunm": 15,
+            "element_remove": {
+              "A": [1, 2, 3, 4],
+              "B": [1, 2, 3, 4],
+              "C": [1, 2, 3, 4],
+              "D": [1, 2, 3, 4],
+              "E": [1, 2, 3, 4],
+              "F": [1, 2, 3, 4],
+              "G": [1, 2, 3, 4],
+              "H": [1, 2, 3, 4],
+              "J": [1, 2, 3, 4],
+              "K": [1, 2, 3, 4],
+              "L": [3, 4],
+              "M": [3, 4],
+              "N": [3, 4],
+              "O": [3, 4, 10]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 2,
+          "id_thear": "684a4cc5a290f33e71b13b44",
+          "diagram": {
+            "row": 16,
+            "colunm": 15,
+            "element_remove": {
+              "A": [1, 2, 3, 4],
+              "B": [1, 2, 3, 4],
+              "C": [1, 2, 3, 4],
+              "D": [1, 2, 3, 4],
+              "E": [1, 2, 3, 4],
+              "F": [1, 2, 3, 4],
+              "G": [1, 2, 3, 4],
+              "H": [1, 2, 3, 4],
+              "J": [1, 2, 3, 4],
+              "K": [3, 4],
+              "L": [3, 4],
+              "M": [3, 4],
+              "N": [3, 4],
+              "O": [6, 10, 11]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 3,
+          "id_thear": "684a4cc5a290f33e71b13b44",
+          "diagram": {
+            "row": 18,
+            "colunm": 14,
+            "element_remove": {
+              "A": [1, 2, 5, 6],
+              "B": [1, 2, 5, 6],
+              "C": [1, 2, 5, 6],
+              "D": [1, 2, 5, 6],
+              "E": [1, 2, 5, 6],
+              "F": [1, 2, 5, 6],
+              "G": [1, 2, 5, 6],
+              "H": [1, 2, 5, 6],
+              "J": [1, 2, 5, 6],
+              "K": [5, 6],
+              "L": [5, 6],
+              "M": [5, 6],
+              "N": [5, 6],
+              "O": []
+            },
+            "double_Chair": {
+              "O": [1, 2]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 1,
+          "id_thear": "684a4cc5a290f33e71b13b45",
+          "diagram": {
+            "row": 26,
+            "colunm": 15,
+            "element_remove": {
+              "A": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "B": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "C": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "D": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "E": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "F": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "G": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "H": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "J": [1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "K": [3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "L": [3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "M": [3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "N": [3, 4, 5, 6, 7, 8, 11, 14, 16, 19, 22, 25],
+              "O": [1, 4, 5, 8, 9, 11, 14, 16, 18, 19, 22, 25, 26]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        }, 
+         {
+          "code_room": 2,
+          "id_thear": "684a4cc5a290f33e71b13b45",
+          "diagram": {
+            "row": 21,
+            "colunm": 10,
+            "element_remove": {
+              "A": [1, 2, 5, 6, 7],
+              "B": [1, 2, 5, 6, 7],
+              "C": [1, 2, 5, 6, 7],
+              "D": [1, 2, 5, 6, 7, 21],
+              "E": [1, 2, 5, 6, 7, 21],
+              "F": [1, 2, 5, 6, 7],
+              "G": [1, 2, 5, 6, 7],
+              "H": [1, 2, 5, 6, 7],
+              "J": [1, 2, 5, 6, 7]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 3,
+          "id_thear": "684a4cc5a290f33e71b13b45",
+          "diagram": {
+            "row": 22,
+            "colunm": 14,
+            "element_remove": {
+              "A": [1, 2, 3, 6, 7, 8, 22],
+              "B": [1, 2, 3, 6, 7, 8],
+              "C": [1, 2, 3, 6, 7, 8],
+              "D": [1, 2, 3, 6, 7, 8],
+              "E": [1, 2, 3, 6, 7, 8],
+              "F": [1, 2, 3, 6, 7, 8],
+              "G": [1, 2, 5, 6, 7, 22],
+              "H": [1, 2, 5, 6, 7, 22],
+              "J": [6, 7, 8],
+              "K": [6, 7, 8],
+              "L": [6, 7, 8],
+              "M": [1, 2, 6, 7, 8, 22],
+              "N": [1, 2, 3, 6, 7, 8, 20, 21, 22]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 1,
+          "id_thear": "684a4cc5a290f33e71b13b46",
+          "diagram": {
+            "row": 19,
+            "colunm": 14,
+            "element_remove": {
+              "A": [19],
+              "B": [1, 19],
+              "C": [19],
+              "D": [],
+              "E": [],
+              "F": [],
+              "G": [],
+              "H": [1],
+              "J": [1],
+              "K": [],
+              "L": [],
+              "M": [],
+              "N": [1, 2]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 2,
+          "id_thear": "684a4cc5a290f33e71b13b46",
+          "diagram": {
+            "row": 10,
+            "colunm": 10,
+            "element_remove": {
+              "A": [],
+              "B": [],
+              "C": [],
+              "D": [],
+              "E": [],
+              "F": [10],
+              "G": [10],
+              "H": [10],
+              "I": []
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 3,
+          "id_thear": "684a4cc5a290f33e71b13b46",
+          "diagram": {
+            "row": 15,
+            "colunm": 10,
+            "element_remove": {
+              "A": [14, 15],
+              "B": [15],
+              "C": [15],
+              "D": [2, 3, 4],
+              "E": [],
+              "F": [],
+              "G": [14, 15],
+              "H": [14, 15],
+              "I": [14, 15]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 2,
+          "id_thear": "684a4cc5a290f33e71b13b47",
+          "diagram": {
+            "row": 15,
+            "colunm": 12,
+            "element_remove": {
+              "A": [],
+              "B": [],
+              "C": [1],
+              "D": [1, 10, 15],
+              "E": [1],
+              "F": [],
+              "G": [],
+              "H": [],
+              "I": [],
+              "J": [1, 2],
+              "K": [1, 2]
+            
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 1,
+          "id_thear": "684a4cc5a290f33e71b13b47",
+          "diagram": {
+            "row": 15,
+            "colunm": 12,
+            "element_remove": {
+              "A": [],
+              "B": [],
+              "C": [1, 2, 15],
+              "D": [1, 15],
+              "E": [],
+              "F": [7, 8, 9, 10, 11, 12, 13, 14, 15],
+              "G": [],
+              "H": [],
+              "I": [],
+              "J": [11, 12, 13, 14, 15],
+              "K": [1, 10, 11, 12, 13, 14, 15]
+            
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        },
+        {
+          "code_room": 3,
+          "id_thear": "684a4cc5a290f33e71b13b47",
+          "diagram": {
+            "row": 15,
+            "colunm": 9,
+            "element_remove": {
+              "A": [15],
+              "B": [8, 15],
+              "C": [14, 15],
+              "D": [],
+              "E": [15],
+              "F": [],
+              "G": [14, 15],
+              "H": [14, 15]
+            },
+            "element_selected": {},
+            "element_selecting": {}
+          }
+        }
+    ],
+
+
+    "screenings": [
+        {
+          "id_room": "684d23f393b6ec82733bd8e4",
+          "id_movie": "6849ada3c9f09ed33ae9022a",
+          "time_start": "8:20",
+          "time_end": "10:25",
+          "date": "06-14-2025",
+          "status": "Hoạt Động"
+        }
+    ],
+
+
+    "vouchers": [
+        {
+            "code": "XINCHAO",
+            "discount_type": 10,
+            "user_count": 0,
+            "max_users": 1500,
+            "start_date": "06-15-2025",
+            "end_date": "06-31-2025",
+            "is_active": "Hoạt Động"
+        }
+    ],
+
+    "ticket": [
+        {
+            "id_user": "684d212093b6ec82733bd8db",
+            "id_screening": "684d27dc93b6ec82733bd90d",
+            "id_seat": ["A1","A2"],
+            "id_voucher": "",
+            "price": 90000,
+            "type": "Đã Thanh Toán"
+        }
+    ],
+
+    "trasition": [
+        {
+
+            "id_ticket": "684d284993b6ec82733bd910",
+            "id_payMethod": "684d203393b6ec82733bd8d4",
+            "amount": 90000,
+            "payment_time": "06-14-2025",
+            "status": "Thành Công"
+        }
+    ],
+
+    "payMethod": [
+        {
+            "name": "MoMo",
+            "description": "Ví MoMo là một ứng dụng ví điện tử tại Việt Nam, cho phép người dùng thực hiện nhiều giao dịch tài chính như thanh toán hóa đơn, chuyển tiền, mua sắm trực tuyến và nhiều dịch vụ khác. Ứng dụng này được Ngân hàng Nhà nước cấp phép và quản lý hoạt động, đồng thời là đối tác chiến lược của nhiều ngân hàng lớn tại Việt Nam, đảm bảo tính an toàn và bảo mật cho người dùng.",
+            "logo": "MoMo_Logo.png",
+            "type": "Chuyển Khoản",
+            "dateCreta": "14-06-2025",
+            "is_active": "Hoạt Động"
+        },
+        {
+            "name": "VNPay",
+            "description": "VNPAY là một nền tảng thanh toán trực tuyến, được phát triển bởi Công ty Cổ phần Giải pháp Thanh toán Việt Nam (VNPAY). Nó bao gồm các dịch vụ như ví điện tử VNPAY và cổng thanh toán VNPAY-QR, cho phép người dùng thực hiện thanh toán nhanh chóng, tiện lợi và an toàn cho nhiều loại giao dịch khác nhau.",
+            "logo": "VNPAY_Logo.jpg",
+            "type": "Chuyển Khoản",
+            "dateCreta": "14-06-2025",
+            "is_active": "Không Hoạt Động"
+        }
+    ],
+
+    "users": [
+        {
+            "name": "Trần Văn Giới",
+            "phone": "0375837534",
+            "email": "trangioi479@gmail.com",
+            "password": "Motdieunua@123",
+            "year": "2005",
+            "status": "Hoạt Động",
+            "role": true
+        }
+    ],
+
+    "rates": [
+        {
+            "id_movie": "6849ada3c9f09ed33ae9022a",
+            "id_ticket": "684d284993b6ec82733bd910",
+            "score": 4.5,
+            "comment": "Phim Rất Hay",
+            "date": "06-14-2025"
+
+        }
+    ],
+
+    "posts": [
+        {
+            "id_user": "684d212093b6ec82733bd8db",
+            "content" : "Hello các bạn nha, chào mừng các bạn đến với Ticknow",
+            "start_day": "14-06-2025",
+            "end_day": "30-06-2025",
+            "status": "Hoạt Động",
+            "img": ""
+        }
+    ]
+}   
