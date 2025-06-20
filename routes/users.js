@@ -4,7 +4,7 @@ const { isAdmin } = require('../middlewares/isAdmin')
 
 const userControler = require('../controler/users.controler');
 
-router.get('/', isAdmin ,userControler.getAllUsers);
+router.get('/', userControler.getAllUsers);
 
 router.post('/login', userControler.login);
 
