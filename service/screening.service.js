@@ -108,6 +108,7 @@ const getScreeningById = async (movieId, filter) => {
         }
 
         cinemaMap.get(key).showtimes.push({
+            id_room: screening.id_room,
             time: screening.time_start,
             showtype: screening.showtype,
         });

@@ -1,4 +1,5 @@
 const rateModel = require('../model/rates.model');
+
 const movieService = require('../service/movie.service');
 const ticketControler = require('../controler/ticket.controler');
 
@@ -30,6 +31,7 @@ const getRate = async () => {
                 movieName: movieName,
             }
         })
+        console.log(result);
         return result;
         
     } catch (error) {
