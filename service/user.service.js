@@ -9,7 +9,10 @@ require('dotenv').config();
 
 const getUsers = async (page = 1, limit = 5) => {
     const result = await paginate.paginateQuery(userModel, {}, page, limit);
-
+    result.data = result.data.map( user => {
+        const {password, ...rest } = user.toObject();
+        return rest;
+    })
     if(!result){
         throw new Error("Lấy dữ liệu không thành công");
     }
