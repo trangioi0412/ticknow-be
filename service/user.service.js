@@ -60,6 +60,9 @@ const register = async (user) => {
         throw new Error(" Email đã tồn tại! ");
     }
 
+    const date = new Date(user.year);
+    const year = date.getFullYear();
+
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(user.password, salt);
 
@@ -68,7 +71,7 @@ const register = async (user) => {
         phone: user.phone,
         email: user.email,
         password: hashPassword,
-        year: user.year,
+        year: year,
         status: user.status,
         role: user.role 
     })
