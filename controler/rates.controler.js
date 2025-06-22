@@ -1,7 +1,7 @@
 const rateModel = require('../model/rates.model');
 
 const movieService = require('../service/movie.service');
-const ticketControler = require('../controler/ticket.controler');
+const ticketService = require('../service/ticket.service');
 
 const getRate = async () => {
     try {
@@ -13,7 +13,7 @@ const getRate = async () => {
             movieMap.set(movie._id, movie.name)
         })
 
-        const tickets = await ticketControler.getTickets();
+        const tickets = await ticketService.getTicket();
         
         const ticketMap = new Map();
         tickets.forEach(ticket => {
@@ -22,6 +22,7 @@ const getRate = async () => {
 
         const rates = await rateModel.find();
         const result =  rates.map(rate => {
+            
             const userName = ticketMap.get(rate.id_ticket);
             const movieName = movieMap.get(rate.id_movie);
 

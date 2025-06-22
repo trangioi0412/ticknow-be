@@ -1,12 +1,12 @@
 const transitionModel = require('../model/transition.model');
-const ticketControler = require('./ticket.controler');
+const ticketService = require('../service/ticket.service');
 const payMethodControler = require('../controler/payMethods.controler'); 
 
 
 const getTransition = async () => {
     try {
 
-        const tickets = await ticketControler.getTickets();
+        const tickets = await ticketService.getTicket();
         const ticketMap = new Map();
         tickets.forEach(ticket => {
             ticketMap.set(ticket._id, ticket)
@@ -23,6 +23,7 @@ const getTransition = async () => {
         const result = transitions.map( trasition => {
             const payMethodName = payMethodMap.get(trasition.id_payMethod);
         })
+
         return transitions;
 
     } catch (error) {
