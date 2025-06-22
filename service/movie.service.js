@@ -23,6 +23,20 @@ const getMovies = async ( filter = {}, limit="", page="") => {
     
 }
 
+
+const getMovieById = async (id) => {
+    try{
+
+        const result = await movieModel.findById(id);
+        return result;
+        
+    }catch(error){
+        console.error(error.message)
+        throw new Error('❌ Lỗi lấy dữ liệu của movie')
+    }
+    
+}
+
 const getDetailMovie = async (id, filter) => {
 
     const screeningService = require('../service/screening.service');
@@ -33,7 +47,7 @@ const getDetailMovie = async (id, filter) => {
             throw new Error("❌ id phim không hợp lệ");
         }
 
-        const screening = await screeningService.getScreeningById(id,filter);
+        const screening = await screeningService.getScreeningByMovieId(id,filter);
         
         const movies = await movieModel.findById(id);
 
@@ -52,4 +66,4 @@ const getDetailMovie = async (id, filter) => {
 }
 
 
-module.exports = { getMovies, getDetailMovie };
+module.exports = { getMovies, getDetailMovie, getMovieById };
