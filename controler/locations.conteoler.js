@@ -1,14 +1,24 @@
-const locationModel = require('../model/location.model');
+const locationService = require('../service/location.service');
 
-const getLocation = async () => {
-    try{
-        const locations = await locationModel.find();
-        return locations;
-    }catch(error){
+const getLocation = async (req, res, next) => {
+    try {
+
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
+
+        const result = await locationService.getAll(page, limit);
+
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
+
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+    } catch (error) {
         console.error(error.message)
-        throw new Error('❌ Lỗi lấy dữ liệu của location')
+        return res.status(500).json({ status: false, message: error.message })
     }
-    
+
 }
 
 module.exports = { getLocation }

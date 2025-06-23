@@ -21,6 +21,7 @@ const getAllUsers = async (req, res, next) => {
 const login = async (req, res, next) => {
     try {
         const {email, password} = req.body;
+
         if(!email || !password){
             return res.status(400).json( {status: false, message: "Email và Password là bắt buộc"} );
         }
@@ -35,7 +36,7 @@ const login = async (req, res, next) => {
     } catch (error) {
 
         console.log(error);
-        return error
+        return res.status(400).json( { status: false, message: error.message} );
 
     }
 }

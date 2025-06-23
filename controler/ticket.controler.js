@@ -3,7 +3,10 @@ const ticketService = require('../service/ticket.service');
 
 const getTickets = async (req, res, next) => {
     try {
-        const tickets  = await ticketService.getTicket();
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+
+        const tickets  = await ticketService.getTicket(page, limit);
 
         if( !tickets ){
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
