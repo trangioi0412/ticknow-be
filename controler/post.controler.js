@@ -1,32 +1,22 @@
-const postModel = require('../model/post.model');
-const usersModel = require('../model/users.model');
+const postService = require('../service/post.service');
 
-const getPosts = async () => {
-    try{
+const getPosts = async (req, res, next) => {
+    try {
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
 
-        const users = await usersModel.find();
+        const result = await postService.getAll(page, limit);
 
-        const usersName = new Map();
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
 
-        users.forEach((user) => {
-            usersName.set(user._id.toString(), user.name);
-        })
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
 
-        const posts = await postModel.find();
-
-        const result = posts.map(post => {
-            const idUser = post.id_user.toString();
-            const nameUser = usersName.get(idUser);
-            return {
-                ...post.toObject(),
-                nameUser: nameUser
-            }
-        })
-        return result;
-    }catch(error){
-        console.error(error);
-        throw new Error("❌ Lỗi lấy dữ liệu từ post");
+    } catch (error) {
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message })
     }
-} 
+}
 
 module.exports = { getPosts };

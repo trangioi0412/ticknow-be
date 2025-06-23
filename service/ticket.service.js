@@ -1,10 +1,13 @@
+const paginate = require('../utils/pagination');
+
 const ticketModel = require('../model/ticket.model');
+
 const screeningService = require('./screening.service')
 const usersService = require('./user.service');
 const roomService = require('./room.service');
 const movieService = require('./movie.service');
 
-const getTicket = async () => {
+const getTicket = async ( page="", limit="") => {
     const screenings = await screeningService.getScreeings();
 
     let room;
@@ -37,19 +40,21 @@ const getTicket = async () => {
 
     const users = await usersService.getUsers();
     const userMap = new Map();
-    users.data.forEach(user => {
+
+    users.user.forEach(user => {
         userMap.set(user._id.toString(), user.name);
     })
 
-    const tickets = await ticketModel.find();
+    const { data, pagination } = await paginate.paginateQuery(ticketModel, {}, page, limit);
 
-    const result = tickets.map(ticket => {
+
+    const ticket = data.map(ticket => {
         const screeningId = ticket.id_screening.toString();
         const screeningTime = screeningMap.get(screeningId);
         const userId = ticket.id_user.toString();
         const userName = userMap.get(userId);
         return {
-            ...ticket.toObject(),
+                ...ticket.toObject(),
             userName: userName,
             screeningTime: screeningTime,
             cinema,
@@ -58,7 +63,10 @@ const getTicket = async () => {
         }
     })
 
-    return result;
+    return {
+        ticket,
+        pagination
+    };
 
 }
 

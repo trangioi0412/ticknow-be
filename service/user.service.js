@@ -1,11 +1,10 @@
+require('dotenv').config();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
 const userModel = require('../model/users.model');
 const paginate = require('../utils/pagination');
-
-require('dotenv').config();
 
 const getUsers = async (page = 1, limit = 5) => {
     const {data, pagination} = await paginate.paginateQuery(userModel, {}, page, limit);
