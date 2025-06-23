@@ -1,45 +1,22 @@
-const ticketModel = require('../model/ticket.model');
-const screeningService = require('../service/screening.service');
-const usersService = require('../service/user.service');
+const ticketService = require('../service/ticket.service');
 
 
-const getTickets = async () => {
+const getTickets = async (req, res, next) => {
     try {
-        const screenings = await screeningService.getScreeings();
-        const screeningMap = new Map();
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
 
-        screenings.forEach( screening => {
-            screeningMap.set(screening._id.toString(), screening.time_start)
-        })
+        const tickets  = await ticketService.getTicket(page, limit);
 
-        const users = await usersService.getUsers();
-        const userMap = new Map();
+        if( !tickets ){
+            return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
+        }
 
-        users.data.forEach(user => {
-            userMap.set(user._id.toString(), user.name);
-        })
-
-        const tickets = await ticketModel.find();
-
-        const result = tickets.map(ticket => {
-            const screeningId = ticket.id_screening.toString();
-            const screeningTime = screeningMap.get(screeningId);
-
-            const userId = ticket.id_user.toString();
-            const userName = userMap.get(userId);
-
-            return {
-                ...ticket.toObject(),
-                userName: userName,
-                screeningTime: screeningTime
-            }
-        })
-        
-        return result;
+        return res.status(299).json({ data: tickets ,status: true, message: 'Lấy tất cả vé thành công' })
 
     } catch (error) {
-        console.error(error)
-        throw new Error("Lấy dữ liệu không thành công");
+        console.error(error);
+        return res.status(500).json({status: false, message: 'Lấy dữ liệu không thành công'})
     }
 }
 

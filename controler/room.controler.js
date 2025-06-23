@@ -1,52 +1,23 @@
-const roomModel = require('../model/room.model');
-const cinemaControler = require("../controler/cinemas.controler");
+const roomService = require('../service/room.service');
 
-const getRooms = async () => {
+const getRooms = async (req, res, next) => {
     try {
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
 
-        const cinemas = await cinemaControler.getCinema();
-        const cinemaMap = new Map();
+        const result = await roomService.getAll(page, limit);
 
-        cinemas.forEach(cinema => {
-            cinemaMap.set(cinema._id.toString(), cinema.name);
-        })
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
 
-        const rooms = await roomModel.find();
-
-        const result = rooms.map( room => {
-
-            const cinemaId = room.id_thear.toString();
-            const nameCine = cinemaMap.get(cinemaId);
-
-            return {
-                ...room.toObject(),
-                cinema: nameCine,
-            }
-        })
-        return result;
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
 
     } catch (error) {
-
-        console.error(error);
-        throw new Error('Lấy dữ liệu không thành công', error.message);
-
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message })
     }
 }
-
-const roomById = async (id) => {
-    try {
-
-        const result = roomModel.findById(id)
-        return result;
-
-    } catch (error) {
-
-        console.error(error);
-        throw new Error('Lấy dữ liệu không thành công', error.message);
-
-    }
-}
-
-module.exports = { getRooms, roomById };
+module.exports = { getRooms };
 
 

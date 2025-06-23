@@ -2,36 +2,35 @@ const screeningModel = require('../model/screening.model');
 
 const movieService = require('../service/movie.service');
 
-const roomControler = require('../controler/room.controler');
-const cinemaControler = require('../controler/cinemas.controler');
+const roomService = require('../service/room.service');
+const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async ( filter ) => {
     try {
-
         const movies = await movieService.getMovies();
         const movieMap = new Map()
-
+        
         movies.movie.forEach(movie => {
-
+            
             movieMap.set(movie._id.toString(), movie.name);
-
+            
         });
-
-        const rooms = await roomControler.getRooms();
+        
+        const rooms = await roomService.getAll();
         const roomMap = new Map();
-
-        rooms.forEach(room => {
-
+        
+        rooms.room.forEach(room => {
+            
             roomMap.set(room._id.toString(), room.code_room);
-
+            
         });
-
+        
         const screenings = await screeningModel.find( filter );
         
         const result = screenings.map(screening => {
             const movieId = screening.id_movie.toString();
             const roomId = screening.id_room.toString();
-
+            
             const movieName = movieMap.get(movieId);
             const roomCode = roomMap.get(roomId);
             return {
@@ -40,7 +39,7 @@ const getScreeings = async ( filter ) => {
                 roomCode: roomCode,
             }
         })
-
+        
         return result;
 
     } catch (error) {
@@ -49,35 +48,17 @@ const getScreeings = async ( filter ) => {
     }
 }
 
-let getMovieToScreening = async (id) => {
-    const movie = await movieService.getDetailMovie(id);
-    return movie;
-}
-
-const getScreeningFilter = async (filter) => {
-    try {
-
-        const screenings = await screeningModel.find( filter );
-        
-        const result = await Promise.all( screenings.map( async screening => {
-            const movie = await getMovieToScreening(screening.id_movie.toString());
-            return {
-                ...screening.toObject(),
-                movie: movie,
-            }
-        }) )
-
-        console.log(result);
-        return result
-
-    } catch (error) {
-        console.error(error)
-        throw new Error("Lấy dữ liệu không thành công");
+const getScreeingById = async (id) => {
+    if(!id){
+        throw new Error('Vui Lòng truyền id');
     }
+
+    const result = await screeningModel.findById(id);
+    return result;
+
 }
 
-
-const getScreeningById = async (movieId, filter) => {
+const getScreeningByMovieId = async (movieId, filter) => {
 
     const result = {
         date: "",
@@ -86,17 +67,29 @@ const getScreeningById = async (movieId, filter) => {
         ]
     };
 
+    if(!filter.date){
+        const now =  new Date();
+        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+
+        const year = vnTime.getUTCFullYear();
+        const month = vnTime.getUTCMonth();
+        const date = vnTime.getUTCDate();
+
+        filter.date = new Date(Date.UTC(year, month, date));
+    }
+
     const screenings = await screeningModel.find({ id_movie: movieId, date: filter.date });
 
+    const firtDate = filter.date;
+    result.date = firtDate;
+
     if(!screenings || screenings.length === 0) return result;
-    const firtDate = screenings[0].date?.toISOString().split("T")[0];
-    result.date = firtDate || "";
 
     const cinemaMap = new Map();
 
     for(const screening of screenings ){
         const room = await roomControler.roomById(screening.id_room.toString());
-        const cinema = await cinemaControler.getCinemaById(room.id_thear.toString())
+        const cinema = await cinemaService.getCinemaById(room.id_thear.toString())
 
         const key = cinema._id.toString;
         if(!cinemaMap.has(key)){
@@ -120,4 +113,4 @@ const getScreeningById = async (movieId, filter) => {
     return result;
 };
 
-module.exports = { getScreeings, getScreeningFilter, getScreeningById}
+module.exports = { getScreeings, getScreeningByMovieId, getScreeingById}

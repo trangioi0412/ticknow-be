@@ -1,23 +1,29 @@
+require('dotenv').config();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 
 const userModel = require('../model/users.model');
 const paginate = require('../utils/pagination');
 
-require('dotenv').config();
-
 const getUsers = async (page = 1, limit = 5) => {
-    const result = await paginate.paginateQuery(userModel, {}, page, limit);
-    result.data = result.data.map( user => {
+    const {data, pagination} = await paginate.paginateQuery(userModel, {}, page, limit);
+
+    const user = data.map( user => {
         const {password, ...rest } = user.toObject();
         return rest;
     })
+
+    const result = {
+        user,
+        pagination
+    };
+
     if(!result){
         throw new Error("Lấy dữ liệu không thành công");
     }
-
-    return result;
+    
+    return result
 }
 
 const login = async (email, password) => {
@@ -53,6 +59,9 @@ const register = async (user) => {
         throw new Error(" Email đã tồn tại! ");
     }
 
+    const date = new Date(user.year);
+    const year = date.getFullYear();
+
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(user.password, salt);
 
@@ -61,7 +70,7 @@ const register = async (user) => {
         phone: user.phone,
         email: user.email,
         password: hashPassword,
-        year: user.year,
+        year: year,
         status: user.status,
         role: user.role 
     })
