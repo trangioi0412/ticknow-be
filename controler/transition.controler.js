@@ -1,5 +1,5 @@
 const transitionModel = require('../model/transition.model');
-const ticketService = require('../service/ticket.service');
+const transitionService = require('../service/transition.service');
 const payMethodService = require('../service/payMethods.service');
 
 
@@ -8,7 +8,7 @@ const getTransition = async (req, res, next) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const tickets = await ticketService.getTicket(page, limit);
+        const tickets = await transitionService.getAll(page, limit);
 
         if (!tickets) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
