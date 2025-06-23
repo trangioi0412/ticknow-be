@@ -20,11 +20,6 @@ const getAll = async (page, limit) => {
     })
 
     const { data, pagination } = await paginate.paginateQuery(transitionModel, {}, page, limit);
-    console.log(data);
-
-    // const result = transitions.map(trasition => {
-    //     const payMethodName = payMethodMap.get(trasition.id_payMethod);
-    // })
 
     return {
         data,

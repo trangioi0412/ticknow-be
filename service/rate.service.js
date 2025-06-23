@@ -12,22 +12,22 @@ const getAll = async (page, limit) => {
     const movieMap = new Map();
 
     movies.movie.forEach(movie => {
-        movieMap.set(movie._id, movie.name)
+        movieMap.set(movie._id.toString(), movie.name)
     })
 
     const tickets = await ticketService.getTicket();
 
     const ticketMap = new Map();
     tickets.ticket.forEach(ticket => {
-        ticketMap.set(ticket._id, ticket.userName)
+        ticketMap.set(ticket._id.toString(), ticket.userName)
     })
 
     const { data, pagination } = await paginate.paginateQuery(rateModel, {}, page, limit);
     
     const rate = data.map(rate => {
 
-        const userName = ticketMap.get(rate.id_ticket);
-        const movieName = movieMap.get(rate.id_movie);
+        const userName = ticketMap.get(rate.id_ticket.toString());
+        const movieName = movieMap.get(rate.id_movie.toString());
 
         return {
             ...rate.toObject(),
