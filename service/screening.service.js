@@ -121,7 +121,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
             )
         }
     }
-    console.log(result)
+    
     return result;
 };
 

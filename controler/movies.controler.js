@@ -26,7 +26,7 @@ const getMovies = async (req, res, next) => {
         }
 
         // get data
-        result = await movieServiece.getMovies(filter, page, limit);
+        result = await movieServiece.getMovies(filter, limit, page);
 
         // check data
         if (!result) {
