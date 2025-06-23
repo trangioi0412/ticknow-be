@@ -57,6 +57,7 @@ const getDetailMovie = async (id, filter) => {
 
         const result = screening;
 
+
         return result;
 
     } catch (error) {
