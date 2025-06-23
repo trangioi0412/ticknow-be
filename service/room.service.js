@@ -35,7 +35,7 @@ const getAll = async (page, limit) => {
 }
 
 
-const roomById = async (id) => {
+const roomById = async (id, location) => {
     if (!id) {
         throw new Error('Vui lòng truyền id');
     }

@@ -5,32 +5,32 @@ const movieService = require('../service/movie.service');
 const roomService = require('../service/room.service');
 const cinemaService = require('../service/cinema.service');
 
-const getScreeings = async ( filter ) => {
+const getScreeings = async (filter) => {
     try {
         const movies = await movieService.getMovies();
         const movieMap = new Map()
-        
+
         movies.movie.forEach(movie => {
-            
+
             movieMap.set(movie._id.toString(), movie.name);
-            
+
         });
-        
+
         const rooms = await roomService.getAll();
         const roomMap = new Map();
-        
+
         rooms.room.forEach(room => {
-            
+
             roomMap.set(room._id.toString(), room.code_room);
-            
+
         });
-        
-        const screenings = await screeningModel.find( filter );
-        
+
+        const screenings = await screeningModel.find(filter);
+
         const result = screenings.map(screening => {
             const movieId = screening.id_movie.toString();
             const roomId = screening.id_room.toString();
-            
+
             const movieName = movieMap.get(movieId);
             const roomCode = roomMap.get(roomId);
             return {
@@ -39,7 +39,7 @@ const getScreeings = async ( filter ) => {
                 roomCode: roomCode,
             }
         })
-        
+
         return result;
 
     } catch (error) {
@@ -49,7 +49,7 @@ const getScreeings = async ( filter ) => {
 }
 
 const getScreeingById = async (id) => {
-    if(!id){
+    if (!id) {
         throw new Error('Vui Lòng truyền id');
     }
 
@@ -60,15 +60,15 @@ const getScreeingById = async (id) => {
 
 const getScreeningByMovieId = async (movieId, filter) => {
 
-    const result = {
+    let     result = {
         date: "",
         cinemas: [
 
         ]
     };
 
-    if(!filter.date){
-        const now =  new Date();
+    if (!filter.date) {
+        const now = new Date();
         const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
 
         const year = vnTime.getUTCFullYear();
@@ -83,18 +83,21 @@ const getScreeningByMovieId = async (movieId, filter) => {
     const firtDate = filter.date;
     result.date = firtDate;
 
-    if(!screenings || screenings.length === 0) return result;
+    if (!screenings || screenings.length === 0) return result;
 
     const cinemaMap = new Map();
 
-    for(const screening of screenings ){
+    for (const screening of screenings) {
+
         const room = await roomService.roomById(screening.id_room.toString());
         const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
 
-        const key = cinema._id.toString;
-        if(!cinemaMap.has(key)){
+        const key = cinema._id.toString();
+
+        if (!cinemaMap.has(key)) {
             cinemaMap.set(key, {
                 id: key,
+                id_location: cinema.location.id_location.toString(),
                 name: cinema.name,
                 showtimes: [],
             });
@@ -107,10 +110,19 @@ const getScreeningByMovieId = async (movieId, filter) => {
         });
 
     }
-    
-    result.cinemas = Array.from(cinemaMap.values());
 
+    result.cinemas = Array.from(cinemaMap.values());
+    const data = result
+    if (filter.location) {
+        result = {
+            date: data.date,
+            cinemas: data.cinemas.filter(cinema =>
+                cinema.id_location.toString() === filter.location
+            )
+        }
+    }
+    console.log(result)
     return result;
 };
 
-module.exports = { getScreeings, getScreeningByMovieId, getScreeingById}
+module.exports = { getScreeings, getScreeningByMovieId, getScreeingById }

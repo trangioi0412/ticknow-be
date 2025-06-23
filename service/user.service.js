@@ -46,7 +46,7 @@ const login = async (email, password) => {
     const { password: pwd, ...userWithoutPassword } = checkUser.toObject();
 
     return {
-        ...userWithoutPassword
+        user: userWithoutPassword.name
         ,token
     };
 

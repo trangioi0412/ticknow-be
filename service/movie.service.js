@@ -47,8 +47,8 @@ const getDetailMovie = async (id, filter) => {
             throw new Error("❌ id phim không hợp lệ");
         }
 
-        const screening = await screeningService.getScreeningByMovieId(id,filter);
-        
+        const screening = await screeningService.getScreeningByMovieId(id, filter);
+
         const movies = await movieModel.findById(id);
 
         const movie = await mapGenre.mapGenreMovieOne(movies);

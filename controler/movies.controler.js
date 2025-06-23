@@ -55,6 +55,7 @@ const getDetailMovie = async (req, res, next) => {
         }
 
         let result = await movieServiece.getDetailMovie(id, filter);
+        
         if (result) {
 
             return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
