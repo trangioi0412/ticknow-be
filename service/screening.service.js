@@ -218,4 +218,6 @@ const getScreeningByCinema = async (cinemaId, filter) => {
     return result;
 
 }
-module.exports = { getScreeings, getScreeningByMovieId, getScreeingById, getScreeingByDay, getScreeningByCinema }
+
+
+module.exports = { getScreeings, getScreeningByMovieId, getScreeingById, getScreeingByDay, getScreeningByCinema } 
