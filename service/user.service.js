@@ -1,10 +1,10 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
-const userModel = require("../model/users.model");
-const paginate = require("../utils/pagination");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-require("dotenv").config();
+const userModel = require('../model/users.model');
+const paginate = require('../utils/pagination');
 
 const getUsers = async (page = 1, limit = 5) => {
   const { data, pagination } = await paginate.paginateQuery(
@@ -56,11 +56,11 @@ const login = async (email, password) => {
   );
 
   const { password: pwd, ...userWithoutPassword } = checkUser.toObject();
+    return {
+        user: userWithoutPassword.name
+        ,token
+    };
 
-  return {
-    ...userWithoutPassword,
-    token,
-  };
 };
 
 const register = async (user) => {
