@@ -60,4 +60,8 @@ const getCinemaById = async (id)=> {
         return result;
 }
 
+const cinemaDetail = async () => {
+    
+}
+
 module.exports = { getCinema, getCinemaById }

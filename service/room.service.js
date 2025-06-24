@@ -58,5 +58,13 @@ const roomById = async (id, location) => {
     };
 };
 
+const roomByIdCinema = async (id) => {
+    const room = await roomModel.find({id_thear : id});
+    if(!room){
+        throw new Error('Không tìm thấy room');
+    }
+    return room
+}
 
-module.exports = { getAll, roomById };
+
+module.exports = { getAll, roomById, roomByIdCinema };
