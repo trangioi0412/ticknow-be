@@ -1,11 +1,11 @@
-const genreControler = require('../controler/genres.controler');
+const genreService = require('../service/genres.service');
 
 
 const mapGenreMovie  = async ( movies ) => {
 
-    const genres = await genreControler.getGenres();
+    const genres = await genreService.getGenres();
     const genreMap =  new Map();
-    genres.forEach(genre => {
+    genres.genres.forEach(genre => {
         genreMap.set(genre._id.toString(), genre.name);
     });
 
@@ -28,9 +28,9 @@ const mapGenreMovie  = async ( movies ) => {
 
 const mapGenreMovieOne  = async ( movie ) => {
     
-    const genres = await genreControler.getGenres();
+    const genres = await genreService.getGenres();
     const genreMap =  new Map();
-    genres.forEach(genre => {
+    genres.genres.forEach(genre => {
         genreMap.set(genre._id.toString(), genre.name);
     });
 

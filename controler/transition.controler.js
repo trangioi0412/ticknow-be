@@ -1,34 +1,24 @@
 const transitionModel = require('../model/transition.model');
-const ticketService = require('../service/ticket.service');
-const payMethodControler = require('../controler/payMethods.controler'); 
+const transitionService = require('../service/transition.service');
+const payMethodService = require('../service/payMethods.service');
 
 
-const getTransition = async () => {
+const getTransition = async (req, res, next) => {
     try {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
 
-        const tickets = await ticketService.getTicket();
-        const ticketMap = new Map();
-        tickets.forEach(ticket => {
-            ticketMap.set(ticket._id, ticket)
-        });
+        const tickets = await transitionService.getAll(page, limit);
 
-        const payMethods = await payMethodControler.getPayMethod();
-        const payMethodMap = new Map();
-        payMethods.forEach(payMethod => {
-            payMethodMap.set(payMethod._id, payMethod.name)
-        })
+        if (!tickets) {
+            return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
+        }
 
-        const transitions = await transitionModel.find();
-
-        const result = transitions.map( trasition => {
-            const payMethodName = payMethodMap.get(trasition.id_payMethod);
-        })
-
-        return transitions;
+        return res.status(299).json({ data: tickets, status: true, message: 'Lấy tất cả vé thành công' })
 
     } catch (error) {
-        console.error(error)
-        throw new Error("Lấy dữ liệu không thành công");
+        console.error(error);
+        return res.status(500).json({ status: false, message: 'Lấy dữ liệu không thành công' })
     }
 }
 

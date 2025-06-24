@@ -2,36 +2,35 @@ const screeningModel = require('../model/screening.model');
 
 const movieService = require('../service/movie.service');
 
-const roomControler = require('../controler/room.controler');
-const cinemaControler = require('../controler/cinemas.controler');
+const roomService = require('../service/room.service');
+const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async ( filter ) => {
     try {
-
         const movies = await movieService.getMovies();
         const movieMap = new Map()
-
+        
         movies.movie.forEach(movie => {
-
+            
             movieMap.set(movie._id.toString(), movie.name);
-
+            
         });
-
-        const rooms = await roomControler.getRooms();
+        
+        const rooms = await roomService.getAll();
         const roomMap = new Map();
-
-        rooms.forEach(room => {
-
+        
+        rooms.room.forEach(room => {
+            
             roomMap.set(room._id.toString(), room.code_room);
-
+            
         });
-
+        
         const screenings = await screeningModel.find( filter );
         
         const result = screenings.map(screening => {
             const movieId = screening.id_movie.toString();
             const roomId = screening.id_room.toString();
-
+            
             const movieName = movieMap.get(movieId);
             const roomCode = roomMap.get(roomId);
             return {
@@ -40,7 +39,7 @@ const getScreeings = async ( filter ) => {
                 roomCode: roomCode,
             }
         })
-
+        
         return result;
 
     } catch (error) {
@@ -89,8 +88,8 @@ const getScreeningByMovieId = async (movieId, filter) => {
     const cinemaMap = new Map();
 
     for(const screening of screenings ){
-        const room = await roomControler.roomById(screening.id_room.toString());
-        const cinema = await cinemaControler.getCinemaById(room.id_thear.toString())
+        const room = await roomService.roomById(screening.id_room.toString());
+        const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
 
         const key = cinema._id.toString;
         if(!cinemaMap.has(key)){
@@ -108,7 +107,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
         });
 
     }
-
+    
     result.cinemas = Array.from(cinemaMap.values());
 
     return result;

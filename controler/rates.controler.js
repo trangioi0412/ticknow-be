@@ -1,43 +1,21 @@
-const rateModel = require('../model/rates.model');
+const rateService = require('../service/rate.service');
 
-const movieService = require('../service/movie.service');
-const ticketService = require('../service/ticket.service');
-
-const getRate = async () => {
+const getRate = async (req, res, next) => {
     try {
-        const movies = await movieService.getMovies();
+        const limit = parseInt(req.query.limit);
+        const page = parseInt(req.query.page);
 
-        const movieMap = new Map();
+        const result = await rateService.getAll(page, limit);
 
-        movies.movie.forEach(movie => {
-            movieMap.set(movie._id, movie.name)
-        })
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
 
-        const tickets = await ticketService.getTicket();
-        
-        const ticketMap = new Map();
-        tickets.forEach(ticket => {
-            ticketMap.set(ticket._id, ticket.userName)
-        })
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
 
-        const rates = await rateModel.find();
-        const result =  rates.map(rate => {
-            
-            const userName = ticketMap.get(rate.id_ticket);
-            const movieName = movieMap.get(rate.id_movie);
-
-            return {
-                ...rate.toObject(),
-                userName: userName,
-                movieName: movieName,
-            }
-        })
-        console.log(result);
-        return result;
-        
     } catch (error) {
-        console.error(error);
-        throw new Error('Lấy dữ liệu không thành công');
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message })
     }
 }
 
