@@ -119,6 +119,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
     for (const screening of screenings) {
 
         const room = await roomService.roomById(screening.id_room.toString());
+
         const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
 
         const key = cinema._id.toString();
@@ -141,12 +142,13 @@ const getScreeningByMovieId = async (movieId, filter) => {
     }
 
     result.cinemas = Array.from(cinemaMap.values());
+    console.log(result.cinemas);
     const data = result
     if (filter.location) {
         result = {
             date: data.date,
             cinemas: data.cinemas.filter(cinema =>
-                cinema.id_location.toString() === filter.location
+                cinema.location.id_location.toString() === filter.location
             )
         }
     }
