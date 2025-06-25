@@ -89,7 +89,7 @@ const getScreeingByDay = async (date = "", cinema = "") => {
 
 const getScreeningByMovieId = async (movieId, filter) => {
 
-    let     result = {
+    let result = {
         date: "",
         cinemas: [
 
@@ -127,6 +127,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
             cinemaMap.set(key, {
                 id: key,
                 id_location: cinema.location.id_location.toString(),
+                location: cinema.location.location,
                 name: cinema.name,
                 showtimes: [],
             });
@@ -150,7 +151,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
             )
         }
     }
-    
+
     return result;
 };
 
@@ -266,10 +267,11 @@ const getScreeningSchedule = async (filter, cinema) => {
 
         let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
 
-        if(!cinemaItem){
+        if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
                 id_location: cinemaData.location.id_location.toString(),
+                location: cinema.location.location,
                 showtimes: []
             }
             film.cinemas.push(cinemaItem);
