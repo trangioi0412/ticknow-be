@@ -15,8 +15,10 @@ const getTickets = async (req, res, next) => {
         return res.status(299).json({ data: tickets ,status: true, message: 'Lấy tất cả vé thành công' })
 
     } catch (error) {
+
         console.error(error);
-        return res.status(500).json({status: false, message: 'Lấy dữ liệu không thành công'})
+        return res.status(500).json({status: false, message: 'Lấy dữ liệu không thành công'});
+        
     }
 }
 

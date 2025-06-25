@@ -105,4 +105,34 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
     return result;
 }
 
-module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie };
+const filterSchedule = async (filter = {}, cinema="" ) => {
+    const screeningService = require('../service/screening.service');
+
+    let movies = [];
+
+    let screeningDay = await screeningService.getScreeningSchedule(filter, cinema);
+
+    // for (const screening of screeningDay.cinemas) {
+    //     const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
+
+    //     if (movie) {
+    //         movies.push(movie);
+    //     }
+
+    // }
+
+    // movies = movies.filter((movie, index, self) =>
+    //     index === self.findIndex(m => m._id.toString() === movie._id.toString())
+    // );
+
+    // const movie = await mapGenre.mapGenreMovie(movies);
+
+    // const result = {
+    //     movie,
+    //     pagination: []
+    // }
+
+    return screeningDay;
+}
+
+module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie, filterSchedule };

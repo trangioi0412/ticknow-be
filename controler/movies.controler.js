@@ -114,5 +114,43 @@ const filterMovie = async (req, res, next) => {
     }
 }
 
+const filterSChedule = async (req, res, next) => {
+     try {
+        // query host
 
-module.exports = { getMovies, getDetailMovie, filterMovie };
+        const { status, date, cinema, id } = req.query;
+
+        const limit = parseInt(req.query.limit);
+
+        const page = parseInt(req.query.page);
+
+        // create variable storage
+        let filter = {};
+
+        let result
+
+        // check variable  
+        if (status) filter.status = status;
+
+        if (date) filter.date = check.checkDate(date);
+
+        if (id) filter.id = id;
+
+        // get data
+        result = await movieServiece.filterSchedule(filter, cinema,limit, page);
+
+        // check data
+        if (!result) {
+            return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
+        }
+
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: false, message: 'Lấy dữ liệu movie thất bại' })
+    }
+}
+
+
+module.exports = { getMovies, getDetailMovie, filterMovie, filterSChedule };
