@@ -7,6 +7,8 @@ router.get('/', movieControler.getMovies);
 
 router.get('/filter', movieControler.filterMovie);
 
+router.get('/schedue', movieControler.filterSChedule);
+
 router.get('/:id', movieControler.getDetailMovie);
 
 module.exports = router
