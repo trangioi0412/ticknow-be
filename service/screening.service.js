@@ -126,8 +126,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
         if (!cinemaMap.has(key)) {
             cinemaMap.set(key, {
                 id: key,
-                id_location: cinema.location.id_location.toString(),
-                location: cinema.location.location,
+                location: cinema.location,
                 name: cinema.name,
                 showtimes: [],
             });
@@ -270,8 +269,7 @@ const getScreeningSchedule = async (filter, cinema) => {
         if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
-                id_location: cinemaData.location.id_location.toString(),
-                location: cinema.location.location,
+                location: cinema.location,
                 showtimes: []
             }
             film.cinemas.push(cinemaItem);
