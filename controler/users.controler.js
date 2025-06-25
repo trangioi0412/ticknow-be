@@ -49,24 +49,20 @@ const login = async (req, res, next) => {
   }
 };
 const register = async (req, res, next) => {
-  try {
-    const user = req.body;
-    console.log(user.name, user.email, user.password);
-    if (!user.name || !user.email || !user.password) {
-      return res
-        .status(400)
-        .json({ message: "Vui lòng nhập đầy đủ thông tin bắt buộc" });
-    }
+    try {
+        const user = req.body;
+        console.log(user.name, user.email, user.password)
+        if (!user.name || !user.email || !user.password) {
+            return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin bắt buộc" });
+        }
 
-    await userService.register(user);
+        await userService.register(user);
 
-    return res
-      .status(200)
-      .json({ status: true, message: "Đăng Ký Thành Công" });
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
+        return res.status(200).json( { status: true, message: "Đăng Ký Thành Công"} );
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json( { status: false, message: error.message} );
+    } 
 };
 
 module.exports = { getAllUsers, login, register };
