@@ -72,24 +72,29 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
 
     const screeningService = require('../service/screening.service');
 
-    let movies = []
+    let movies = [];
 
     let screeningDay = await screeningService.getScreeingByDay(filter.date, filter.cinema);
-    movies = await Promise.all(
-        screeningDay.map(screening => {
-            return movieModel.findById(screening.id_movie);
-        })
-    );
+
+    for (const screening of screeningDay) {
+        const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
+
+        if (movie) {
+            movies.push(movie);
+        }
+
+    }
 
     movies = movies.filter((movie, index, self) =>
         index === self.findIndex(m => m._id.toString() === movie._id.toString())
-    ); 
+    );
 
     if (genre) {
         movies = movies.filter((movie) =>
             movie.genre.some(g => g.id == genre)
         );
     }
+
     const movie = await mapGenre.mapGenreMovie(movies);
 
     const result = {
@@ -100,4 +105,34 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
     return result;
 }
 
-module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie };
+const filterSchedule = async (filter = {}, cinema="" ) => {
+    const screeningService = require('../service/screening.service');
+
+    let movies = [];
+
+    let screeningDay = await screeningService.getScreeningSchedule(filter, cinema);
+
+    // for (const screening of screeningDay.cinemas) {
+    //     const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
+
+    //     if (movie) {
+    //         movies.push(movie);
+    //     }
+
+    // }
+
+    // movies = movies.filter((movie, index, self) =>
+    //     index === self.findIndex(m => m._id.toString() === movie._id.toString())
+    // );
+
+    // const movie = await mapGenre.mapGenreMovie(movies);
+
+    // const result = {
+    //     movie,
+    //     pagination: []
+    // }
+
+    return screeningDay;
+}
+
+module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie, filterSchedule };

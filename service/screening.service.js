@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const screeningModel = require('../model/screening.model');
 
 const movieService = require('../service/movie.service');
@@ -125,4 +127,140 @@ const getScreeningByMovieId = async (movieId, filter) => {
     return result;
 };
 
-module.exports = { getScreeings, getScreeningByMovieId, getScreeingById }
+const getScreeningByCinema = async (cinemaId, filter) => {
+
+    let result = {
+        date: "",
+        cinemas: [
+
+        ]
+    };
+
+    if (!filter.date) {
+        const now = new Date();
+        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+
+        const year = vnTime.getUTCFullYear();
+        const month = vnTime.getUTCMonth();
+        const date = vnTime.getUTCDate();
+
+        filter.date = new Date(Date.UTC(year, month, date));
+    }
+
+    const firtDate = filter.date;
+    result.date = firtDate;
+
+    const rooms = await roomService.roomByIdCinema(cinemaId);
+
+    const screeningResults = await Promise.all(rooms.map(r => screeningModel.find({ id_room: r._id, date: filter.date })));
+    const screenings = screeningResults.flat();
+
+    if (!screenings || screenings.length === 0) {
+        return result;
+    }
+
+    const movieMap = new Map();
+
+    for (const screening of screenings) {
+
+        const movie = await movieService.getMovieById(screening.id_movie.toString());
+
+        const key = movie._id.toString();
+
+        if (!movieMap.has(key)) {
+            movieMap.set(key, {
+
+                id: cinemaId,
+
+                movie: movie,
+
+                showtimes: []
+            });
+        }
+
+        movieMap.get(key).showtimes.push({
+            id_room: screening.id_room,
+            time: screening.time_start,
+            showtype: screening.showtype
+        });
+    }
+
+    result.cinemas = Array.from(movieMap.values());
+
+    return result;
+
+}
+
+
+const getScreeningSchedule = async (filter, cinema) => {
+    const result = {
+        date: "",
+        films: []
+    };
+
+    if (!filter.date) {
+        const now = new Date();
+        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        filter.date = new Date(Date.UTC(vnTime.getUTCFullYear(), vnTime.getUTCMonth(), vnTime.getUTCDate()));
+    }
+
+    result.date = filter.date;
+
+    if (cinema) {
+        const rooms = await roomService.roomByIdCinema(cinema);
+        if (rooms?.length) {
+            filter.id_room = { $in: rooms.map(r => r._id) };
+        }
+    }
+
+
+    const screenings = await screeningModel.find(filter);
+
+    const filmMap = new Map();
+
+    for (let screening of screenings) {
+        const room = await roomService.roomById(screening.id_room.toString());
+        const cinemaData = await cinemaService.getCinemaById(room.id_thear.toString());
+        const filmData = await movieService.getMovieById(screening.id_movie.toString());
+
+        const filmId = filmData._id.toString();
+
+        if (!filmMap.has(filmId)) {
+            filmMap.set(filmId, {
+                id: filmId,
+                name: filmData.name,
+                cinemas: []
+            });
+        }
+
+        console.log(cinemaData);
+
+        const film = filmMap.get(filmId);
+
+        let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
+
+        if(!cinemaItem){
+            cinemaItem = {
+                id: cinemaData._id.toString(),
+                id_location: cinemaData.location.id_location.toString(),
+                showtimes: []
+            }
+            film.cinemas.push(cinemaItem);
+        }
+
+        cinemaItem.showtimes.push({
+            id_room: screening.id_room,
+            time: screening.time_Start,
+            showtype: screening.showtype
+        })
+    }
+
+    result.films = Array.from(filmMap.values());
+
+    console.log(result);
+
+    return result;
+};
+
+
+module.exports = { getScreeings, getScreeningByMovieId, getScreeingById, getScreeingByDay, getScreeningByCinema, getScreeningSchedule } 
