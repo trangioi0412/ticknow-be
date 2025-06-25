@@ -60,6 +60,33 @@ const getScreeingById = async (id) => {
 
 }
 
+const getScreeingByDay = async (date = "", cinema = "") => {
+    let day = date
+
+    if (!date) {
+        const now = new Date();
+        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+
+        const year = vnTime.getUTCFullYear();
+        const month = vnTime.getUTCMonth();
+        const date = vnTime.getUTCDate();
+
+        day = new Date(Date.UTC(year, month, date));
+    }
+
+
+    let screenings = await screeningModel.find({ date: day });
+
+    if (cinema) {
+        let rooms = await roomService.roomByIdCinema(cinema);
+        const roomIds = rooms.map(r => r.id);
+
+        screenings = screenings.filter(s => roomIds.includes(s.id_room.toString()));
+    }
+
+    return screenings;
+}
+
 const getScreeningByMovieId = async (movieId, filter) => {
 
     let     result = {
