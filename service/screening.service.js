@@ -5,6 +5,7 @@ const screeningModel = require('../model/screening.model');
 const movieService = require('../service/movie.service');
 
 const roomService = require('../service/room.service');
+
 const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async (filter) => {
@@ -56,6 +57,7 @@ const getScreeingById = async (id) => {
     }
 
     const result = await screeningModel.findById(id);
+
     return result;
 
 }
@@ -250,6 +252,7 @@ const getScreeningSchedule = async (filter, cinema) => {
     for (let screening of screenings) {
         const room = await roomService.roomById(screening.id_room.toString());
         const cinemaData = await cinemaService.getCinemaById(room.id_thear.toString());
+
         const filmData = await movieService.getMovieById(screening.id_movie.toString());
 
         const filmId = filmData._id.toString();
@@ -261,8 +264,6 @@ const getScreeningSchedule = async (filter, cinema) => {
                 cinemas: []
             });
         }
-
-        console.log(cinemaData);
 
         const film = filmMap.get(filmId);
 
@@ -291,5 +292,51 @@ const getScreeningSchedule = async (filter, cinema) => {
     return result;
 };
 
+const screeningRoom = async (id) => {
+    const ticketService = require('../service/ticket.service');
 
-module.exports = { getScreeings, getScreeningByMovieId, getScreeingById, getScreeingByDay, getScreeningByCinema, getScreeningSchedule } 
+
+    let filter = {}
+
+    const screening = await screeningModel.findById(id);
+
+    const room = await roomService.roomId(screening.id_room);
+
+    if (!screening) {
+        throw new Error("Không Tìm Thấy Phòng")
+    }
+
+    filter.id_screening = screening._id
+
+    let seat = {}
+
+    const tickets = await ticketService.filterTicket(filter);
+
+    for (let ticket of tickets) {
+        ticket.seat.forEach(ticket => {
+            
+            const row = ticket[0];
+            const number = parseInt(ticket.slice(1), 10);
+
+            if(!seat[row]){
+                seat[row] = [];
+            }
+
+            seat[row].push(number);
+        });
+    }
+
+    room.diagram.element_selected = { ...seat }
+    
+    return room;
+}
+
+module.exports = {
+    getScreeings,
+    getScreeningByMovieId,
+    getScreeingById,
+    getScreeingByDay,
+    getScreeningByCinema,
+    getScreeningSchedule,
+    screeningRoom
+} 

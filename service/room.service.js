@@ -58,6 +58,19 @@ const roomById = async (id, location) => {
     };
 };
 
+const roomId = async (id) => {
+    if (!id) {
+        throw new Error('Vui lòng truyền id');
+    }
+
+    const room = await roomModel.findById(id);
+    if (!room) {
+        throw new Error('Không tìm thấy phòng');
+    }
+
+    return room;
+}
+
 const roomByIdCinema = async (id) => {
     const room = await roomModel.find({id_thear : id});
     if(!room){
@@ -66,5 +79,4 @@ const roomByIdCinema = async (id) => {
     return room
 }
 
-
-module.exports = { getAll, roomById, roomByIdCinema };
+module.exports = { getAll, roomById, roomId, roomByIdCinema };
