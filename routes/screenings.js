@@ -7,4 +7,6 @@ router.get('/', screeningControler.getScreeings);
 
 router.get('/filter', screeningControler.filterScreening);
 
+router.get('/:id', screeningControler.ScreeningRoom);
+
 module.exports = router;
