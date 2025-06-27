@@ -5,6 +5,7 @@ const screeningModel = require('../model/screening.model');
 const movieService = require('../service/movie.service');
 
 const roomService = require('../service/room.service');
+
 const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async (filter) => {
@@ -56,6 +57,7 @@ const getScreeingById = async (id) => {
     }
 
     const result = await screeningModel.findById(id);
+
     return result;
 
 }
@@ -89,7 +91,7 @@ const getScreeingByDay = async (date = "", cinema = "") => {
 
 const getScreeningByMovieId = async (movieId, filter) => {
 
-    let     result = {
+    let result = {
         date: "",
         cinemas: [
 
@@ -119,6 +121,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
     for (const screening of screenings) {
 
         const room = await roomService.roomById(screening.id_room.toString());
+
         const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
 
         const key = cinema._id.toString();
@@ -126,7 +129,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
         if (!cinemaMap.has(key)) {
             cinemaMap.set(key, {
                 id: key,
-                id_location: cinema.location.id_location.toString(),
+                location: cinema.location,
                 name: cinema.name,
                 showtimes: [],
             });
@@ -141,16 +144,17 @@ const getScreeningByMovieId = async (movieId, filter) => {
     }
 
     result.cinemas = Array.from(cinemaMap.values());
+    console.log(result.cinemas);
     const data = result
     if (filter.location) {
         result = {
             date: data.date,
             cinemas: data.cinemas.filter(cinema =>
-                cinema.id_location.toString() === filter.location
+                cinema.location.id_location.toString() === filter.location
             )
         }
     }
-    
+
     return result;
 };
 
@@ -248,6 +252,7 @@ const getScreeningSchedule = async (filter, cinema) => {
     for (let screening of screenings) {
         const room = await roomService.roomById(screening.id_room.toString());
         const cinemaData = await cinemaService.getCinemaById(room.id_thear.toString());
+
         const filmData = await movieService.getMovieById(screening.id_movie.toString());
 
         const filmId = filmData._id.toString();
@@ -260,16 +265,14 @@ const getScreeningSchedule = async (filter, cinema) => {
             });
         }
 
-        console.log(cinemaData);
-
         const film = filmMap.get(filmId);
 
         let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
 
-        if(!cinemaItem){
+        if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
-                id_location: cinemaData.location.id_location.toString(),
+                location: cinema.location,
                 showtimes: []
             }
             film.cinemas.push(cinemaItem);
@@ -289,5 +292,51 @@ const getScreeningSchedule = async (filter, cinema) => {
     return result;
 };
 
+const screeningRoom = async (id) => {
+    const ticketService = require('../service/ticket.service');
 
-module.exports = { getScreeings, getScreeningByMovieId, getScreeingById, getScreeingByDay, getScreeningByCinema, getScreeningSchedule } 
+
+    let filter = {}
+
+    const screening = await screeningModel.findById(id);
+
+    const room = await roomService.roomId(screening.id_room);
+
+    if (!screening) {
+        throw new Error("Không Tìm Thấy Phòng")
+    }
+
+    filter.id_screening = screening._id
+
+    let seat = {}
+
+    const tickets = await ticketService.filterTicket(filter);
+
+    for (let ticket of tickets) {
+        ticket.seat.forEach(ticket => {
+            
+            const row = ticket[0];
+            const number = parseInt(ticket.slice(1), 10);
+
+            if(!seat[row]){
+                seat[row] = [];
+            }
+
+            seat[row].push(number);
+        });
+    }
+
+    room.diagram.element_selected = { ...seat }
+    
+    return room;
+}
+
+module.exports = {
+    getScreeings,
+    getScreeningByMovieId,
+    getScreeingById,
+    getScreeingByDay,
+    getScreeningByCinema,
+    getScreeningSchedule,
+    screeningRoom
+} 

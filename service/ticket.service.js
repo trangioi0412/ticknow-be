@@ -70,4 +70,14 @@ const getTicket = async ( page="", limit="") => {
 
 }
 
-module.exports = { getTicket }
+const filterTicket = async ( filter ) => {
+    const tickets = await ticketModel.find( filter );
+
+    if(!tickets){
+        throw new Error('Không có phòng phù hợp');
+    }
+    
+    return tickets;
+} 
+
+module.exports = { getTicket, filterTicket }
