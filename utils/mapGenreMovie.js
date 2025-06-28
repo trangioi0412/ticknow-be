@@ -30,6 +30,7 @@ const mapGenreMovieOne  = async ( movie ) => {
     
     const genres = await genreService.getGenres();
     const genreMap =  new Map();
+    
     genres.genres.forEach(genre => {
         genreMap.set(genre._id.toString(), genre.name);
     });

@@ -1,7 +1,13 @@
+
 const movieModel = require('../model/movies.model');
 
 const mapGenre = require('../utils/mapGenreMovie');
+
 const paginate = require('../utils/pagination');
+
+const convertGenreIds = require('../utils/convertGenreIds');
+
+const genreModel = require('../model/genres.model');
 
 const getMovies = async (filter = {}, limit = "", page = "") => {
     try {
@@ -105,34 +111,60 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
     return result;
 }
 
-const filterSchedule = async (filter = {}, cinema="" ) => {
+const filterSchedule = async (filter = {}, cinema = "") => {
     const screeningService = require('../service/screening.service');
 
-    let movies = [];
-
     let screeningDay = await screeningService.getScreeningSchedule(filter, cinema);
-
-    // for (const screening of screeningDay.cinemas) {
-    //     const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
-
-    //     if (movie) {
-    //         movies.push(movie);
-    //     }
-
-    // }
-
-    // movies = movies.filter((movie, index, self) =>
-    //     index === self.findIndex(m => m._id.toString() === movie._id.toString())
-    // );
-
-    // const movie = await mapGenre.mapGenreMovie(movies);
-
-    // const result = {
-    //     movie,
-    //     pagination: []
-    // }
 
     return screeningDay;
 }
 
-module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie, filterSchedule };
+const addMovies = async (movieData, file) => {
+
+    let genreIds = movieData.genre;
+
+    if (!Array.isArray(genreIds)) {
+        genreIds = [genreIds];
+    }
+
+    const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
+
+    if (foundGenre.length !== genreIds.length) {
+        throw new Error('Một hoặc nhiều danh mục không tồn tại');
+    }
+
+    movieData.genre = genreIds;
+
+    const checkMovie = await movieModel.findOne({ name: movieData.name });
+
+    if (checkMovie) {
+        throw new Error('Tên Phim Đã Tồn Tại');
+    }
+
+    if (file.image && file.image.length > 0) {
+        movieData.image = file.image[0].filename
+    }
+
+    if (file.banner && file.banner.length > 0) {
+        movieData.banner = file.banner[0].filename
+    }
+
+    if (typeof movieData.genre === "string") {
+
+        movieData.genre = [movieData.genre];
+    }
+
+    const genre = convertGenreIds(movieData.genre);
+
+    const newMovie = new movieModel({
+        ...movieData,
+        genre : genre
+    });
+
+    const data = await newMovie.save();
+
+    return data;
+
+}
+
+module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie, filterSchedule, addMovies };
