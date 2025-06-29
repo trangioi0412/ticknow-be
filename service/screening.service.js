@@ -136,7 +136,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
         }
 
         cinemaMap.get(key).showtimes.push({
-            id_room: screening.id_room,
+            id: screening._id,
             time: screening.time_start,
             showtype: screening.showtype,
         });
@@ -144,7 +144,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
     }
 
     result.cinemas = Array.from(cinemaMap.values());
-    console.log(result.cinemas);
+
     const data = result
     if (filter.location) {
         result = {
@@ -158,7 +158,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
     return result;
 };
 
-const getScreeningByCinema = async (cinemaId, filter) => {
+const getScreeningByCinema = async (cinemaId, filter = {} ) => {
 
     let result = {
         date: "",
@@ -210,7 +210,7 @@ const getScreeningByCinema = async (cinemaId, filter) => {
         }
 
         movieMap.get(key).showtimes.push({
-            id_room: screening.id_room,
+            id: screening._id,
             time: screening.time_start,
             showtype: screening.showtype
         });
@@ -279,15 +279,13 @@ const getScreeningSchedule = async (filter, cinema) => {
         }
 
         cinemaItem.showtimes.push({
-            id_room: screening.id_room,
+            id: screening._id,
             time: screening.time_Start,
             showtype: screening.showtype
         })
     }
 
     result.films = Array.from(filmMap.values());
-
-    console.log(result);
 
     return result;
 };
@@ -339,4 +337,4 @@ module.exports = {
     getScreeningByCinema,
     getScreeningSchedule,
     screeningRoom
-} 
+}

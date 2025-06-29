@@ -180,4 +180,49 @@ const addMovie = [
     }
 ]
 
-module.exports = { getMovies, getDetailMovie, filterMovie, filterSChedule, addMovie };
+const deleteMovie = async (req, res, next) => {
+    try{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        }
+
+        const result = await movieService.deleteMovie(id);
+
+        return res.status(200).json({ status: true, message: "Xóa phim thành công"})
+    }catch (error) {
+        console.error(error);
+        return res.status(500).json({status: false, message: error.message})
+    }
+}
+
+const updateMovie = [
+    upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "banner", maxCount: 1 }
+    ]),
+    async (req, res, next) => {
+        try {
+            const movie = req.body;
+
+            const file = req.files
+
+            const result = await movieService.updateMovie(movie, file);
+
+            if (!result) {
+                res.status(404).json({ status: false, message: " Thêm Dữ Liệu Không Thành Công " })
+            }
+
+            res.status(200).json({ data: result, status: true, message: " Thêm Movie Thành Công " })
+        } catch (error) {
+
+            console.error(error);
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+]
+
+
+module.exports = { getMovies, getDetailMovie, filterMovie, filterSChedule, addMovie, deleteMovie, updateMovie };

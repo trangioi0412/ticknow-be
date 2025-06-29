@@ -42,4 +42,13 @@ const getAll = async (page, limit) => {
     };
 }
 
-module.exports = { getAll }
+
+const getByIdMovie = async (movieId) => {
+
+    const rate = await rateModel.find( { id_movie: movieId } );
+    
+    return rate;
+    
+}
+
+module.exports = { getAll, getByIdMovie }

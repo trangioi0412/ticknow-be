@@ -9,7 +9,11 @@ router.get('/filter', movieControler.filterMovie);
 
 router.get('/schedue', movieControler.filterSChedule);
 
-router.post('/addmovie', movieControler.addMovie);
+router.post('/add', movieControler.addMovie);
+
+router.delete('/delete/:id', movieControler.deleteMovie);
+
+router.post('/update', movieControler.updateMovie);
 
 router.get('/:id', movieControler.getDetailMovie);
 

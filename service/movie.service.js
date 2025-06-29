@@ -1,13 +1,16 @@
-
+const genreModel = require('../model/genres.model');
 const movieModel = require('../model/movies.model');
 
+
 const mapGenre = require('../utils/mapGenreMovie');
-
 const paginate = require('../utils/pagination');
-
 const convertGenreIds = require('../utils/convertGenreIds');
 
-const genreModel = require('../model/genres.model');
+const rateService = require('../service/rate.service');
+
+const fs = require('fs');
+const path = require('path');
+
 
 const getMovies = async (filter = {}, limit = "", page = "") => {
     try {
@@ -28,7 +31,6 @@ const getMovies = async (filter = {}, limit = "", page = "") => {
     }
 
 }
-
 
 const getMovieById = async (id) => {
     try {
@@ -158,7 +160,7 @@ const addMovies = async (movieData, file) => {
 
     const newMovie = new movieModel({
         ...movieData,
-        genre : genre
+        genre: genre
     });
 
     const data = await newMovie.save();
@@ -167,4 +169,102 @@ const addMovies = async (movieData, file) => {
 
 }
 
-module.exports = { getMovies, getDetailMovie, getMovieById, filterMovie, filterSchedule, addMovies };
+const deleteMovie = async (id) => {
+    const screeningModel = require('../model/screening.model');
+
+    const screening = await screeningModel.find({ id_movie: id });
+
+    if (screening && screening.length > 0) {
+        throw new Error('Phim Đang Còn Suất Chiếu');
+    }
+
+    const rate = await rateService.getByIdMovie(id, {});
+
+    if (rate && rate.length > 0) {
+        throw new Error('Phim Đang Còn Đánh Giá');
+    }
+
+    const movie = await movieModel.findById(id);
+
+    if (!movie) {
+        throw new Error(' Không tìm thấy phim để xóa ');
+    }
+
+    const imagePath = path.join(__dirname, '../public/images/movie', movie.image);
+    const bannerPath = path.join(__dirname, '../public/images/banner', movie.banner);
+
+    if (movie.image && fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+    }
+
+    if (movie.banner && fs.existsSync(bannerPath)) {
+        fs.unlinkSync(bannerPath);
+    }
+
+    return await movieModel.findByIdAndDelete(id);
+
+}
+
+const updateMovie = async (movieData, file) => {
+
+    let genreIds = movieData.genre;
+
+    const movieId = await movieModel.findById(movieData.id);
+
+    if (!movieId) {
+        throw new Error('Phim Không tồn tại');
+    }
+
+    if (file.image && file.image.length > 0) {
+        movieData.image = file.image[0].filename
+    }
+
+    if (file.banner && file.banner.length > 0) {
+        movieData.banner = file.banner[0].filename
+    }
+
+    const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
+
+    if (foundGenre.length !== genreIds.length) {
+        throw new Error('Một hoặc nhiều danh mục không tồn tại');
+    }
+
+    if (typeof movieData.genre === "string") {
+
+        movieData.genre = [movieData.genre];
+    }
+
+    const genre = convertGenreIds(genreIds);
+
+    const imagePath = path.join(__dirname, '../public/images/movie', movieId.image);
+    const bannerPath = path.join(__dirname, '../public/images/banner', movieId.banner);
+
+    if (movieId.image && fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+    }
+
+    if (movieId.banner && fs.existsSync(bannerPath)) {
+        fs.unlinkSync(bannerPath);
+    }
+
+    movieData.genre = genre
+
+    const result = await movieModel.findByIdAndUpdate(
+        movieData.id,
+        movieData,
+        { new: true }
+    )
+
+    return result;
+}
+
+module.exports = {
+    getMovies,
+    getDetailMovie,
+    getMovieById,
+    filterMovie,
+    filterSchedule,
+    addMovies,
+    deleteMovie,
+    updateMovie
+};
