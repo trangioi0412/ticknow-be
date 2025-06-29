@@ -122,7 +122,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
 
         const room = await roomService.roomById(screening.id_room.toString());
 
-        const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
+        const cinema = await cinemaService.getCinemaById(room.id_cinema.toString());
 
         const key = cinema._id.toString();
 
@@ -251,7 +251,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     for (let screening of screenings) {
         const room = await roomService.roomById(screening.id_room.toString());
-        const cinemaData = await cinemaService.getCinemaById(room.id_thear.toString());
+        const cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
 
         const filmData = await movieService.getMovieById(screening.id_movie.toString());
 

@@ -19,7 +19,7 @@ const getAll = async (page, limit) => {
 
     const room = data.map(room => {
 
-        const cinemaId = room.id_thear.toString();
+        const cinemaId = room.id_cinema.toString();
         const nameCine = cinemaMap.get(cinemaId);
 
         return {
@@ -45,7 +45,7 @@ const roomById = async (id, location) => {
         throw new Error('Không tìm thấy phòng');
     }
 
-    const cinema = await cinemaModel.findById(room.id_thear);
+    const cinema = await cinemaModel.findById(room.id_cinema);
     if (!cinema) {
         throw new Error('Không tìm thấy rạp');
     }
@@ -53,7 +53,7 @@ const roomById = async (id, location) => {
     return {
         id_room: room._id,
         code_room: room.code_room,
-        id_thear: cinema._id,
+        id_cinema: cinema._id,
         name_cinema: cinema.name,
     };
 };
@@ -72,7 +72,7 @@ const roomId = async (id) => {
 }
 
 const roomByIdCinema = async (id) => {
-    const room = await roomModel.find({id_thear : id});
+    const room = await roomModel.find({id_cinema : id});
     if(!room){
         throw new Error('Không tìm thấy room');
     }

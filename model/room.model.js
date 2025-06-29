@@ -5,7 +5,7 @@ const ObjectId = Schema.ObjectId;
 
 const roomSchema = new Schema({
   code_room: { type: String, required: true },
-  id_thear: { type: ObjectId, required: true },
+  id_cinema: { type: ObjectId, required: true },
   diagram: {
     row: { type: Number, required: true },
     column: { type: Number, required: true },
