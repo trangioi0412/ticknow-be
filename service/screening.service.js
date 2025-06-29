@@ -1,8 +1,5 @@
-const mongoose = require('mongoose')
 
 const screeningModel = require('../model/screening.model');
-
-const movieService = require('../service/movie.service');
 
 const roomService = require('../service/room.service');
 
@@ -10,6 +7,8 @@ const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async (filter) => {
     try {
+        const movieService = require('../service/movie.service');
+
         const movies = await movieService.getMovies();
         const movieMap = new Map()
 
@@ -158,7 +157,9 @@ const getScreeningByMovieId = async (movieId, filter) => {
     return result;
 };
 
-const getScreeningByCinema = async (cinemaId, filter = {} ) => {
+const getScreeningByCinema = async (cinemaId, filter = {}) => {
+    const movieService = require('../service/movie.service');
+
 
     let result = {
         date: "",
@@ -224,6 +225,8 @@ const getScreeningByCinema = async (cinemaId, filter = {} ) => {
 
 
 const getScreeningSchedule = async (filter, cinema) => {
+    const movieService = require('../service/movie.service');
+
     const result = {
         date: "",
         films: []
@@ -312,11 +315,11 @@ const screeningRoom = async (id) => {
 
     for (let ticket of tickets) {
         ticket.seat.forEach(ticket => {
-            
+
             const row = ticket[0];
             const number = parseInt(ticket.slice(1), 10);
 
-            if(!seat[row]){
+            if (!seat[row]) {
                 seat[row] = [];
             }
 
@@ -325,7 +328,7 @@ const screeningRoom = async (id) => {
     }
 
     room.diagram.element_selected = { ...seat }
-    
+
     return room;
 }
 
