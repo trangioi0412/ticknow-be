@@ -1,6 +1,10 @@
 const check = require('../utils/checkDateQuery');
 
-const movieServiece = require('../service/movie.service');
+const movieService = require('../service/movie.service');
+
+const getUploader = require('../middlewares/uploadFile');
+
+const upload = getUploader()
 
 const getMovies = async (req, res, next) => {
     try {
@@ -26,7 +30,7 @@ const getMovies = async (req, res, next) => {
         }
 
         // get data
-        result = await movieServiece.getMovies(filter, limit, page);
+        result = await movieService.getMovies(filter, limit, page);
 
         // check data
         if (!result) {
@@ -55,8 +59,8 @@ const getDetailMovie = async (req, res, next) => {
             filter.location = location;
         }
 
-        let result = await movieServiece.getDetailMovie(id, filter);
-        
+        let result = await movieService.getDetailMovie(id, filter);
+
         if (result) {
 
             return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
@@ -73,7 +77,7 @@ const getDetailMovie = async (req, res, next) => {
 }
 
 const filterMovie = async (req, res, next) => {
-     try {
+    try {
         // query host
         const { name, status, date, genre, cinema } = req.query;
 
@@ -99,7 +103,7 @@ const filterMovie = async (req, res, next) => {
         }
 
         // get data
-        result = await movieServiece.filterMovie(filter, genre, limit, page);
+        result = await movieService.filterMovie(filter, genre, limit, page);
 
         // check data
         if (!result) {
@@ -115,7 +119,7 @@ const filterMovie = async (req, res, next) => {
 }
 
 const filterSChedule = async (req, res, next) => {
-     try {
+    try {
         // query host
 
         const { status, date, cinema, id } = req.query;
@@ -137,7 +141,7 @@ const filterSChedule = async (req, res, next) => {
         if (id) filter.id = id;
 
         // get data
-        result = await movieServiece.filterSchedule(filter, cinema,limit, page);
+        result = await movieService.filterSchedule(filter, cinema, limit, page);
 
         // check data
         if (!result) {
@@ -152,5 +156,73 @@ const filterSChedule = async (req, res, next) => {
     }
 }
 
+const addMovie = [
+    upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "banner", maxCount: 1 }
+    ]),
+    async (req, res, next) => {
+        try {
+            const movie = req.body;
+            const file = req.files
 
-module.exports = { getMovies, getDetailMovie, filterMovie, filterSChedule };
+            const result = await movieService.addMovies(movie, file);
+            if (!result) {
+                res.status(404).json({ status: false, message: " Thêm Dữ Liệu Không Thành Công " })
+            }
+
+            res.status(200).json({ data: result, status: true, message: " Thêm Movie Thành Công " })
+        } catch (error) {
+
+            console.error(error);
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+]
+
+const deleteMovie = async (req, res, next) => {
+    try{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        }
+
+        const result = await movieService.deleteMovie(id);
+
+        return res.status(200).json({ status: true, message: "Xóa phim thành công"})
+    }catch (error) {
+        console.error(error);
+        return res.status(500).json({status: false, message: error.message})
+    }
+}
+
+const updateMovie = [
+    upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "banner", maxCount: 1 }
+    ]),
+    async (req, res, next) => {
+        try {
+            const movie = req.body;
+
+            const file = req.files
+
+            const result = await movieService.updateMovie(movie, file);
+
+            if (!result) {
+                res.status(404).json({ status: false, message: " Thêm Dữ Liệu Không Thành Công " })
+            }
+
+            res.status(200).json({ data: result, status: true, message: " Thêm Movie Thành Công " })
+        } catch (error) {
+
+            console.error(error);
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+]
+
+
+module.exports = { getMovies, getDetailMovie, filterMovie, filterSChedule, addMovie, deleteMovie, updateMovie };
