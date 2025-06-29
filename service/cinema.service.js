@@ -75,4 +75,8 @@ const cinemaDetail = async (id, filter) => {
     return result;
 }
 
+const addCinema = async () => {
+    
+}
+
 module.exports = { getCinema, getCinemaById, cinemaDetail }
