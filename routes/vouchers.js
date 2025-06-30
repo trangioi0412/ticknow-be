@@ -3,6 +3,14 @@ const router = express.Router();
 
 const voucherControler = require('../controler/vouchers.controler');
 
-router.get('/', voucherControler.getVouchers)
+const getUploader = require('../middlewares/uploadFile');
+
+const upload = getUploader()
+
+router.get('/', voucherControler.getVouchers);
+
+router.post('/add', upload.none(), voucherControler.addVoucher);
+
+router.post('/update', upload.none(), voucherControler.updateVoucher);
 
 module.exports = router;
