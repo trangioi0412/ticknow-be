@@ -25,7 +25,7 @@ const getTicket = async ( page="", limit="") => {
         }
 
         cinema = {
-            id: cinemaRoom.id_thear,
+            id: cinemaRoom.id_cinema,
             name: cinemaRoom.name_cinema
         }
 

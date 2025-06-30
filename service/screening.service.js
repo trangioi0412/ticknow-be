@@ -1,8 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const moment = require('moment');
 
 const screeningModel = require('../model/screening.model');
-
-const movieService = require('../service/movie.service');
 
 const roomService = require('../service/room.service');
 
@@ -10,6 +9,8 @@ const cinemaService = require('../service/cinema.service');
 
 const getScreeings = async (filter) => {
     try {
+        const movieService = require('../service/movie.service');
+
         const movies = await movieService.getMovies();
         const movieMap = new Map()
 
@@ -86,6 +87,8 @@ const getScreeingByDay = async (date = "", cinema = "") => {
         screenings = screenings.filter(s => roomIds.includes(s.id_room.toString()));
     }
 
+    console.log(cinema);
+
     return screenings;
 }
 
@@ -122,7 +125,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
 
         const room = await roomService.roomById(screening.id_room.toString());
 
-        const cinema = await cinemaService.getCinemaById(room.id_thear.toString());
+        const cinema = await cinemaService.getCinemaById(room.id_cinema.toString());
 
         const key = cinema._id.toString();
 
@@ -143,6 +146,7 @@ const getScreeningByMovieId = async (movieId, filter) => {
 
     }
 
+
     result.cinemas = Array.from(cinemaMap.values());
 
     const data = result
@@ -158,7 +162,9 @@ const getScreeningByMovieId = async (movieId, filter) => {
     return result;
 };
 
-const getScreeningByCinema = async (cinemaId, filter = {} ) => {
+const getScreeningByCinema = async (cinemaId, filter = {}) => {
+    const movieService = require('../service/movie.service');
+
 
     let result = {
         date: "",
@@ -222,8 +228,9 @@ const getScreeningByCinema = async (cinemaId, filter = {} ) => {
 
 }
 
-
 const getScreeningSchedule = async (filter, cinema) => {
+    const movieService = require('../service/movie.service');
+
     const result = {
         date: "",
         films: []
@@ -251,7 +258,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     for (let screening of screenings) {
         const room = await roomService.roomById(screening.id_room.toString());
-        const cinemaData = await cinemaService.getCinemaById(room.id_thear.toString());
+        const cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
 
         const filmData = await movieService.getMovieById(screening.id_movie.toString());
 
@@ -312,11 +319,11 @@ const screeningRoom = async (id) => {
 
     for (let ticket of tickets) {
         ticket.seat.forEach(ticket => {
-            
+
             const row = ticket[0];
             const number = parseInt(ticket.slice(1), 10);
 
-            if(!seat[row]){
+            if (!seat[row]) {
                 seat[row] = [];
             }
 
@@ -325,8 +332,117 @@ const screeningRoom = async (id) => {
     }
 
     room.diagram.element_selected = { ...seat }
-    
+
     return room;
+}
+
+const addSceening = async (screeningData) => {
+
+    const movieService = require('../service/movie.service');
+
+    const room = await roomService.roomByIdCinema(screeningData.id_room);
+
+    let date = new Date(`${screeningData.date}T00:00:00.000Z`);
+
+    if (!room && room.length < 0) {
+        throw new Error("Không tìm thấy room");
+    }
+
+    if (room.status === 1) {
+        throw new Error("Phòng không còn hoạt động")
+    }
+
+    if (!screeningData.time_start && screeningData.time_start === "") {
+        throw new Error("Vui lòng nhập thời gian bắt đầu suất chiếu")
+    }
+
+    const movie = await movieService.getMovieById(screeningData.id_movie);
+
+
+    if (!movie && movie.length < 0) {
+        throw new Error("Không tìm thấy phim")
+    }
+
+    let time_end = moment(screeningData.time_start, "HH:mm").add(movie.duration, 'minutes').format("HH:mm");
+
+    const conflict = await screeningModel.findOne({
+        id_room: screeningData.id_room,
+        date: date,
+        time_start: { $lt: time_end },
+        time_end: { $gt: screeningData.time_start }
+    });
+
+    if (conflict) {
+        throw new Error("Đã có lịch chiếu trùng trong khoảng thời gian này.");
+    }
+
+    const newScreening = new screeningModel({
+        ...screeningData,
+        id_movie: new mongoose.Types.ObjectId(screeningData.id_movie),
+        id_room: new mongoose.Types.ObjectId(screeningData.id_room),
+        time_end: time_end
+    })
+
+    const data = await newScreening.save();
+
+    return data;
+}
+
+const updateSceening = async (screeningData) => {
+
+    const movieService = require('../service/movie.service');
+
+    const room = await roomService.roomByIdCinema(screeningData.id_room);
+
+    let date = new Date(`${screeningData.date}T00:00:00.000Z`);
+
+    if (!room && room.length < 0) {
+        throw new Error("Không tìm thấy room");
+    }
+
+    if (room.status === 1) {
+        throw new Error("Phòng không còn hoạt động")
+    }
+
+    if (!screeningData.time_start && screeningData.time_start === "") {
+        throw new Error("Vui lòng nhập thời gian bắt đầu suất chiếu")
+    }
+
+    const movie = await movieService.getMovieById(screeningData.id_movie);
+
+
+    if (!movie && movie.length < 0) {
+        throw new Error("Không tìm thấy phim")
+    }
+
+    let time_end = moment(screeningData.time_start, "HH:mm").add(movie.duration, 'minutes').format("HH:mm");
+
+    const conflict = await screeningModel.findOne({
+        id_room: screeningData.id_room,
+        date: date,
+        time_start: { $lt: time_end },
+        time_end: { $gt: screeningData.time_start }
+    });
+
+    if (conflict) {
+        throw new Error("Đã có lịch chiếu trùng trong khoảng thời gian này.");
+    }
+
+    const newScreening = {
+        ...screeningData,
+        id_movie: new mongoose.Types.ObjectId(screeningData.id_movie),
+        id_room: new mongoose.Types.ObjectId(screeningData.id_room),
+        time_end: time_end
+    };
+
+    const result = await screeningModel.findByIdAndUpdate(
+        screeningData.id,
+        newScreening,
+        { new: true }
+    )
+
+    return result
+
 }
 
 module.exports = {
@@ -336,5 +452,7 @@ module.exports = {
     getScreeingByDay,
     getScreeningByCinema,
     getScreeningSchedule,
-    screeningRoom
+    screeningRoom,
+    addSceening,
+    updateSceening
 }

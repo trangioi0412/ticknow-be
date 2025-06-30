@@ -212,10 +212,10 @@ const updateMovie = [
             const result = await movieService.updateMovie(movie, file);
 
             if (!result) {
-                res.status(404).json({ status: false, message: " Thêm Dữ Liệu Không Thành Công " })
+                res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
             }
 
-            res.status(200).json({ data: result, status: true, message: " Thêm Movie Thành Công " })
+            res.status(200).json({ data: result, status: true, message: " Sửa Movie Thành Công " })
         } catch (error) {
 
             console.error(error);
