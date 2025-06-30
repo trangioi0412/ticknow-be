@@ -80,4 +80,9 @@ const filterTicket = async ( filter ) => {
     return tickets;
 } 
 
-module.exports = { getTicket, filterTicket }
+const getTicketId = async (id) => {
+    const ticket = await ticketModel.findById(id);
+    return ticket
+}
+
+module.exports = { getTicket, filterTicket, getTicketId }
