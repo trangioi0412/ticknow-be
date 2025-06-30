@@ -1,16 +1,24 @@
+const fs = require('fs');
+const path = require('path');
 
-const path = require("path");
-const fs = require("fs");
+const saveImageToDisk = (fileBuffer, fileName, folder) => {
+  const dir = path.join(__dirname, `../public/images/${folder}`);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  const filePath = path.join(dir, fileName);
+  fs.writeFileSync(filePath, fileBuffer);
+  return `/images/${folder}/${fileName}`;
+};
 
+const deleteImageFromDisk = (imagePath, folderName) => {
 
-let saveFile = (file, destination) => {
-    let folder = 'public/images/orthers';
+  const fullPath = path.join(__dirname, `../public/images/${folderName}`, imagePath);
 
-    if (file.fieldname === 'image') {
-        folder = 'public/images/movie';
-    }
+  if (fs.existsSync(fullPath)) {
+    fs.unlinkSync(fullPath);
+  }
 
-    if (file.fieldname === 'banner') {
-        folder = 'public/images/banner';
-    }
-}
+};
+
+module.exports = { saveImageToDisk ,deleteImageFromDisk};

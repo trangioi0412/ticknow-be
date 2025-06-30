@@ -12,7 +12,8 @@ const roomSchema = new Schema({
     element_remove: { type: Map, of: [Number], default: {} },
     element_selected: { type: Map, of: [Number], default: {} },
     element_selecting: { type: Map, of: [Number], default: {} },
-  }
+  },
+  status: { type: Number, required: false, default: 2 },
 }, {
   toObject: {
     transform: function (doc, ret) {
@@ -25,6 +26,7 @@ const roomSchema = new Schema({
       return ret;
     }
   }
+
 });
 
 module.exports = mongoose.models.room || mongoose.model('room', roomSchema)

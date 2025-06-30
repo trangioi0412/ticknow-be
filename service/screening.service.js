@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 
 const screeningModel = require('../model/screening.model');
 
@@ -332,6 +333,41 @@ const screeningRoom = async (id) => {
     return room;
 }
 
+const addSceening = async (screeningData) => {
+    const movieService = require('../service/movie.service');
+
+    const room = await roomService.roomByIdCinema(screeningData.id_room);
+
+    if(!room && room.length < 0){
+        throw new Error("Không tìm thấy room");
+    }
+
+    if( room.status === 1 ){
+        throw new Error("Phòng không còn hoạt động")
+    }
+
+    if(!screeningData.time_start && screeningData.time_start === ""){
+        throw new Error("Vui lòng nhập thời gian bắt đầu suất chiếu")
+    }
+
+    const movie = await movieService.getMovieById(screeningData.id_movie);
+
+    if(!movie && movie.length < 0){
+        throw new Error("Không tìm thấy phim")
+    }
+    
+    const screenings = await screeningModel.exists( { id_room: mongoose.Types.ObjectId(room._id), time_start: screeningData.time_start } );
+
+    if(screenings){
+        throw new Error("Đã có lịch chiếu tại thời điểm này trong phòng này.")
+    }
+    
+    
+    
+    
+
+}
+
 module.exports = {
     getScreeings,
     getScreeningByMovieId,
@@ -339,5 +375,6 @@ module.exports = {
     getScreeingByDay,
     getScreeningByCinema,
     getScreeningSchedule,
-    screeningRoom
+    screeningRoom,
+    addSceening,
 }

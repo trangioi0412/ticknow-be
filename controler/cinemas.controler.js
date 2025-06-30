@@ -1,9 +1,13 @@
-const check = require('../utils/checkDateQuery');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const cinemaService = require('../service/cinema.service')
 
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+const check = require('../utils/checkDateQuery');
+
+const getUploader = require('../middlewares/uploadFile');
+
+const upload = getUploader()
 
 const getCinema = async (req, res, next) => {
     try {
@@ -54,4 +58,67 @@ const getDetail = async (req, res, next) => {
     }
 }
 
-module.exports = { getCinema, getDetail }
+const addCinema = [
+    upload.single('image'),
+    async (req, res, next) => {
+        try {
+            const cinema = req.body;
+            const file = req.file
+
+            const result = await cinemaService.addCinema(cinema, file);
+            if (!result) {
+                res.status(404).json({ status: false, message: " Thêm Dữ Liệu Không Thành Công " })
+            }
+
+            res.status(200).json({ data: result, status: true, message: " Thêm cinema Thành Công " })
+        } catch (error) {
+
+            console.error(error);
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+]
+
+const deleteCinema = async (req, res, next) => {
+    try{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        }
+
+        const result = await cinemaService.deleteCinema(id);
+
+        return res.status(200).json({ status: true, message: "Xóa rạp thành công"})
+    }catch (error) {
+        console.error(error);
+        return res.status(500).json({status: false, message: error.message})
+    }
+}
+
+const updateCinema = [
+    upload.single('image'),
+    async (req, res, next) => {
+        try {
+            const cinema = req.body;
+
+            const file = req.file
+
+            const result = await cinemaService.updateCinema(cinema, file);
+
+            if (!result) {
+                res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
+            }
+
+            res.status(200).json({ data: result, status: true, message: " Sửa cinema Thành Công " })
+        } catch (error) {
+
+            console.error(error);
+            res.status(500).json({ status: false, message: error.message });
+        }
+    }
+]
+
+
+module.exports = { getCinema, getDetail, addCinema, deleteCinema, updateCinema }

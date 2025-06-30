@@ -9,7 +9,6 @@ const checkFileType = (req, file, cb) => {
   cb(null, true);
 };
 
-
 const storage = multer.memoryStorage();
 
 const getUploader = () => {

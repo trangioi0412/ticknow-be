@@ -5,6 +5,12 @@ const CinemaControler = require('../controler/cinemas.controler');
 
 router.get('/', CinemaControler.getCinema);
 
+router.post('/add', CinemaControler.addCinema);
+
+router.post('/update', CinemaControler.updateCinema);
+
+router.delete('/delete/:id', CinemaControler.deleteCinema);
+
 router.get('/:id', CinemaControler.getDetail)
 
 module.exports = router;
