@@ -3,9 +3,17 @@ const router = express.Router();
 
 const screeningControler = require('../controler/screening.controler');
 
+const getUploader = require('../middlewares/uploadFile');
+
+const upload = getUploader()
+
 router.get('/', screeningControler.getScreeings);
 
 router.get('/filter', screeningControler.filterScreening);
+
+router.post('/add', upload.none(), screeningControler.addSceening);
+
+router.post('/update', upload.none(), screeningControler.updateSceening);
 
 router.get('/:id', screeningControler.ScreeningRoom);
 
