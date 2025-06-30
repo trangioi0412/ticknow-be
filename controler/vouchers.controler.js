@@ -21,4 +21,41 @@ const getVouchers = async (req, res, next) => {
     }
 }
 
-module.exports = { getVouchers }
+const addVoucher = async (req, res, next) => {
+    try{
+
+        const voucher = req.body;
+
+        const result = await voucherService.addVoucher(voucher);
+        
+        if( !result ){
+            return res.status(404).json({ status: true, message: 'Thêm dữ liệu Không thành công'})
+        }
+
+        res.status(200).json({ status: true, message: "Thêm voucher thành công" });
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+const updateVoucher = async (req, res, next) => {
+    try{
+
+        const voucher = req.body;
+
+        const result = await voucherService.updateVoucher(voucher);
+        
+        if( !result ){
+            return res.status(404).json({ status: true, message: 'sửa dữ liệu Không thành công'})
+        }
+
+        res.status(200).json({ status: true, message: "Sửa voucher thành công" });
+
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+module.exports = { getVouchers, addVoucher, updateVoucher }
