@@ -8,6 +8,8 @@ const convertGenreIds = require('../utils/convertGenreIds');
 
 const rateService = require('../service/rate.service');
 
+const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -143,12 +145,19 @@ const addMovies = async (movieData, file) => {
         throw new Error('Tên Phim Đã Tồn Tại');
     }
 
-    if (file.image && file.image.length > 0) {
-        movieData.image = file.image[0].filename
+
+    if (file?.image?.[0]) {
+        const imageFile = file.image[0];
+        const imageName = Date.now() + '-' + imageFile.originalname;
+        saveImageToDisk(imageFile.buffer, imageName, 'movie');
+        movieData.image = imageName;
     }
 
-    if (file.banner && file.banner.length > 0) {
-        movieData.banner = file.banner[0].filename
+    if (file?.banner?.[0]) {
+        const bannerFile = file.banner[0];
+        const bannerName = Date.now() + '-' + bannerFile.originalname;
+        saveImageToDisk(bannerFile.buffer, bannerName, 'banner');
+        movieData.banner = bannerName;
     }
 
     if (typeof movieData.genre === "string") {
@@ -236,15 +245,27 @@ const updateMovie = async (movieData, file) => {
 
     const genre = convertGenreIds(genreIds);
 
-    const imagePath = path.join(__dirname, '../public/images/movie', movieId.image);
-    const bannerPath = path.join(__dirname, '../public/images/banner', movieId.banner);
+    if (file?.image?.[0]) {
+        const imageFile = file.image[0];
+        const imageName = Date.now() + '-' + imageFile.originalname;
+        console.log(movieId.image);
+        if (movieId.image) {
+            deleteImageFromDisk(movieId.image, 'movie');
+        }
 
-    if (movieId.image && fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+        saveImageToDisk(imageFile.buffer, imageName, 'movie');
+
+        movieData.image = imageName;
     }
 
-    if (movieId.banner && fs.existsSync(bannerPath)) {
-        fs.unlinkSync(bannerPath);
+    if (file?.banner?.[0]) {
+        const bannerFile = file.banner[0];
+        const bannerName = Date.now() + '-' + bannerFile.originalname;
+        if (movieId.banner) {
+            deleteImageFromDisk(movieId.banner, 'banner');
+        }
+        saveImageToDisk(bannerFile.buffer, bannerName, 'banner');
+        movieData.banner = bannerName;
     }
 
     movieData.genre = genre
