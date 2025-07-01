@@ -11,7 +11,7 @@ router.get('/', roomControler.getRooms),
 
 router.post('/add', upload.none(), roomControler.addRoom);
 
-router.post('/update', upload.none(), roomControler.updateRoom);
+router.patch('/update', upload.none(), roomControler.updateRoom);
 
 router.get('/:id', roomControler.roomId);
 
