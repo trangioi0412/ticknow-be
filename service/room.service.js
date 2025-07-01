@@ -40,7 +40,11 @@ const roomById = async (id, location) => {
         throw new Error('Vui lòng truyền id');
     }
 
+    console.log(id);
+
     const room = await roomModel.findById(id);
+    console.log(room);
+
     if (!room) {
         throw new Error('Không tìm thấy phòng');
     }
@@ -121,7 +125,7 @@ const addRoom = async (roomData) => {
 }
 
 const updateRoom = async (roomData, id) => {
-    
+
     const roomCheck = await roomModel.findById(id);
 
     if (

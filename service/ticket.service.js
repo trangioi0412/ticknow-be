@@ -7,7 +7,9 @@ const usersService = require('./user.service');
 const roomService = require('./room.service');
 const movieService = require('./movie.service');
 
-const getTicket = async ( page="", limit="") => {
+const getTicket = async (page = "", limit = "") => {
+    const movieService = require('./movie.service');
+
     const screenings = await screeningService.getScreeings();
 
     let room;
@@ -54,7 +56,7 @@ const getTicket = async ( page="", limit="") => {
         const userId = ticket.id_user.toString();
         const userName = userMap.get(userId);
         return {
-                ...ticket.toObject(),
+            ...ticket.toObject(),
             userName: userName,
             screeningTime: screeningTime,
             cinema,
@@ -70,15 +72,15 @@ const getTicket = async ( page="", limit="") => {
 
 }
 
-const filterTicket = async ( filter ) => {
-    const tickets = await ticketModel.find( filter );
+const filterTicket = async (filter) => {
+    const tickets = await ticketModel.find(filter);
 
-    if(!tickets){
+    if (!tickets) {
         throw new Error('Không có phòng phù hợp');
     }
-    
+
     return tickets;
-} 
+}
 
 const getTicketId = async (id) => {
     const ticket = await ticketModel.findById(id);
