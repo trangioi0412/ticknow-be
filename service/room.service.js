@@ -5,7 +5,6 @@ const cinemaModel = require('../model/cinemas.model');
 
 const cinemaService = require('../service/cinema.service');
 
-
 const getAll = async (page, limit) => {
     const cinemas = await cinemaService.getCinema();
     const cinemaMap = new Map();
@@ -40,10 +39,7 @@ const roomById = async (id, location) => {
         throw new Error('Vui lòng truyền id');
     }
 
-    console.log(id);
-
     const room = await roomModel.findById(id);
-    console.log(room);
 
     if (!room) {
         throw new Error('Không tìm thấy phòng');
@@ -126,13 +122,23 @@ const addRoom = async (roomData) => {
 
 const updateRoom = async (roomData, id) => {
 
+    console.log(roomData.element_selected);
+
+    const { screeningRoom } = require('./screening.service');
+
     const roomCheck = await roomModel.findById(id);
+
+    const screening = await screeningRoom(id);
+
+    if (screening != null || screening != undefined) {
+        throw new Error("Hiện tại phòng đang chiếu");
+    }
 
     if (
         roomCheck.diagram.element_selected instanceof Map &&
         roomCheck.diagram.element_selected.size > 0
     ) {
-        throw new Error("Hiện tại phòng đang có suất chiếu");
+        throw new Error("Hiện tại phòng đang chiếu");
     }
 
     let element_remove = roomData.seatRemoved || roomCheck.diagram.element_remove;
@@ -144,6 +150,8 @@ const updateRoom = async (roomData, id) => {
     roomData.row = roomData.row || roomCheck.diagram.row;
     roomData.column = roomData.column || roomCheck.diagram.column;
     roomData.id_cinema = roomData.id_cinema || roomCheck.id_cinema;
+    roomData.element_selected = roomData.element_selected || roomCheck.element_selected || {};
+    roomData.element_selecting = roomData.element_selecting || roomCheck.element_selecting || {};
 
     const row = parseInt(roomData.row);
     const column = parseInt(roomData.column);
@@ -157,7 +165,9 @@ const updateRoom = async (roomData, id) => {
         diagram: {
             row,
             column,
-            element_remove
+            element_remove,
+            element_selected: roomData.element_selected,
+            element_selecting :roomData.element_selecting
         },
         status: roomData.status
     };

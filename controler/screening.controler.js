@@ -8,7 +8,10 @@ const getScreeings = async (req, res, next) => {
     try {
         let filter = {};
 
-        const screenings = await screeningService.getScreeings(filter);
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+
+        const screenings = await screeningService.getScreeings(filter, page, limit);
 
         if (screenings) {
             return res.status(200).json({ data: screenings, status: true, message: 'Lấy dữ liệu thành công' })

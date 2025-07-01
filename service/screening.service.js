@@ -298,6 +298,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 };
 
 const screeningRoom = async (id) => {
+
     const ticketService = require('../service/ticket.service');
 
 
@@ -305,11 +306,16 @@ const screeningRoom = async (id) => {
 
     const screening = await screeningModel.findById(id);
 
+    if (screening === null || screening === undefined) {
+        return screening;
+    }
+
     const room = await roomService.roomId(screening.id_room);
 
     if (!screening) {
         throw new Error("Không Tìm Thấy Phòng")
     }
+
 
     filter.id_screening = screening._id
 
