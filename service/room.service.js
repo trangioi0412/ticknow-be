@@ -64,9 +64,11 @@ const roomId = async (id) => {
     }
 
     const room = await roomModel.findById(id);
+
     if (!room) {
         throw new Error('Không tìm thấy phòng');
     }
+    console.log(room)
 
     return room;
 }
@@ -114,25 +116,35 @@ const addRoom = async (roomData) => {
 const updateRoom = async (roomData) => {
     const roomCheck = await roomModel.findById(roomData.id);
 
-    if (roomCheck.diagram.element_selected instanceof Map && roomCheck.diagram.element_selected.size > 0) {
+    if (
+        roomCheck.diagram.element_selected instanceof Map &&
+        roomCheck.diagram.element_selected.size > 0
+    ) {
         throw new Error("Hiện tại phòng đang có suất chiếu");
     }
 
-    let element_remove = roomData.seatRemoved;
+    let element_remove = roomData.seatRemoved || roomCheck.diagram.element_remove;
 
-    if(!roomData.seatRemoved && Object.keys(roomData.seatRemoved).length < 0){
-        element_remove = roomCheck.diagram.element_selected;
+    if (roomData.status === undefined || roomData.status === null || roomData.status === "") {
+        roomData.status = 1;
     }
 
-    if (!roomData.status && roomData.status === "") {
-        roomData.status = 1;
+    roomData.row = roomData.row || roomCheck.diagram.row;
+    roomData.column = roomData.column || roomCheck.diagram.column;
+    roomData.id_cinema = roomData.id_cinema || roomCheck.id_cinema;
+
+    const row = parseInt(roomData.row);
+    const column = parseInt(roomData.column);
+
+    if (isNaN(row) || isNaN(column)) {
+        throw new Error("row hoặc column không hợp lệ (không phải số)");
     }
 
     const roomDatas = {
         id_cinema: roomData.id_cinema,
         diagram: {
-            row: parseInt(roomData.row),
-            column: parseInt(roomData.column),
+            row,
+            column,
             element_remove
         },
         status: roomData.status
@@ -142,9 +154,10 @@ const updateRoom = async (roomData) => {
         roomData.id,
         roomDatas,
         { new: true }
-    )
+    );
 
     return newRoom;
-}
+};
+
 
 module.exports = { getAll, roomById, roomId, roomByIdCinema, addRoom, updateRoom };
