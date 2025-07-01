@@ -20,41 +20,58 @@ const getRooms = async (req, res, next) => {
 }
 
 const addRoom = async (req, res, next) => {
-    try{
+    try {
 
         const room = req.body;
 
         const result = await roomService.addRoom(room);
-        
-        if( !result ){
-            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công'})
+
+        if (!result) {
+            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
         }
 
-        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
-    }catch(error){
+        res.status(200).json({ status: true, message: "Thêm phòng chiếu thành công" });
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
     }
 }
 
 const updateRoom = async (req, res, next) => {
-    try{
+    try {
 
         const room = req.body;
 
         const result = await roomService.updateRoom(room);
-        
-        if( !result ){
-            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công'})
+
+        if (!result) {
+            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
         }
 
-        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
-    }catch(error){
+        res.status(200).json({ status: true, message: "sửa phòng chiếu thành công" });
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
     }
 }
 
-module.exports = { getRooms, addRoom, updateRoom };
+const roomId = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const result = await roomService.roomId(id);
+
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
+
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+    } catch (error) {
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+module.exports = { getRooms, addRoom, updateRoom, roomId };
 
 

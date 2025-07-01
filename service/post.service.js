@@ -29,4 +29,8 @@ const getAll = async (page = "", limit = "") => {
     };
 }
 
+const addPost = async ( postData, file ) => {
+    
+}
+
 module.exports = { getAll }
