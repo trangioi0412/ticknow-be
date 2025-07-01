@@ -76,7 +76,7 @@ const roomId = async (id) => {
 
     return {
         ...room.toObject(),
-        name_cinema: cinema.name
+        cinema: cinema.name
     };
 }
 
