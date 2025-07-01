@@ -120,8 +120,9 @@ const addRoom = async (roomData) => {
 
 }
 
-const updateRoom = async (roomData) => {
-    const roomCheck = await roomModel.findById(roomData.id);
+const updateRoom = async (roomData, id) => {
+    
+    const roomCheck = await roomModel.findById(id);
 
     if (
         roomCheck.diagram.element_selected instanceof Map &&
@@ -158,7 +159,7 @@ const updateRoom = async (roomData) => {
     };
 
     const newRoom = await roomModel.findByIdAndUpdate(
-        roomData.id,
+        id,
         roomDatas,
         { new: true }
     );
