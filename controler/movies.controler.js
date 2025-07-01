@@ -181,20 +181,20 @@ const addMovie = [
 ]
 
 const deleteMovie = async (req, res, next) => {
-    try{
+    try {
 
         const { id } = req.params;
 
-        if(!id){
-            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        if (!id) {
+            return res.status(401).json({ status: false, message: "Id Không hợp lệ" });
         }
 
         const result = await movieService.deleteMovie(id);
 
-        return res.status(200).json({ status: true, message: "Xóa phim thành công"})
-    }catch (error) {
+        return res.status(200).json({ status: true, message: "Xóa phim thành công" })
+    } catch (error) {
         console.error(error);
-        return res.status(500).json({status: false, message: error.message})
+        return res.status(500).json({ status: false, message: error.message })
     }
 }
 
@@ -207,9 +207,15 @@ const updateMovie = [
         try {
             const movie = req.body;
 
+            const { id } = req.params;
+
+            if (id) {
+                res.status(404).json({ status: false, message: " Vui lòng truyền id " })
+            }
+
             const file = req.files
 
-            const result = await movieService.updateMovie(movie, file);
+            const result = await movieService.updateMovie(movie, file, id);
 
             if (!result) {
                 res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })

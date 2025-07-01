@@ -44,7 +44,13 @@ const updateVoucher = async (req, res, next) => {
 
         const voucher = req.body;
 
-        const result = await voucherService.updateVoucher(voucher);
+        const { id } = req.params;
+
+        if (id) {
+            res.status(404).json({ status: false, message: " Vui lòng truyền id " })
+        }
+
+        const result = await voucherService.updateVoucher(voucher, id);
         
         if( !result ){
             return res.status(404).json({ status: true, message: 'sửa dữ liệu Không thành công'})

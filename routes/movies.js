@@ -13,7 +13,7 @@ router.post('/add', movieControler.addMovie);
 
 router.delete('/delete/:id', movieControler.deleteMovie);
 
-router.patch('/update', movieControler.updateMovie);
+router.patch('/update/:id', movieControler.updateMovie);
 
 router.get('/:id', movieControler.getDetailMovie);
 

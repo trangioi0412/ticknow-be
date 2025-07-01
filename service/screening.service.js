@@ -388,7 +388,7 @@ const addSceening = async (screeningData) => {
     return data;
 }
 
-const updateSceening = async (screeningData) => {
+const updateSceening = async (screeningData, id) => {
 
     const movieService = require('../service/movie.service');
 
@@ -436,7 +436,7 @@ const updateSceening = async (screeningData) => {
     };
 
     const result = await screeningModel.findByIdAndUpdate(
-        screeningData.id,
+        id,
         newScreening,
         { new: true }
     )

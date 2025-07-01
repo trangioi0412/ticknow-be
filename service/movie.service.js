@@ -214,11 +214,11 @@ const deleteMovie = async (id) => {
 
 }
 
-const updateMovie = async (movieData, file) => {
+const updateMovie = async (movieData, file, id) => {
 
     let genreIds = movieData.genre;
 
-    const movieId = await movieModel.findById(movieData.id);
+    const movieId = await movieModel.findById(id);
 
     if (!movieId) {
         throw new Error('Phim Không tồn tại');
@@ -271,7 +271,7 @@ const updateMovie = async (movieData, file) => {
     movieData.genre = genre
 
     const result = await movieModel.findByIdAndUpdate(
-        movieData.id,
+        id,
         movieData,
         { new: true }
     )

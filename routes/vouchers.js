@@ -11,6 +11,6 @@ router.get('/', voucherControler.getVouchers);
 
 router.post('/add', upload.none(), voucherControler.addVoucher);
 
-router.patch('/update', upload.none(), voucherControler.updateVoucher);
+router.patch('/update/:id', upload.none(), voucherControler.updateVoucher);
 
 module.exports = router;

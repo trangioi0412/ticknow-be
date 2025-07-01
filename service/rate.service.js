@@ -2,11 +2,14 @@ const paginate = require('../utils/pagination');
 
 const rateModel = require('../model/rates.model');
 
-const movieService = require('../service/movie.service');
+// const movieService = require('../service/movie.service');
+
 const ticketService = require('../service/ticket.service');
 
 
 const getAll = async (page, limit) => {
+    const movieService = require('../service/movie.service');
+
     const movies = await movieService.getMovies();
 
     const movieMap = new Map();
@@ -23,7 +26,7 @@ const getAll = async (page, limit) => {
     })
 
     const { data, pagination } = await paginate.paginateQuery(rateModel, {}, page, limit);
-    
+
     const rate = data.map(rate => {
 
         const userName = ticketMap.get(rate.id_ticket.toString());
@@ -45,10 +48,10 @@ const getAll = async (page, limit) => {
 
 const getByIdMovie = async (movieId) => {
 
-    const rate = await rateModel.find( { id_movie: movieId } );
-    
+    const rate = await rateModel.find({ id_movie: movieId });
+
     return rate;
-    
+
 }
 
 module.exports = { getAll, getByIdMovie }

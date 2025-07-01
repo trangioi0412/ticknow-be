@@ -119,9 +119,9 @@ const addCinema = async (cinemaData, file) => {
     return data;
 }
 
-const updateCinema = async (cinemaData, file) => {
+const updateCinema = async (cinemaData, file, id) => {
 
-    const cinema = await cinemaModel.findById(cinemaData.id);
+    const cinema = await cinemaModel.findById(id);
 
     if (!cinema) {
         throw new Error(' Không tìm thấy rạp để xóa ');
@@ -156,7 +156,7 @@ const updateCinema = async (cinemaData, file) => {
     }
 
     const result = await cinemaModel.findByIdAndUpdate(
-        cinemaData.id,
+        id,
         newCinema,
         { new: true }
     )

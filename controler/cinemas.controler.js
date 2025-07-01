@@ -80,20 +80,20 @@ const addCinema = [
 ]
 
 const deleteCinema = async (req, res, next) => {
-    try{
+    try {
 
         const { id } = req.params;
 
-        if(!id){
-            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        if (!id) {
+            return res.status(401).json({ status: false, message: "Id Không hợp lệ" });
         }
 
         const result = await cinemaService.deleteCinema(id);
 
-        return res.status(200).json({ status: true, message: "Xóa rạp thành công"})
-    }catch (error) {
+        return res.status(200).json({ status: true, message: "Xóa rạp thành công" })
+    } catch (error) {
         console.error(error);
-        return res.status(500).json({status: false, message: error.message})
+        return res.status(500).json({ status: false, message: error.message })
     }
 }
 
@@ -104,6 +104,12 @@ const updateCinema = [
             const cinema = req.body;
 
             const file = req.file
+
+            const { id } = req.params;
+
+            if (id) {
+                res.status(404).json({ status: false, message: " Vui lòng truyền id " })
+            }
 
             const result = await cinemaService.updateCinema(cinema, file);
 
