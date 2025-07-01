@@ -18,6 +18,43 @@ const getRooms = async (req, res, next) => {
         return res.status(500).json({ status: false, message: error.message })
     }
 }
-module.exports = { getRooms };
+
+const addRoom = async (req, res, next) => {
+    try{
+
+        const room = req.body;
+
+        const result = await roomService.addRoom(room);
+        
+        if( !result ){
+            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công'})
+        }
+
+        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+const updateRoom = async (req, res, next) => {
+    try{
+
+        const room = req.body;
+
+        const result = await roomService.updateRoom(room);
+        
+        if( !result ){
+            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công'})
+        }
+
+        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+module.exports = { getRooms, addRoom, updateRoom };
 
 
