@@ -58,7 +58,7 @@ const updateRoom = async (req, res, next) => {
 const roomId = async (req, res, next) => {
     try {
         const { id } = req.params
-        const result = await roomService.roomById(id);
+        const result = await roomService.roomId(id);
 
         if (!result) {
             return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })

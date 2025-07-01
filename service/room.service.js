@@ -68,9 +68,16 @@ const roomId = async (id) => {
     if (!room) {
         throw new Error('Không tìm thấy phòng');
     }
-    console.log(room)
 
-    return room;
+    const cinema = await cinemaModel.findById(room.id_cinema);
+    if (!cinema) {
+        throw new Error('Không tìm thấy rạp');
+    }
+
+    return {
+        ...room.toObject(),
+        name_cinema: cinema.name
+    };
 }
 
 const roomByIdCinema = async (id) => {
