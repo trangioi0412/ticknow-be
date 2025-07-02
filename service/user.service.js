@@ -32,6 +32,20 @@ const getUsers = async (filter, page, limit, sort) => {
   return result;
 };
 
+const getUserDetail = async (id) => {
+
+  const user =  await userModel.findById(id);
+
+  if(user == null || user == undefined){
+    throw new Error("Thông tin người dùng sai")
+  }
+
+  const { password, ...rest } = user.toObject();
+
+  return rest;
+
+}
+
 const login = async (email, password) => {
   const checkUser = await userModel.findOne({ email: email });
 
@@ -90,5 +104,4 @@ const register = async (user) => {
   const result = await newUser.save();
   return result;
 };
-
-module.exports = { getUsers, login, register };
+module.exports = { getUsers, getUserDetail, login, register };
