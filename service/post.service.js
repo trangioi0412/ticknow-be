@@ -35,6 +35,16 @@ const getAll = async (filter, page = "", limit = "", sort) => {
     };
 }
 
+const getDetail = async  (id) => {
+    const postDetail = await postModel.findById(id);
+
+    if(!postDetail){
+        throw new Error("không tìm thấy bài viết")
+    }
+
+    return postDetail
+}
+
 const addPost = async (postData, file) => {
 
     if (!postData.title && postData.title === "") {
@@ -134,4 +144,4 @@ const deletePost = async (id) => {
 
 }
 
-module.exports = { getAll, addPost, updatepost, deletePost }
+module.exports = { getAll, addPost, updatepost, deletePost, getDetail }
