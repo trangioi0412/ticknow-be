@@ -9,7 +9,7 @@ const postSchema = new Schema({
     start_day: {type: Date, required: true},
     end_day: { type: Date, required: true},
     status: { type: String, required: false, default: "Hoạt Động" },
-    img: {type: String, required: true}
+    image: {type: String, required: true}
 }, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.post || mongoose.model('post', postSchema);

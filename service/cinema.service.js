@@ -124,7 +124,7 @@ const updateCinema = async (cinemaData, file, id) => {
     const cinema = await cinemaModel.findById(id);
 
     if (!cinema) {
-        throw new Error(' Không tìm thấy rạp để xóa ');
+        throw new Error(' Không tìm thấy rạp để sửa ');
     }
 
     const locations = await locationModel.find({ _id: { $in: cinemaData.id_location } });
