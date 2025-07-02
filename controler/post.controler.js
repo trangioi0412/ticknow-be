@@ -2,10 +2,17 @@ const postService = require('../service/post.service');
 
 const getPosts = async (req, res, next) => {
     try {
+
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const sort = { [sortField]: sortOrder };
+
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const result = await postService.getAll(page, limit);
+        const filter = {}
+
+        const result = await postService.getAll(filter, page, limit, sort);
 
         if (!result) {
             return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })

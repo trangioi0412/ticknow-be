@@ -8,10 +8,14 @@ const getScreeings = async (req, res, next) => {
     try {
         let filter = {};
 
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const sort = { [sortField]: sortOrder };
+
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const screenings = await screeningService.getScreeings(filter, page, limit);
+        const screenings = await screeningService.getScreeings(filter, page, limit, sort);
 
         if (screenings) {
             return res.status(200).json({ data: screenings, status: true, message: 'Lấy dữ liệu thành công' })
@@ -76,7 +80,7 @@ const addSceening = async (req, res, next) => {
             return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
         }
 
-        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
+        res.status(200).json({ data: result, status: true, message: "Thêm suất chiếu thành công" });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
@@ -101,7 +105,7 @@ const updateSceening = async (req, res, next) => {
             return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
         }
 
-        res.status(200).json({ status: true, message: "Thêm suất chiếu thành công" });
+        res.status(200).json({ data: result, status: true, message: "Thêm suất chiếu thành công" });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })

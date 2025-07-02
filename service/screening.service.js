@@ -9,7 +9,7 @@ const cinemaService = require('../service/cinema.service');
 
 const paginate = require('../utils/pagination');
 
-const getScreeings = async (filter, page, limit) => {
+const getScreeings = async (filter, page, limit, sort) => {
     try {
         const movieService = require('../service/movie.service');
 
@@ -31,13 +31,12 @@ const getScreeings = async (filter, page, limit) => {
 
         });
 
-        const screenings = await screeningModel.find(filter);
-
         const { data, pagination } = await paginate.paginateQuery(
             screeningModel,
             filter,
             page,
-            limit
+            limit, 
+            sort
         );
 
         const result = data.map(screening => {
@@ -98,8 +97,6 @@ const getScreeingByDay = async (date = "", cinema = "") => {
 
         screenings = screenings.filter(s => roomIds.includes(s.id_room.toString()));
     }
-
-    console.log(cinema);
 
     return screenings;
 }

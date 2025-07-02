@@ -19,6 +19,6 @@ const movieSchema = new Schema({
     status: { type: Number, enum: [1, 2, 3], required: false, default: 2 },
     language: {type: String, required: false, default: 'Đang Cập Nhật'},
     star: {type: Number, required: false, default: 0}
-}, { versionKey: false});
+}, { versionKey: false, timestamps: true});
 
 module.exports = mongoose.models.movie || mongoose.model('movie', movieSchema );

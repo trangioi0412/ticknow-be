@@ -11,6 +11,6 @@ const screeningSchema = new Schema ({
     date: { type: Date, required: false, default: Date.now()},
     status: { type: String, required: false, default: "Hoạt Động"},
     showtype: { type: String, required: true },
-})
+}, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.screening || mongoose.model('screening', screeningSchema);

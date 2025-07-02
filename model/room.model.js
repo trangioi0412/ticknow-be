@@ -15,6 +15,8 @@ const roomSchema = new Schema({
   },
   status: { type: Number, required: false, default: 2 },
 }, {
+  versionKey: false,
+  timestamps: true,
   toObject: {
     transform: function (doc, ret) {
       if (ret.diagram) {

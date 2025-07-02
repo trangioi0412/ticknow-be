@@ -10,6 +10,6 @@ const ticketSchema = new Schema ({
     id_voucher: { type: ObjectId, required: false, default: ""},
     price: { type: Number, required: true },
     type: { type: String, required: true },
-})
+}, {versionKey: false, timestamps: true})
 
 module.exports = mongoose.models.ticket || mongoose.model('ticket', ticketSchema);

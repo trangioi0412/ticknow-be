@@ -9,6 +9,6 @@ const transitionSchema = new Schema ({
     amount: { type: String, required: true },
     payment_time: { type: Date, required: false, default: Date.now()},
     status: { type: String, required: true} 
-})
+}, {versionKey: false, timestamps: true})
 
 module.exports = mongoose.models.transition || mongoose.model('transition', transitionSchema);

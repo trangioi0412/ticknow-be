@@ -10,6 +10,6 @@ const postSchema = new Schema({
     end_day: { type: Date, required: true},
     status: { type: String, required: false, default: "Hoạt Động" },
     img: {type: String, required: true}
-})
+}, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.post || mongoose.model('post', postSchema);

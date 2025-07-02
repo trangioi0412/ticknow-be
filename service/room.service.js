@@ -5,7 +5,7 @@ const cinemaModel = require('../model/cinemas.model');
 
 const cinemaService = require('../service/cinema.service');
 
-const getAll = async (page, limit) => {
+const getAll = async (filter, page, limit, sort) => {
     const cinemas = await cinemaService.getCinema();
     const cinemaMap = new Map();
 
@@ -13,7 +13,7 @@ const getAll = async (page, limit) => {
         cinemaMap.set(cinema._id.toString(), cinema.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(roomModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(roomModel, filter, page, limit, sort);
 
 
     const room = data.map(room => {
@@ -114,15 +114,13 @@ const addRoom = async (roomData) => {
         }
     };
 
-    const newRoom = await roomModel.create(roomDatas)
-
+    const newRoom = await roomModel.create(roomDatas);
+    
     return newRoom;
 
 }
 
 const updateRoom = async (roomData, id) => {
-
-    console.log(roomData.element_selected);
 
     const { screeningRoom } = require('./screening.service');
 

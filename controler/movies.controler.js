@@ -8,19 +8,21 @@ const upload = getUploader()
 
 const getMovies = async (req, res, next) => {
     try {
-        // query host
+
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const sort = { [sortField]: sortOrder };
+
         const { name, status, date } = req.query;
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
-        // create variable storage
         let filter = {};
 
         let result
-
-        // check variable  
+  
         if (status) filter.status = status;
 
         if (date) filter.release_date = check.checkDate(date);
@@ -29,10 +31,8 @@ const getMovies = async (req, res, next) => {
             filter.name = new RegExp(name, 'i');
         }
 
-        // get data
-        result = await movieService.getMovies(filter, limit, page);
+        result = await movieService.getMovies(filter, limit, page, sort);
 
-        // check data
         if (!result) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
         }

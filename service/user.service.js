@@ -6,12 +6,13 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../model/users.model');
 const paginate = require('../utils/pagination');
 
-const getUsers = async (page = 1, limit = 5) => {
+const getUsers = async (filter, page, limit, sort) => {
   const { data, pagination } = await paginate.paginateQuery(
     userModel,
-    {},
+    filter,
     page,
-    limit
+    limit,
+    sort
   );
 
   const user = data.map((user) => {

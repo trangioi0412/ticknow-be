@@ -9,7 +9,7 @@ const payMethodSchema = new Schema ({
     dateCreta: {type: Date, required: false, default: Date.now()},
     is_active: {type: Boolean, required: false, default: false}
     },
-    { collection: 'payMethods' }
+    { collection: 'payMethods', versionKey: false, timestamps: true }
 )
 
 module.exports = mongoose.models.payMethod || mongoose.model('payMethod', payMethodSchema);
