@@ -3,7 +3,7 @@ const userService = require('../service/user.service');
 
 const paginate = require('../utils/pagination');
 
-const getAll = async (page = "", limit = "") => {
+const getAll = async (filter, page = "", limit = "", sort) => {
     const users = await userService.getUsers();
 
     const usersName = new Map();
@@ -12,7 +12,7 @@ const getAll = async (page = "", limit = "") => {
         usersName.set(user._id.toString(), user.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(postModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(postModel, filter, page, limit, sort);
 
     const post = data.map(post => {
         const idUser = post.id_user.toString();

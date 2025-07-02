@@ -4,9 +4,9 @@ const voucherModel = require('../model/vouchers.model');
 const ticketService = require('../service/ticket.service');
 
 
-const getAll = async (page, limit) => {
+const getAll = async (filter, page, limit, sort) => {
 
-    const { data, pagination } = await paginate.paginateQuery(voucherModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(voucherModel, filter, page, limit, sort);
 
     return {
         voucher: data,

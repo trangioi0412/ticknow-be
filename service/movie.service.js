@@ -14,10 +14,10 @@ const fs = require('fs');
 const path = require('path');
 
 
-const getMovies = async (filter = {}, limit = "", page = "") => {
+const getMovies = async (filter = {}, limit = "", page = "", sort) => {
     try {
 
-        const { data, pagination } = await paginate.paginateQuery(movieModel, filter, page, limit);
+        const { data, pagination } = await paginate.paginateQuery(movieModel, filter, page, limit, sort);
 
         const movie = await mapGenre.mapGenreMovie(data);
 
@@ -39,7 +39,12 @@ const getMovieById = async (id) => {
 
         const movie = await movieModel.findById(id);
 
+        if (!movie) {
+            throw new Error('❌ Không tìm thấy movie với id này');
+        }
+
         const result = await mapGenre.mapGenreMovieOne(movie);
+
         return result;
 
     } catch (error) {
@@ -248,7 +253,7 @@ const updateMovie = async (movieData, file, id) => {
     if (file?.image?.[0]) {
         const imageFile = file.image[0];
         const imageName = Date.now() + '-' + imageFile.originalname;
-        console.log(movieId.image);
+
         if (movieId.image) {
             deleteImageFromDisk(movieId.image, 'movie');
         }

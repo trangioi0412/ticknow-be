@@ -9,6 +9,6 @@ const usersSchema = new Schema ({
     year: { type: Number, required: false, default: "" },
     status: { type: String, required: false, default: "Hoạt Động"},
     role: {type: Boolean, required: false, default: false }
-}, { versionKey: false});
+}, { versionKey: false, timestamps: true});
 
 module.exports = mongoose.models.user || mongoose.model('user', usersSchema);

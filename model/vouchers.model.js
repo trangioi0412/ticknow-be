@@ -11,6 +11,6 @@ const voucherSchema = new Schema({
     start_date: { type: Date, required: true},
     end_day: { type: Date, required: true},
     is_active: { type: String, required: false, default: "Hoạt Động" },
-})
+}, { versionKey: false, timestamps: true})
 
 module.exports = mongoose.models.voucher || mongoose.model('voucher', voucherSchema);

@@ -5,9 +5,11 @@ const ticketModel = require('../model/ticket.model');
 const screeningService = require('./screening.service')
 const usersService = require('./user.service');
 const roomService = require('./room.service');
+
 const movieService = require('./movie.service');
 
-const getTicket = async (page = "", limit = "") => {
+const getTicket = async (filter, page = "", limit = "", sort) => {
+
     const movieService = require('./movie.service');
 
     const screenings = await screeningService.getScreeings();
@@ -18,7 +20,7 @@ const getTicket = async (page = "", limit = "") => {
 
     const screeningMap = new Map();
 
-    screenings.forEach(async screening => {
+    screenings.result.forEach(async screening => {
         const cinemaRoom = await roomService.roomById(screening.id_room);
 
         room = {
@@ -32,6 +34,7 @@ const getTicket = async (page = "", limit = "") => {
         }
 
         const movieId = await movieService.getMovieById(screening.id_movie)
+        
         movie = {
             id: movieId._id,
             name: movieId.name,
@@ -47,7 +50,7 @@ const getTicket = async (page = "", limit = "") => {
         userMap.set(user._id.toString(), user.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(ticketModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(ticketModel, filter, page, limit, sort);
 
 
     const ticket = data.map(ticket => {

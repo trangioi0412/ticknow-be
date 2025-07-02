@@ -12,7 +12,7 @@ const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
 
 
 
-const getCinema = async (page = "", limit = "") => {
+const getCinema = async (filter ,page = "", limit = "", sort) => {
     const locations = await locationService.getAll();
 
     const locationMap = new Map();
@@ -21,7 +21,7 @@ const getCinema = async (page = "", limit = "") => {
         locationMap.set(loca._id.toString(), loca.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(cinemaModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(cinemaModel, filter, page, limit, sort);
 
     const cinema = data.map(cinema => {
         const idLoca = cinema.location.id_location.toString();

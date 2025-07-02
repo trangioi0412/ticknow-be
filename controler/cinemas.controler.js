@@ -12,11 +12,17 @@ const upload = getUploader()
 const getCinema = async (req, res, next) => {
     try {
 
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const sort = { [sortField]: sortOrder };
+
+        const filter = {}
+
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
-        const result = await cinemaService.getCinema(page, limit);
+        const result = await cinemaService.getCinema(filter, page, limit, sort);
 
         if (!result) {
             return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
