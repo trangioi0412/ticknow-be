@@ -13,6 +13,8 @@ router.patch( '/update/:id', postControler.updatePost);
 
 router.delete( '/delete/:id', postControler.deletePost);
 
+router.get( '/:id', postControler.getDetail);
+
 
 
 module.exports = router;

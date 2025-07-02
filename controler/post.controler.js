@@ -30,6 +30,25 @@ const getPosts = async (req, res, next) => {
     }
 }
 
+const getDetail = async (req, res, next) => {
+     try {
+
+        const { id } = req.params
+
+        const result = await postService.getDetail(id);
+
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+        }
+
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+    } catch (error) {
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
 const addPoster = [
     upload.single('image'),
     async (req, res, next) => {
@@ -102,4 +121,4 @@ const deletePost = async (req, res, next) => {
 }
 
 
-module.exports = { getPosts, addPoster, updatePost, deletePost };
+module.exports = { getPosts, addPoster, updatePost, deletePost, getDetail };
