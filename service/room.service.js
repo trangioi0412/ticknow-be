@@ -94,11 +94,14 @@ const addRoom = async (roomData) => {
 
     }).sort({ code_room: -1 }).limit(1);
 
-    if (!rooms && rooms.length < 0) {
-        throw new Error("Cinema không tồn tại")
+    let code_room
+
+    if (rooms && rooms.length > 0) {
+        code_room = parseInt(rooms.code_room) + 1;
     }
 
-    let code_room = parseInt(rooms.code_room) + 1;
+    code_room = 1;
+
 
     let element_remove = roomData.seatRemoved;
 

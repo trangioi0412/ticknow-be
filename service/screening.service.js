@@ -360,7 +360,7 @@ const addSceening = async (screeningData) => {
     let date = new Date(`${screeningData.date}T00:00:00.000Z`);
 
     if (!room && room.length < 0) {
-        throw new Error("Không tìm thấy room");
+        throw new Error("Không tìm thấy phòng");
     }
 
     if (room.status === 1) {
