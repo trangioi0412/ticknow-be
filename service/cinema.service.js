@@ -94,7 +94,7 @@ const addCinema = async (cinemaData, file) => {
     const checkCinema = await cinemaModel.findOne({ name: cinemaData.name });
 
     if (checkCinema) {
-        throw new Error('Tên Phim Đã Tồn Tại');
+        throw new Error('Tên Cinema Đã Tồn Tại');
     }
 
     if (file) {

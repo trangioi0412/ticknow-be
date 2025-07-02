@@ -16,13 +16,20 @@ const getCinema = async (req, res, next) => {
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
-        const filter = {}
+        const filter = {};
+
+        const { locationId } = req.query
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
+        if (locationId) {
+            filter['location.id_location'] = locationId;
+        }
+
         const result = await cinemaService.getCinema(filter, page, limit, sort);
+
 
         if (!result) {
             return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
