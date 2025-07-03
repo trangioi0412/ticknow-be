@@ -96,12 +96,11 @@ const addRoom = async (roomData) => {
 
     let code_room
 
+    code_room = 1;
+
     if (rooms && rooms.length > 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
-
-    code_room = 1;
-
 
     let element_remove = roomData.seatRemoved;
 
