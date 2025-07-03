@@ -303,8 +303,6 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     result.films = Array.from(filmMap.values());
 
-    console.log(result.cinemas);
-
     return result;
 };
 
