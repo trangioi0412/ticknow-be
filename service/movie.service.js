@@ -237,8 +237,6 @@ const updateMovie = async (movieData, file, id) => {
         movieData.banner = file.banner[0].filename;
     }
 
-
-
     const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
 
     if (foundGenre.length !== genreIds.length) {
