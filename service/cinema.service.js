@@ -7,12 +7,14 @@ const locationModel = require("../model/location.model");
 
 const cinemaModel = require('../model/cinemas.model');
 
+const roomModel = require('../model/room.model');
+
 const paginate = require('../utils/pagination');
 const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
 
 
 
-const getCinema = async (filter ,page = "", limit = "", sort) => {
+const getCinema = async (filter, page = "", limit = "", sort) => {
     const locations = await locationService.getAll();
 
     const locationMap = new Map();
@@ -131,6 +133,13 @@ const updateCinema = async (cinemaData, file, id) => {
 
     if (!locations && locations.length <= 0) {
         throw new Error('Địa chỉ không tồn tại')
+    }
+
+    if (cinemaData.status && cinemaData.status === 3) {
+        const roomActive = await roomModel.find({ id_cinema: id, status: 2 });
+        if (roomActive) {
+            throw new Error('Hiện tại rạp vẫn đang còn phòng hoạt động!')
+        }
     }
 
     if (file) {

@@ -213,7 +213,7 @@ const updateMovie = [
                 res.status(404).json({ status: false, message: " Vui lòng truyền id " })
             }
 
-            const file = req.files
+            const file = req.files || {};
 
             const result = await movieService.updateMovie(movie, file, id);
 

@@ -118,12 +118,28 @@ const addRoom = async (roomData) => {
     };
 
     const newRoom = await roomModel.create(roomDatas);
-    
+
     return newRoom;
 
 }
 
 const updateRoom = async (roomData, id) => {
+
+    if (roomData.id_cinema) {
+        const rooms = await roomModel.findOne({
+            id_cinema: roomData.id_cinema,
+
+        }).sort({ code_room: -1 }).limit(1);
+
+        let code_room
+
+        if (rooms && rooms.length > 0) {
+            code_room = parseInt(rooms.code_room) + 1;
+        }
+
+        roomData.code_room = code_room
+    }
+
 
     const { screeningRoom } = require('./screening.service');
 
@@ -168,7 +184,7 @@ const updateRoom = async (roomData, id) => {
             column,
             element_remove,
             element_selected: roomData.element_selected,
-            element_selecting :roomData.element_selecting
+            element_selecting: roomData.element_selecting
         },
         status: roomData.status
     };
