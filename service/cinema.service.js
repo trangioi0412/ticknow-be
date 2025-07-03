@@ -174,29 +174,4 @@ const updateCinema = async (cinemaData, file, id) => {
 
 }
 
-const deleteCinema = async (id) => {
-    const roomModel = require('../model/room.model');
-
-    const rooms = await roomModel.find({ id_cinema: id });
-
-    if (rooms && rooms.length > 0) {
-        throw new Error('Rạp Đang Còn Phòng');
-    }
-
-    const cinema = await cinemaModel.findById(id);
-
-    if (!cinema) {
-        throw new Error(' Không tìm thấy rạp để xóa ');
-    }
-
-    const imagePath = path.join(__dirname, '../public/images/cinema', cinema.image);
-
-    if (cinema.image && fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-    }
-
-    return await cinemaModel.findByIdAndDelete(id);
-
-}
-
-module.exports = { getCinema, getCinemaById, cinemaDetail, addCinema, deleteCinema, updateCinema }
+module.exports = { getCinema, getCinemaById, cinemaDetail, addCinema, updateCinema }

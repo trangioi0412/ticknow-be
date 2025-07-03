@@ -254,7 +254,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     const result = {
         date: "",
-        films: []
+        data: []
     };
 
     if (!filter.date) {
@@ -287,8 +287,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
         if (!filmMap.has(filmId)) {
             filmMap.set(filmId, {
-                id: filmId,
-                name: filmData.name,
+                film: filmData,
                 cinemas: []
             });
         }
@@ -300,6 +299,7 @@ const getScreeningSchedule = async (filter, cinema) => {
         if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
+                name: cinemaData.name.toString(),
                 location: cinema.location,
                 showtimes: []
             }
@@ -308,14 +308,14 @@ const getScreeningSchedule = async (filter, cinema) => {
 
         cinemaItem.showtimes.push({
             id: screening._id,
-            time: screening.time_Start,
+            time: screening.time_start,
             showtype: screening.showtype
         })
     }
 
-    result.films = Array.from(filmMap.values());
+    console.log()
 
-    console.log(result.cinemas);
+    result.data = Array.from(filmMap.values());
 
     return result;
 };
