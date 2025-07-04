@@ -229,12 +229,12 @@ const updateMovie = async (movieData, file, id) => {
         throw new Error('Phim Không tồn tại');
     }
 
-    if (file.image && file.image.length > 0) {
-        movieData.image = file.image[0].filename
+    if (file?.image?.length > 0) {
+        movieData.image = file.image[0].filename;
     }
 
-    if (file.banner && file.banner.length > 0) {
-        movieData.banner = file.banner[0].filename
+    if (file?.banner?.length > 0) {
+        movieData.banner = file.banner[0].filename;
     }
 
     const foundGenre = await genreModel.find({ _id: { $in: genreIds } });

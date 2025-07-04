@@ -35,7 +35,7 @@ const getScreeings = async (filter, page, limit, sort) => {
             screeningModel,
             filter,
             page,
-            limit, 
+            limit,
             sort
         );
 
@@ -75,21 +75,33 @@ const getScreeingById = async (id) => {
 }
 
 const getScreeingByDay = async (date = "", cinema = "") => {
-    let day = date
 
-    if (!date) {
-        const now = new Date();
-        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+    let screenings
 
-        const year = vnTime.getUTCFullYear();
-        const month = vnTime.getUTCMonth();
-        const date = vnTime.getUTCDate();
+    screenings = await screeningModel.aggregate([
+        {
+            $lookup: {
+                from: "movies",
+                localField: "id_movie",
+                foreignField: "_id",
+                as: "movie"
+            }
+        },
+        {
+            $unwind: "$movie" 
+        },
+        {
+            $match: {
+                "movie.status": 1,
+                "id_movie": mongoose.Types.ObjectId("ID_CỦA_MOVIE")
+            }
+        }
+    ]);
 
-        day = new Date(Date.UTC(year, month, date));
+    if (date) {
+        screenings = await screeningModel.find({ date: date });
     }
 
-
-    let screenings = await screeningModel.find({ date: day });
 
     if (cinema) {
         let rooms = await roomService.roomByIdCinema(cinema);
@@ -242,7 +254,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     const result = {
         date: "",
-        films: []
+        data: []
     };
 
     if (!filter.date) {
@@ -275,8 +287,7 @@ const getScreeningSchedule = async (filter, cinema) => {
 
         if (!filmMap.has(filmId)) {
             filmMap.set(filmId, {
-                id: filmId,
-                name: filmData.name,
+                film: filmData,
                 cinemas: []
             });
         }
@@ -288,6 +299,7 @@ const getScreeningSchedule = async (filter, cinema) => {
         if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
+                name: cinemaData.name.toString(),
                 location: cinema.location,
                 showtimes: []
             }
@@ -296,13 +308,11 @@ const getScreeningSchedule = async (filter, cinema) => {
 
         cinemaItem.showtimes.push({
             id: screening._id,
-            time: screening.time_Start,
+            time: screening.time_start,
             showtype: screening.showtype
         })
     }
-
-    result.films = Array.from(filmMap.values());
-
+    result.data = Array.from(filmMap.values());
     return result;
 };
 
@@ -402,6 +412,7 @@ const addSceening = async (screeningData) => {
 
     return data;
 }
+
 
 const updateSceening = async (screeningData, id) => {
 
