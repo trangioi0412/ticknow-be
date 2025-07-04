@@ -2,7 +2,7 @@ const paginateQuery = async (Model, filter = {}, page, limit, sort = {}) => {
     const query = Model.find(filter).sort(sort);
     let data;
     let pagination = {};
-
+    
     if (!limit && !page) {
         data = await query;
     } else {

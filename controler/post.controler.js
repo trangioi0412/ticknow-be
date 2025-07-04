@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const postService = require('../service/post.service');
 
 const getUploader = require('../middlewares/uploadFile');
@@ -14,7 +16,30 @@ const getPosts = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const filter = {}
+        const filter = {};
+
+        const { start_day, end_day, status, user } = req.query;
+
+        if (start_day) {
+            const startDate = new Date(start_day);
+            startDate.setHours(0, 0, 0, 0);
+            filter.start_day = { ...filter.start_day, $gte: startDate };
+        }
+
+        if (end_day) {
+            const endDate = new Date(end_day);
+            endDate.setHours(23, 59, 59, 999);
+            filter.end_day = { ...filter.endDate, $lte: endDate };
+        }
+
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
+            filter.status = { $in: statusArray }
+        }
+
+        if(user){
+            filter.id_user = new mongoose.Types.ObjectId(user);
+        }
 
         const result = await postService.getAll(filter, page, limit, sort);
 
@@ -31,7 +56,7 @@ const getPosts = async (req, res, next) => {
 }
 
 const getDetail = async (req, res, next) => {
-     try {
+    try {
 
         const { id } = req.params
 

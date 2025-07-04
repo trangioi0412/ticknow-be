@@ -12,10 +12,16 @@ const getLocation = async (req, res, next) => {
 
         const filter = {} 
 
+        const name = req.query;
+
+        if( name ){
+            filter.name = { $regex: name, $options: 'i' }
+        }
+
         const result = await locationService.getAll(filter, page, limit, sort);
 
         if (!result) {
-            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" })
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thất bại" })
         }
 
         return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })

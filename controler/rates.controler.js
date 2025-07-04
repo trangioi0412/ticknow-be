@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const rateService = require('../service/rate.service');
 
 const getRate = async (req, res, next) => {
@@ -10,7 +12,29 @@ const getRate = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const filter ={}
+        const { movie, user, score, date } = req.query
+
+        const filter = {}
+
+        if (movie) {
+            filter.id_movie = new mongoose.Types.ObjectId(movie);
+        }
+
+        if (user) {
+            filter.id_user = new mongoose.Types.ObjectId(user);
+        }
+
+        if (score) {
+            const parts = score.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+
+            if (parts.length === 2) {
+                const [min, max] = parts;
+                filter.score = { $gte: min, $lte: max };
+            } else if (parts.length === 1) {
+                const value = parts[0];
+                filter.score = { $gte: value, $lt: value + 1 };
+            }
+        }
 
         const result = await rateService.getAll(filter, page, limit, sort);
 

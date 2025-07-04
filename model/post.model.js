@@ -8,7 +8,7 @@ const postSchema = new Schema({
     content: {type: String, required: true},
     start_day: {type: Date, required: true},
     end_day: { type: Date, required: true},
-    status: { type: String, required: false, default: "Hoạt Động" },
+    status: { type: Number, required: false, default: 2 },
     image: {type: String, required: true}
 }, {versionKey: false, timestamps: true })
 
