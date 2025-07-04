@@ -312,11 +312,7 @@ const getScreeningSchedule = async (filter, cinema) => {
             showtype: screening.showtype
         })
     }
-
-    console.log()
-
     result.data = Array.from(filmMap.values());
-
     return result;
 };
 
