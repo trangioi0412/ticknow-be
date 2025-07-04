@@ -18,14 +18,24 @@ const getCinema = async (req, res, next) => {
 
         const filter = {};
 
-        const { locationId } = req.query
+        const { locationId, status, name } = req.query
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
         if (locationId) {
-            filter['location.id_location'] = locationId;
+            const locationArray = Array.isArray(locationId) ? locationId : locationId.split(',').map(id => id.trim())
+            filter['location.id_location'] = { $in: locationArray };
+        }
+
+        if(status){
+            const statusArray = Array.isArray(status) ? status.map( s => Number(s) ) : status.split(',').map(sta => Number( sta.trim()) );
+            filter.status = { $in: statusArray }
+        }
+
+        if(name){
+            filter.name = { $regex: name, $options: 'i' }
         }
 
         const result = await cinemaService.getCinema(filter, page, limit, sort);
@@ -92,24 +102,6 @@ const addCinema = [
     }
 ]
 
-const deleteCinema = async (req, res, next) => {
-    try {
-
-        const { id } = req.params;
-
-        if (!id) {
-            return res.status(401).json({ status: false, message: "Id Không hợp lệ" });
-        }
-
-        const result = await cinemaService.deleteCinema(id);
-
-        return res.status(200).json({ status: true, message: "Xóa rạp thành công" })
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: false, message: error.message })
-    }
-}
-
 const updateCinema = [
     upload.single('image'),
     async (req, res, next) => {
@@ -140,4 +132,4 @@ const updateCinema = [
 ]
 
 
-module.exports = { getCinema, getDetail, addCinema, deleteCinema, updateCinema }
+module.exports = { getCinema, getDetail, addCinema, updateCinema }

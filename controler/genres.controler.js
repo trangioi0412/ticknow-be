@@ -10,7 +10,13 @@ const getGenres = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
+        const { name } = req.query
+
         const filter = {}
+
+        if(name){
+            filter.name = { $regex: name, $options: 'i' }
+        }
 
         const result = await genreService.getGenres(filter, page, limit, sort);
 

@@ -104,4 +104,6 @@ const register = async (user) => {
   const result = await newUser.save();
   return result;
 };
+
+
 module.exports = { getUsers, getUserDetail, login, register };

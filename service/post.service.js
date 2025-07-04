@@ -12,6 +12,9 @@ const paginate = require('../utils/pagination');
 const getAll = async (filter, page = "", limit = "", sort) => {
     const users = await userService.getUsers();
 
+    const posttest = await postModel(filter);
+    console.log(posttest);
+
     const usersName = new Map();
 
     users.user.forEach((user) => {
