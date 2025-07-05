@@ -78,26 +78,6 @@ const getScreeingByDay = async (date = "", cinema = "") => {
 
     let screenings
 
-    screenings = await screeningModel.aggregate([
-        {
-            $lookup: {
-                from: "movies",
-                localField: "id_movie",
-                foreignField: "_id",
-                as: "movie"
-            }
-        },
-        {
-            $unwind: "$movie" 
-        },
-        {
-            $match: {
-                "movie.status": 1,
-                "id_movie": new mongoose.Types.ObjectId(cinema)
-            }
-        }
-    ]);
-
     if (date) {
         screenings = await screeningModel.find({ date: date });
     }
