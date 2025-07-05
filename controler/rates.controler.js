@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const check = require('../utils/checkDateQuery');
+
 const rateService = require('../service/rate.service');
 
 const getRate = async (req, res, next) => {
@@ -12,7 +14,7 @@ const getRate = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const { movie, user, score, date } = req.query
+        const { movie, user, score, start_day, end_day } = req.query
 
         const filter = {}
 
@@ -33,6 +35,22 @@ const getRate = async (req, res, next) => {
             } else if (parts.length === 1) {
                 const value = parts[0];
                 filter.score = { $gte: value, $lt: value + 1 };
+            }
+        }
+
+        if (start_day || end_day) {
+            filter.date = {};
+
+            if (start_day) {
+                const startDate = new Date(start_day);
+                startDate.setHours(0, 0, 0, 0);
+                filter.date.$gte = startDate;
+            }
+
+            if (end_day) {
+                const endDate = new Date(end_day);
+                endDate.setHours(23, 59, 59, 999);
+                filter.date.$lte = endDate;
             }
         }
 

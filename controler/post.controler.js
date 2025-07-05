@@ -80,7 +80,6 @@ const addPoster = [
         try {
             const poster = req.body;
 
-
             const file = req.file
 
             const result = await postService.addPost(poster, file);

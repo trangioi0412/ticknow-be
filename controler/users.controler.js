@@ -12,6 +12,32 @@ const getAllUsers = async (req, res, next) => {
 
     const filter = {}
 
+    const { name, phone, email, status, role } = req.query;
+
+    if (name) {
+      filter.name = new RegExp(name, 'i');
+    }
+
+    if (phone) {
+      filter.phone = { $eq: phone };
+    }
+
+    if (email) {
+      filter.email = new RegExp(email, 'i');
+    }
+
+    if (status) {
+      const statusArray = Array.isArray(status) ? status.map(s => s) : status.split(',').map(sta => sta.trim());
+      filter.status = { $in: statusArray }
+    }
+
+    if (role) {
+      const roleArray = Array.isArray(role) ? role.map(s => s) : role.split(',').map(sta => sta.trim());
+      filter.role = { $in: roleArray }
+    }
+
+
+
     const data = await userService.getUsers(filter, page, limit, sort);
 
     if (!data) {
@@ -31,7 +57,7 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-const getDetail = async (req, res, next) => { 
+const getDetail = async (req, res, next) => {
   try {
 
     const { id } = req.params;
@@ -84,7 +110,6 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   try {
     const user = req.body;
-    console.log(user.name, user.email, user.password)
     if (!user.name || !user.email || !user.password) {
       return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin bắt buộc" });
     }
@@ -98,27 +123,27 @@ const register = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-    try {
+  try {
 
-        const user = req.body;
+    const user = req.body;
 
-        const { id } = req.params;
+    const { id } = req.params;
 
-        if (!id) {
-            res.status(404).json({ status: false, message: " Vui lòng truyền id " })
-        }
-
-        const result = await userService.updateUser(user, id);
-
-        if (!result) {
-            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
-        }
-
-        res.status(200).json({ data: result, status: true, message: "Sửa dữ liệu thành công" });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ status: false, message: error.message })
+    if (!id) {
+      res.status(404).json({ status: false, message: " Vui lòng truyền id " })
     }
+
+    const result = await userService.updateUser(user, id);
+
+    if (!result) {
+      return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
+    }
+
+    res.status(200).json({ data: result, status: true, message: "Sửa dữ liệu thành công" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: false, message: error.message })
+  }
 }
 
 module.exports = { getAllUsers, login, register, getDetail, updateUser };

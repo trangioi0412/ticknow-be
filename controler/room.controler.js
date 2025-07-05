@@ -10,7 +10,19 @@ const getRooms = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
+        const { status, cinema, quantity } = req.query
+
         const filter = {};
+
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
+            filter.status = { $in: statusArray }
+        }
+
+        if (cinema) {
+            const locationArray = Array.isArray(cinema) ? cinema : cinema.split(',').map(id => id.trim())
+            filter.cinema = { $in: locationArray };
+        }
 
         const result = await roomService.getAll(filter, page, limit, sort);
 
@@ -50,7 +62,7 @@ const updateRoom = async (req, res, next) => {
         const room = req.body;
         const { id } = req.params;
 
-        if(!id){
+        if (!id) {
             return res.status(404).json({ status: true, message: 'Vui Lòng truyền id room' })
         }
         const result = await roomService.updateRoom(room, id);

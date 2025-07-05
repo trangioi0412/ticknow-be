@@ -15,6 +15,57 @@ const getScreeings = async (req, res, next) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
+        const { status, date, showtype, timeStart, timeEnd, room, movie } = req.query
+
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
+            filter.status = { $in: statusArray }
+        }
+
+        if (date) {
+            const dateArray = Array.isArray(date)
+                ? date
+                : date.split(',').map(day => day.trim());
+
+            const orConditions = dateArray.map(day => {
+                const start = new Date(day);
+                start.setHours(0, 0, 0, 0);
+
+                const end = new Date(start);
+                end.setHours(23, 59, 59, 999);
+
+                return {
+                    date: { $gte: start, $lte: end }
+                };
+            });
+
+            filter.$or = orConditions;
+
+        }
+
+        if (showtype) {
+            const showtypeArray = Array.isArray(showtype) ? showtype.map(s => Number(s)) : showtype.split(',').map(sta => Number(sta.trim()));
+            filter.showtype = { $in: showtypeArray }
+        }
+
+        if(timeStart){
+            filter.time_start = { $gte: timeStart }
+        }
+
+        if(timeEnd){
+            filter.time_end = { $lte: timeEnd }
+        }
+
+        if (movie) {
+            const movieArray = Array.isArray(movie) ? movie : movie.split(',').map(id => id.trim())
+            filter.id_movie = { $in: movieArray };
+        }
+
+        if (room) {
+            const roomArray = Array.isArray(room) ? room : room.split(',').map(id => id.trim())
+            filter.id_room = { $in: roomArray };
+        }
+
         const screenings = await screeningService.getScreeings(filter, page, limit, sort);
 
         if (screenings) {
@@ -86,7 +137,6 @@ const addSceening = async (req, res, next) => {
         return res.status(500).json({ status: false, message: error.message })
     }
 }
-
 
 const updateSceening = async (req, res, next) => {
     try {
