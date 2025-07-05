@@ -74,16 +74,18 @@ const getScreeingById = async (id) => {
 
 }
 
-const getScreeingByDay = async (date = "", cinema = "") => {
+const getScreeingByDay = async (filter) => {
 
     let screenings
 
-    if (date) {
-        screenings = await screeningModel.find({ date: date });
+    if (filter.date) {
+        screenings = await screeningModel.find({ date: filter.date });
+    }else{
+        screenings = await screeningModel.find();
     }
 
-    if (cinema) {
-        let rooms = await roomService.roomByIdCinema(cinema);
+    if (filter.cinema) {
+        let rooms = await roomService.roomByIdCinema(filter.cinema);
         const roomIds = rooms.map(r => r.id);
 
         screenings = screenings.filter(s => roomIds.includes(s.id_room.toString()));
