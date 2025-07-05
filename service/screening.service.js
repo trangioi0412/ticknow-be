@@ -82,7 +82,6 @@ const getScreeingByDay = async (date = "", cinema = "") => {
         screenings = await screeningModel.find({ date: date });
     }
 
-
     if (cinema) {
         let rooms = await roomService.roomByIdCinema(cinema);
         const roomIds = rooms.map(r => r.id);

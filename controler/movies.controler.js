@@ -138,7 +138,7 @@ const filterSChedule = async (req, res, next) => {
 
         if (date) filter.date = check.checkDate(date);
 
-        if (movie) filter.id = movie;
+        if (movie) filter.id_movie = movie;
 
         // get data
         result = await movieService.filterSchedule(filter, cinema, limit, page);

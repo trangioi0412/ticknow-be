@@ -89,8 +89,8 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
 
     let movies = [];
 
-    if (filter.date) {
-        let screeningDay = await screeningService.getScreeingByDay(filter.date, filter.cinema);
+    if (Object.keys(filter).length === 0) {
+        let screeningDay = await screeningService.getScreeingByDay(filter);
 
         for (const screening of screeningDay) {
             const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
