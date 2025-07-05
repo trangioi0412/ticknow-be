@@ -122,7 +122,7 @@ const filterSChedule = async (req, res, next) => {
     try {
         // query host
 
-        const { status, date, cinema, id } = req.query;
+        const { status, date, cinema, movie } = req.query;
 
         const limit = parseInt(req.query.limit);
 
@@ -138,7 +138,7 @@ const filterSChedule = async (req, res, next) => {
 
         if (date) filter.date = check.checkDate(date);
 
-        if (id) filter.id = id;
+        if (movie) filter.id = movie;
 
         // get data
         result = await movieService.filterSchedule(filter, cinema, limit, page);

@@ -21,7 +21,7 @@ const getRooms = async (req, res, next) => {
 
         if (cinema) {
             const locationArray = Array.isArray(cinema) ? cinema : cinema.split(',').map(id => id.trim())
-            filter.cinema = { $in: locationArray };
+            filter.id_cinema = { $in: locationArray };
         }
 
         const result = await roomService.getAll(filter, page, limit, sort);

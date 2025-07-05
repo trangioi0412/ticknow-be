@@ -93,7 +93,7 @@ const getScreeingByDay = async (date = "", cinema = "") => {
         {
             $match: {
                 "movie.status": 1,
-                "id_movie": mongoose.Types.ObjectId("ID_CỦA_MOVIE")
+                "id_movie": new mongoose.Types.ObjectId(cinema)
             }
         }
     ]);
