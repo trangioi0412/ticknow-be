@@ -12,7 +12,7 @@ const getLocation = async (req, res, next) => {
 
         const filter = {} 
 
-        const name = req.query;
+        const { name } = req.query;
 
         if( name ){
             filter.name = { $regex: name, $options: 'i' }
