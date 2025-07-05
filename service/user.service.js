@@ -122,6 +122,7 @@ const register = async (user) => {
       <p>password: ${year}</p>
     `
   })
+
   return result;
 };
 
@@ -186,4 +187,5 @@ const updateUser = async (userData, id) => {
   return result;
 
 }
+
 module.exports = { getUsers, getUserDetail, login, register, updateUser };

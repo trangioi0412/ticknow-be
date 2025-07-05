@@ -12,6 +12,29 @@ const getVouchers = async (req, res, next) => {
 
         const filter = {};
 
+        const { code, timeStart, timeEnd, active } = req.query;
+
+        if (code) {
+            filter.code = new RegExp(code, 'i');
+        }
+
+        if (timeStart) {
+            const startDate = new Date(timeStart);
+            startDate.setHours(0, 0, 0, 0);
+            filter.start_date = { ...filter.timeStart, $gte: startDate };
+        }
+
+        if (timeEnd) {
+            const endDate = new Date(timeEnd);
+            endDate.setHours(23, 59, 59, 999);
+            filter.end_date = { ...filter.timeEnd, $lte: endDate };
+        }
+
+        if (active) {
+            const activeArray = Array.isArray(active) ? active.map(s => s) : active.split(',').map(sta => sta.trim());
+            filter.is_active = { $in: activeArray }
+        }
+
         const result = await voucherService.getAll(filter, page, limit, sort);
 
         if (!result) {
@@ -29,25 +52,25 @@ const getVouchers = async (req, res, next) => {
 }
 
 const addVoucher = async (req, res, next) => {
-    try{
+    try {
 
         const voucher = req.body;
 
         const result = await voucherService.addVoucher(voucher);
-        
-        if( !result ){
-            return res.status(404).json({ status: true, message: 'Thêm dữ liệu Không thành công'})
+
+        if (!result) {
+            return res.status(404).json({ status: true, message: 'Thêm dữ liệu Không thành công' })
         }
 
         res.status(200).json({ status: true, message: "Thêm voucher thành công" });
-    }catch(error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
     }
 }
 
 const updateVoucher = async (req, res, next) => {
-    try{
+    try {
 
         const voucher = req.body;
 
@@ -58,14 +81,14 @@ const updateVoucher = async (req, res, next) => {
         }
 
         const result = await voucherService.updateVoucher(voucher, id);
-        
-        if( !result ){
-            return res.status(404).json({ status: true, message: 'sửa dữ liệu Không thành công'})
+
+        if (!result) {
+            return res.status(404).json({ status: true, message: 'sửa dữ liệu Không thành công' })
         }
 
         res.status(200).json({ status: true, message: "Sửa voucher thành công" });
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
     }

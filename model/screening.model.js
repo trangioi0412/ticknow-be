@@ -9,8 +9,8 @@ const screeningSchema = new Schema ({
     time_start: { type: String, required: true },
     time_end: { type: String, required: false },
     date: { type: Date, required: false, default: Date.now()},
-    status: { type: String, required: false, default: "Hoạt Động"},
-    showtype: { type: String, required: true },
+    status: { type: Number, required: false, default:  2},
+    showtype: { type: Number, required: true },
 }, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.screening || mongoose.model('screening', screeningSchema);

@@ -7,7 +7,7 @@ const usersSchema = new Schema ({
     email: { type: String, required: true },
     password: { type: String, required: true },
     year: { type: Number, required: false, default: "" },
-    status: { type: String, required: false, default: "Hoạt Động"},
+    status: { type: Boolean, required: false, default: true},
     role: {type: Boolean, required: false, default: false }
 }, { versionKey: false, timestamps: true});
 

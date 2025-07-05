@@ -388,7 +388,10 @@ const addSceening = async (screeningData) => {
         throw new Error("Không tìm thấy phim")
     }
 
+    screeningData.time_start = moment(screeningData.time_start, "HH:mm").format("HH:mm");
+
     let time_end = moment(screeningData.time_start, "HH:mm").add(movie.duration, 'minutes').format("HH:mm");
+
 
     const conflict = await screeningModel.findOne({
         id_room: screeningData.id_room,

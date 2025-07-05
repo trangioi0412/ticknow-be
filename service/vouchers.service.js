@@ -29,7 +29,7 @@ const addVoucher = async (voucherData) => {
     const newVoucher = new voucherModel({
         ...voucherData,
         start_date: startDate,
-        end_day: endDate
+        end_date: endDate
     })
 
     const result = await newVoucher.save();
@@ -52,7 +52,7 @@ const updateVoucher = async (voucherData, id) => {
     const newVoucher = {
         ...voucherData,
         start_date: startDate,
-        end_day: endDate
+        end_date: endDate
     }
 
     const result = await voucherModel.findByIdAndUpdate(

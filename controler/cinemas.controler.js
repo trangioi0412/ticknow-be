@@ -18,14 +18,14 @@ const getCinema = async (req, res, next) => {
 
         const filter = {};
 
-        const { locationId, status, name } = req.query
+        const { location, status, name } = req.query
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
-        if (locationId) {
-            const locationArray = Array.isArray(locationId) ? locationId : locationId.split(',').map(id => id.trim())
+        if (location) {
+            const locationArray = Array.isArray(location) ? location : location.split(',').map(id => id.trim())
             filter['location.id_location'] = { $in: locationArray };
         }
 
