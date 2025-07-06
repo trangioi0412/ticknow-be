@@ -81,7 +81,9 @@ const roomId = async (id) => {
 }
 
 const roomByIdCinema = async (id) => {
+    
     const room = await roomModel.find({ id_cinema: id });
+
     if (!room) {
         throw new Error('Không tìm thấy room');
     }

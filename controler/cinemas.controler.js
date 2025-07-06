@@ -66,6 +66,8 @@ const getDetail = async (req, res, next) => {
 
         let result = await cinemaService.cinemaDetail(id, filter);
 
+        console.log(result);
+
         if (result) {
 
             return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })

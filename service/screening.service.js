@@ -248,11 +248,13 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     if (cinema) {
         const rooms = await roomService.roomByIdCinema(cinema);
+
         if (rooms?.length) {
             filter.id_room = { $in: rooms.map(r => r._id) };
+        }else{
+            return result
         }
     }
-
 
     const screenings = await screeningModel.find(filter);
 
