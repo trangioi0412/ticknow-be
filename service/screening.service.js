@@ -80,7 +80,7 @@ const getScreeingByDay = async (filter) => {
 
     if (filter.date) {
         screenings = await screeningModel.find({ date: filter.date });
-    }else{
+    } else {
         screenings = await screeningModel.find();
     }
 
@@ -230,7 +230,7 @@ const getScreeningByCinema = async (cinemaId, filter = {}) => {
 
 }
 
-const getScreeningSchedule = async (filter, cinema) => {
+const getScreeningSchedule = async (filterInput, cinema) => {
     const movieService = require('../service/movie.service');
 
     const result = {
@@ -238,9 +238,11 @@ const getScreeningSchedule = async (filter, cinema) => {
         data: []
     };
 
+    const filter = { ...filterInput };
+
     if (!filter.date) {
         const now = new Date();
-        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        const vnTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
         filter.date = new Date(Date.UTC(vnTime.getUTCFullYear(), vnTime.getUTCMonth(), vnTime.getUTCDate()));
     }
 
@@ -248,23 +250,37 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     if (cinema) {
         const rooms = await roomService.roomByIdCinema(cinema);
+        if (!rooms?.length) return result;
 
-        if (rooms?.length) {
-            filter.id_room = { $in: rooms.map(r => r._id) };
-        }else{
-            return result
-        }
+        filter.id_room = { $in: rooms.map(r => r._id) };
     }
 
     const screenings = await screeningModel.find(filter);
+    if (!screenings.length) return result;
 
+    const roomCache = new Map();
+    const cinemaCache = new Map();
+    const movieCache = new Map();
     const filmMap = new Map();
 
-    for (let screening of screenings) {
-        const room = await roomService.roomById(screening.id_room.toString());
-        const cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
+    for (const screening of screenings) {
+        let room = roomCache.get(screening.id_room.toString());
+        if (!room) {
+            room = await roomService.roomById(screening.id_room.toString());
+            roomCache.set(screening.id_room.toString(), room);
+        }
 
-        const filmData = await movieService.getMovieById(screening.id_movie.toString());
+        let cinemaData = cinemaCache.get(room.id_cinema.toString());
+        if (!cinemaData) {
+            cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
+            cinemaCache.set(room.id_cinema.toString(), cinemaData);
+        }
+
+        let filmData = movieCache.get(screening.id_movie.toString());
+        if (!filmData) {
+            filmData = await movieService.getMovieById(screening.id_movie.toString());
+            movieCache.set(screening.id_movie.toString(), filmData);
+        }
 
         const filmId = filmData._id.toString();
 
@@ -278,14 +294,13 @@ const getScreeningSchedule = async (filter, cinema) => {
         const film = filmMap.get(filmId);
 
         let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
-
         if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
-                name: cinemaData.name.toString(),
-                location: cinema.location,
+                name: cinemaData.name,
+                location: cinemaData.location,
                 showtimes: []
-            }
+            };
             film.cinemas.push(cinemaItem);
         }
 
@@ -293,11 +308,13 @@ const getScreeningSchedule = async (filter, cinema) => {
             id: screening._id,
             time: screening.time_start,
             showtype: screening.showtype
-        })
+        });
     }
+
     result.data = Array.from(filmMap.values());
     return result;
 };
+
 
 const screeningRoom = async (id) => {
 
