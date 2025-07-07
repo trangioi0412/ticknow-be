@@ -81,7 +81,7 @@ const roomId = async (id) => {
 }
 
 const roomByIdCinema = async (id) => {
-    
+
     const room = await roomModel.find({ id_cinema: id });
 
     if (!room) {
@@ -100,7 +100,7 @@ const addRoom = async (roomData) => {
 
     code_room = 1;
 
-    if ( rooms.code_room > 0) {
+    if (rooms.code_room > 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
@@ -127,15 +127,18 @@ const addRoom = async (roomData) => {
 const updateRoom = async (roomData, id) => {
 
     if (roomData.id_cinema) {
+
         const rooms = await roomModel.findOne({
             id_cinema: roomData.id_cinema,
 
         }).sort({ code_room: -1 }).limit(1);
 
-        let code_room = 1
+        let code_room
 
-        if ( rooms.code_room > 0 ) {
+        if (String(rooms._id) !== String(id) && rooms.code_room > 0) {
             code_room = parseInt(rooms.code_room) + 1;
+        }else {
+            code_room = parseInt(rooms.code_room)
         }
 
         roomData.code_room = code_room;

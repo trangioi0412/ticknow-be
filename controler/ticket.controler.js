@@ -48,7 +48,6 @@ const getTickets = async (req, res, next) => {
 }
 
 const addTicket = async (req, res, next) => {
-
     try {
         const data = req.body;
 

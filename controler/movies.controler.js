@@ -13,7 +13,7 @@ const getMovies = async (req, res, next) => {
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
-        const { name, status, date } = req.query;
+        const { name, status, date, genre, star } = req.query;
 
         const limit = parseInt(req.query.limit);
 
@@ -21,14 +21,34 @@ const getMovies = async (req, res, next) => {
 
         let filter = {};
 
-        let result
-  
-        if (status) filter.status = status;
+        let result;
+
+        if (genre) {
+            const genreArray = Array.isArray(genre) ? genre : genre.split(',').map(id => id.trim())
+            filter['genre.id_genre'] = { $in: genreArray };
+        }
+
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
+            filter.status = { $in: statusArray }
+        }
 
         if (date) filter.release_date = check.checkDate(date);
 
         if (name) {
             filter.name = new RegExp(name, 'i');
+        }
+
+        if (star) {
+            const parts = star.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+
+            if (parts.length === 2) {
+                const [min, max] = parts;
+                filter.star = { $gte: min, $lte: max };
+            } else if (parts.length === 1) {
+                const value = parts[0];
+                filter.star = { $gte: value, $lt: value + 1 };
+            }
         }
 
         result = await movieService.getMovies(filter, limit, page, sort);
