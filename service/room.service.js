@@ -135,7 +135,7 @@ const updateRoom = async (roomData, id) => {
         let code_room = 1
 
         if ( rooms.code_room > 0 ) {
-            code_room = parseInt(rooms.code_room) + 1;s
+            code_room = parseInt(rooms.code_room) + 1;
         }
 
         roomData.code_room = code_room;
