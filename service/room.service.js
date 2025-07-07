@@ -133,12 +133,15 @@ const updateRoom = async (roomData, id) => {
 
         }).sort({ code_room: -1 }).limit(1);
 
-        let code_room
+        let code_room = 1
 
-        if (String(rooms._id) !== String(id) && rooms.code_room > 0) {
-            code_room = parseInt(rooms.code_room) + 1;
-        }else {
-            code_room = parseInt(rooms.code_room)
+        if (rooms) {
+            if (String(rooms._id) === String(id)) {
+                code_room = parseInt(rooms.code_room);
+            } else if (rooms.code_room > 0) {
+                
+                code_room = parseInt(rooms.code_room) + 1;
+            }
         }
 
         roomData.code_room = code_room;
