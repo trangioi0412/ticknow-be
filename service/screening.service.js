@@ -322,7 +322,7 @@ const screeningRoom = async (id) => {
 
 
     let filter = {
-        status: 2
+        
     }
 
     const screening = await screeningModel.findById(id);
@@ -333,10 +333,9 @@ const screeningRoom = async (id) => {
 
     const room = await roomService.roomId(screening.id_room);
 
-    if (!screening) {
+    if (!room) {
         throw new Error("Không Tìm Thấy Phòng")
     }
-
 
     filter.id_screening = screening._id
 
@@ -357,10 +356,13 @@ const screeningRoom = async (id) => {
             seat[row].push(number);
         });
     }
-
-    room.diagram.element_selected = { ...seat }
-
-    return room;
+    
+    room.diagram.element_selected = { ...seat };
+    
+    return {
+        room,
+        screening
+    };
 }
 
 const addSceening = async (screeningData) => {

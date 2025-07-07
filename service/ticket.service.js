@@ -7,6 +7,7 @@ const usersService = require('./user.service');
 const roomService = require('./room.service');
 
 const movieService = require('./movie.service');
+const voucherService = require('./vouchers.service');
 
 const getTicket = async (filter, page = "", limit = "", sort) => {
 
@@ -34,7 +35,7 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
         }
 
         const movieId = await movieService.getMovieById(screening.id_movie)
-        
+
         movie = {
             id: movieId._id,
             name: movieId.name,
@@ -79,7 +80,7 @@ const filterTicket = async (filter) => {
     const tickets = await ticketModel.find(filter);
 
     if (!tickets) {
-        throw new Error('Không có phòng phù hợp');
+        throw new Error('Không có vé phù hợp');
     }
 
     return tickets;
@@ -90,8 +91,47 @@ const getTicketId = async (id) => {
     return ticket
 }
 
-const addTicket = async ( tickets, user ) => {
-    
+const addTicket = async (tickets, idUser) => {
+
+    const user = await usersService.getUserDetail(idUser);
+
+    if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
+        throw new Error("Thông tin user không tồn tại")
+    }
+
+    const screening = await screeningService.getScreeingById(tickets.screening);
+
+    if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
+        throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
+    }
+
+    const rooms = await screeningService.screeningRoom(tickets.screening);
+
+    const isExist = tickets.seat.some(seat => {
+
+        const row = seat[0];
+        const seatNumber = parseInt(seat.slice(1));
+        const selected = rooms.diagram.element_selected?.[row];
+        return Array.isArray(selected) && selected.includes(seatNumber);
+
+    });
+
+    if (isExist) {
+        throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
+    }
+
+    console.log(tickets.voucher);
+
+    const voucher = await voucherService.getDetail(tickets.voucher);
+
+    let price = tickets.seat.length * screening.price;
+
+    if (voucher) {
+        price = (tickets.seat.length * screening.price) - (tickets.seat.length * screening.price * (voucher.discount_type/100) );
+    }
+
+    console.log(price);
+
 }
 
 module.exports = { getTicket, filterTicket, getTicketId, addTicket }

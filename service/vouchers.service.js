@@ -14,6 +14,13 @@ const getAll = async (filter, page, limit, sort) => {
     };
 }
 
+const getDetail = async (id) => {
+
+    const voucher = await voucherModel.findById(id);
+
+    return voucher
+}
+
 const addVoucher = async (voucherData) => {
 
     let startDate = new Date(`${voucherData.start_date}T00:00:00.000Z`);
@@ -64,4 +71,4 @@ const updateVoucher = async (voucherData, id) => {
     return result;
 }
 
-module.exports = { getAll, addVoucher, updateVoucher }
+module.exports = { getAll, getDetail, addVoucher, updateVoucher }
