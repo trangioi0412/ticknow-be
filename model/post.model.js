@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const postSchema = new Schema({ 
-    id_user: {type: ObjectId, required: false, default: ""},
+    id_user: {type: String, required: false, default: ""},
     content: {type: String, required: true},
     start_day: {type: Date, required: true},
     end_day: { type: Date, required: true},
