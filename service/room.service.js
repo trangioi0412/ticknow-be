@@ -100,7 +100,7 @@ const addRoom = async (roomData) => {
 
     code_room = 1;
 
-    if (rooms && rooms.length > 0) {
+    if (!rooms && rooms.length < 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
@@ -161,7 +161,7 @@ const updateRoom = async (roomData, id) => {
 
     let element_remove = roomData.seatRemoved || roomCheck.diagram.element_remove;
 
-    if (rooms && rooms.length > 0) {
+    if (!rooms && rooms.length < 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
