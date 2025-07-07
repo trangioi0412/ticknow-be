@@ -100,7 +100,7 @@ const addRoom = async (roomData) => {
 
     code_room = 1;
 
-    if (!rooms && rooms.length < 0) {
+    if ( rooms.code_room > 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
@@ -132,13 +132,14 @@ const updateRoom = async (roomData, id) => {
 
         }).sort({ code_room: -1 }).limit(1);
 
-        let code_room
+        let code_room = 1
 
-        if (rooms && rooms.length > 0) {
-            code_room = parseInt(rooms.code_room) + 1;
+        if ( rooms.code_room > 0 ) {
+            code_room = parseInt(rooms.code_room) + 1;s
         }
 
-        roomData.code_room = code_room
+        roomData.code_room = code_room;
+
     }
 
 
@@ -161,10 +162,6 @@ const updateRoom = async (roomData, id) => {
 
     let element_remove = roomData.seatRemoved || roomCheck.diagram.element_remove;
 
-    if (!rooms && rooms.length < 0) {
-        code_room = parseInt(rooms.code_room) + 1;
-    }
-
     roomData.row = roomData.row || roomCheck.diagram.row;
     roomData.column = roomData.column || roomCheck.diagram.column;
     roomData.id_cinema = roomData.id_cinema || roomCheck.id_cinema;
@@ -180,6 +177,7 @@ const updateRoom = async (roomData, id) => {
 
     const roomDatas = {
         id_cinema: roomData.id_cinema,
+        code_room: roomData.code_room,
         diagram: {
             row,
             column,
