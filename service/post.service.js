@@ -79,11 +79,11 @@ const addPost = async (postData, file) => {
 
     let end_day = new Date(`${postData.end_day}T00:00:00.000Z`);
 
-    const user = await userService.getUserDetail(postData.id_user);
+    // const user = await userService.getUserDetail(postData.id_user);
 
-    if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
-        throw new Error("thông tin user không đúng")
-    }
+    // if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
+    //     throw new Error("thông tin user không đúng")
+    // }
 
     const newPoster = new postModel({
         ...postData,
