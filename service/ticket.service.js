@@ -90,4 +90,8 @@ const getTicketId = async (id) => {
     return ticket
 }
 
-module.exports = { getTicket, filterTicket, getTicketId }
+const addTicket = async ( tickets, user ) => {
+    
+}
+
+module.exports = { getTicket, filterTicket, getTicketId, addTicket }

@@ -321,7 +321,9 @@ const screeningRoom = async (id) => {
     const ticketService = require('../service/ticket.service');
 
 
-    let filter = {}
+    let filter = {
+        status: 2
+    }
 
     const screening = await screeningModel.findById(id);
 

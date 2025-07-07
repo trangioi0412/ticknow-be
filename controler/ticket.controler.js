@@ -1,5 +1,6 @@
 const ticketService = require('../service/ticket.service');
 
+const { verifyToken } = require('../utils/auth.util');
 
 const getTickets = async (req, res, next) => {
     try {
@@ -46,8 +47,34 @@ const getTickets = async (req, res, next) => {
     }
 }
 
-const addTicket = async () => {
+const addTicket = async (req, res, next) => {
+
+    try {
+        const data = req.body;
+
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader) throw new Error('Không có token');
+
+        const token = req.headers.authorization.split(' ')[1];
+
+        if (!token) throw new Error('Token Không hợp lệ');
+
+        const userId = await verifyToken(token);
+
+        const result = await ticketService.addTicket(data, userId);
+
+        if (!result) return res.status(404).json({ status: false, message: "Thêm vé thất bại" });
+
+        res.status(201).json({ status: true, message: "Tạo vé thành công" })
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ status: false, message: error.message });
+        
+    }
+
 
 }
 
-module.exports = { getTickets }
+module.exports = { getTickets, addTicket }
