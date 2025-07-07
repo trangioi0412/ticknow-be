@@ -5,6 +5,7 @@ const ObjectId = Schema.ObjectId;
 
 const postSchema = new Schema({ 
     id_user: {type: String, required: false, default: ""},
+    title: {type: String, required: true},
     content: {type: String, required: true},
     start_day: {type: Date, required: true},
     end_day: { type: Date, required: true},
