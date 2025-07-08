@@ -1,5 +1,7 @@
 const userService = require("../service/user.service");
 
+const { verifyToken } = require('../utils/auth.util');
+
 const getAllUsers = async (req, res, next) => {
   try {
 
@@ -36,8 +38,6 @@ const getAllUsers = async (req, res, next) => {
       filter.role = { $in: roleArray }
     }
 
-
-
     const data = await userService.getUsers(filter, page, limit, sort);
 
     if (!data) {
@@ -60,9 +60,17 @@ const getAllUsers = async (req, res, next) => {
 const getDetail = async (req, res, next) => {
   try {
 
-    const { id } = req.params;
+    const authHeader = req.headers.authorization;
 
-    const data = await userService.getUserDetail(id);
+    if (!authHeader) throw new Error('Không có token');
+
+    const token = req.headers.authorization.split(' ')[1];
+
+    if (!token) throw new Error('Token Không hợp lệ');
+
+    const userId = await verifyToken(token);
+
+    const data = await userService.getUserDetail(userId);
 
     if (!data) {
       return res
