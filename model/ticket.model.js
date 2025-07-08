@@ -7,7 +7,7 @@ const ticketSchema = new Schema ({
     id_user: { type: ObjectId, required: true },
     id_screening: { type: ObjectId, required: true },
     seat: { type: Array, required: true },
-    id_voucher: { type: ObjectId, required: false, default: ""},
+    id_voucher: { type: ObjectId, required: false, default: null},
     price: { type: Number, required: true },
     type: { type: Number, required: false, default: 1},
 }, {versionKey: false, timestamps: true})

@@ -1,4 +1,7 @@
+const mongoose = require('mongoose');
+
 const paginate = require('../utils/pagination');
+const generateUniqueTicketCode = require('../utils/randomCodeTicket');
 
 const ticketModel = require('../model/ticket.model');
 
@@ -106,12 +109,11 @@ const addTicket = async (tickets, idUser) => {
     }
 
     const rooms = await screeningService.screeningRoom(tickets.screening);
-
     const isExist = tickets.seat.some(seat => {
 
         const row = seat[0];
         const seatNumber = parseInt(seat.slice(1));
-        const selected = rooms.diagram.element_selected?.[row];
+        const selected = rooms.room.diagram.element_selected?.[row];
         return Array.isArray(selected) && selected.includes(seatNumber);
 
     });
@@ -120,18 +122,35 @@ const addTicket = async (tickets, idUser) => {
         throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
     }
 
-    console.log(tickets.voucher);
-
     const voucher = await voucherService.getDetail(tickets.voucher);
 
     let price = tickets.seat.length * screening.price;
 
     if (voucher) {
-        price = (tickets.seat.length * screening.price) - (tickets.seat.length * screening.price * (voucher.discount_type/100) );
+        price = (tickets.seat.length * screening.price) - (tickets.seat.length * screening.price * (voucher.discount_type / 100));
     }
 
-    console.log(price);
+    tickets.price = price;
 
+    const code = await generateUniqueTicketCode(ticketModel);
+
+    tickets.code = code;
+
+    const { screening: id_screening, voucher: id_voucher, ...rest } = tickets;
+
+    const newTickets = {
+        ...rest,
+        id_screening,
+        id_user: idUser,
+    }
+
+    if (id_voucher && typeof id_voucher === "string" && id_voucher.length === 24) {
+        newTickets.id_voucher = mongoose.Types.ObjectId.isValid(id_voucher) ? id_voucher : null;
+    }
+
+    const newTicket = await ticketModel.create(newTickets);
+
+    return newTicket;
 }
 
 module.exports = { getTicket, filterTicket, getTicketId, addTicket }

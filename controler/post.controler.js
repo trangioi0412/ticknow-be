@@ -18,7 +18,11 @@ const getPosts = async (req, res, next) => {
 
         const filter = {};
 
-        const { start_day, end_day, status, user } = req.query;
+        const { start_day, end_day, status, user, title } = req.query;
+
+        if (title) {
+            filter.title = new RegExp(title, 'i');
+        }
 
         if (start_day) {
             const startDate = new Date(start_day);
