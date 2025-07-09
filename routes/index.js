@@ -31,5 +31,8 @@ router.use('/user', require('./users'));
 
 router.use('/voucher', require('./vouchers'));
 
+router.use('/vnpay', require('./vnpay.router'));
+
+
 
 module.exports = router;
