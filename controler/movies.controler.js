@@ -9,7 +9,7 @@ const upload = getUploader()
 const getMovies = async (req, res, next) => {
     try {
 
-        const sortField = req.query.sortField || 'createdAt';
+        const sortField = req.query.sortField || '_id';
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
@@ -25,7 +25,7 @@ const getMovies = async (req, res, next) => {
 
         if (genre) {
             const genreArray = Array.isArray(genre) ? genre : genre.split(',').map(id => id.trim())
-            filter['genre.id_genre'] = { $in: genreArray };
+            filter['genre.id'] = { $in: genreArray };
         }
 
         if (status) {

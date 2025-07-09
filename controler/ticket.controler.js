@@ -5,7 +5,7 @@ const { verifyToken } = require('../utils/auth.util');
 const getTickets = async (req, res, next) => {
     try {
 
-        const sortField = req.query.sortField || 'createdAt';
+        const sortField = req.query.sortField || '_id';
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
@@ -47,6 +47,28 @@ const getTickets = async (req, res, next) => {
     }
 }
 
+const getDetail = async (req, res, next) => {
+    try {
+            const { id } = req.params;
+    
+            let result = await ticketService.getDetail( id );
+    
+            if (result) {
+    
+                return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+    
+            } else {
+    
+                return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
+    
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: false, message: error.message })
+        }
+
+}
+
 const addTicket = async (req, res, next) => {
     try {
         const data = req.body;
@@ -76,4 +98,4 @@ const addTicket = async (req, res, next) => {
 
 }
 
-module.exports = { getTickets, addTicket }
+module.exports = { getTickets, addTicket, getDetail }

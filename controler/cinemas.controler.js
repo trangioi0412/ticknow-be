@@ -12,7 +12,7 @@ const upload = getUploader()
 const getCinema = async (req, res, next) => {
     try {
 
-        const sortField = req.query.sortField || 'createdAt';
+        const sortField = req.query.sortField || '_id';
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
@@ -66,7 +66,6 @@ const getDetail = async (req, res, next) => {
 
         let result = await cinemaService.cinemaDetail(id, filter);
 
-        console.log(result);
 
         if (result) {
 

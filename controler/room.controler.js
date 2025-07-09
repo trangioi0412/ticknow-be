@@ -3,14 +3,14 @@ const roomService = require('../service/room.service');
 const getRooms = async (req, res, next) => {
     try {
 
-        const sortField = req.query.sortField || 'createdAt';
+        const sortField = req.query.sortField || '_id';
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const { status, cinema, quantity } = req.query
+        const { status, cinema } = req.query
 
         const filter = {};
 

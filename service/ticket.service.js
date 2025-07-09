@@ -9,7 +9,6 @@ const screeningService = require('./screening.service')
 const usersService = require('./user.service');
 const roomService = require('./room.service');
 
-const movieService = require('./movie.service');
 const voucherService = require('./vouchers.service');
 
 const getTicket = async (filter, page = "", limit = "", sort) => {
@@ -94,6 +93,45 @@ const getTicketId = async (id) => {
     return ticket
 }
 
+const getDetail = async (id) => {
+    const movieService = require('./movie.service');
+
+    const ticket = await ticketModel.findById(id);
+
+    if(!ticket || (typeof ticket === 'object' && Object.keys(ticket).length === 0 )){
+        throw new Error("Không tìm thấy vé")
+    }
+
+    const user = await usersService.getUserDetail(ticket.id_user);
+
+    if(!user || (typeof user === 'object' && Object.keys(user).length === 0 )){
+        throw new Error("Không tìm thấy user")
+    }
+
+    const screening = await screeningService.getScreeingById(ticket.id_screening);
+
+    if(!screening || (typeof screening === 'object' && Object.keys(screening).length === 0 )){
+        throw new Error("Không tìm thấy screening")
+    }
+
+    const movie = await movieService.getMovieById(screening.id_movie);
+
+    if(!movie || (typeof movie === 'object' && Object.keys(movie).length === 0 )){
+        throw new Error("Không tìm thấy movie")
+    }
+
+    const room = await roomService.roomById(screening.id_room);
+
+    return { 
+        ticket,
+        user,
+        screening,
+        movie,
+        room
+    }
+
+}
+
 const addTicket = async (tickets, idUser) => {
 
     const user = await usersService.getUserDetail(idUser);
@@ -153,4 +191,4 @@ const addTicket = async (tickets, idUser) => {
     return newTicket;
 }
 
-module.exports = { getTicket, filterTicket, getTicketId, addTicket }
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail }

@@ -3,7 +3,7 @@ const locationService = require('../service/location.service');
 const getLocation = async (req, res, next) => {
     try {
 
-        const sortField = req.query.sortField || 'createdAt';
+        const sortField = req.query.sortField || '_id';
         const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
         const sort = { [sortField]: sortOrder };
 
