@@ -2,7 +2,7 @@ const paginateQuery = async (Model, filter = {}, page, limit, sort = {}) => {
     const query = Model.find(filter).sort(sort);
     let data;
     let pagination = {};
-    
+
     if (!limit && !page) {
         data = await query;
     } else {
@@ -17,6 +17,8 @@ const paginateQuery = async (Model, filter = {}, page, limit, sort = {}) => {
             totalPages: Math.ceil(totalData / (limit || totalData)),
         };
     }
+
+    console.log(data._id);
 
     return { data, pagination };
 };
