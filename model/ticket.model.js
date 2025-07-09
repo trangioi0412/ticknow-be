@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const ticketSchema = new Schema ({
+    code: {type: Number, required: true},
     id_user: { type: ObjectId, required: true },
     id_screening: { type: ObjectId, required: true },
     seat: { type: Array, required: true },

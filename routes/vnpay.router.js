@@ -37,12 +37,10 @@ router.post('/create-qr', async (req, res) => {
             vnp_ExpireDate: dateFormat(tomorrow),
         });
 
-        // 👉 Tạo link ảnh QR
         const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(paymentUrl)}`;
 
         return res.status(201).json({
-            paymentUrl,
-            qrImageUrl, // ✅ Trả về ảnh QR (link)
+            paymentUrl
         });
     } catch (error) {
         console.error("VNPAY QR creation error:", error);
