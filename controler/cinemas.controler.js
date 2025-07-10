@@ -113,7 +113,7 @@ const updateCinema = [
 
             const { id } = req.params;
 
-            if (id) {
+            if (!id) {
                 res.status(404).json({ status: false, message: " Vui lòng truyền id " })
             }
 

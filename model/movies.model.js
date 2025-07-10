@@ -17,7 +17,7 @@ const movieSchema = new Schema({
     banner: {type: String, required: true},
     genre: [ { _id: false, id: { type: ObjectId, ref: 'genre', required: true } } ],
     status: { type: Number, enum: [1, 2, 3], required: false, default: 2 },
-    language: {type: Number, required: false},
+    language: {type: String, required: false},
     star: {type: Number, required: false, default: 0}
 }, { versionKey: false, timestamps: true});
 

@@ -14,4 +14,9 @@ const getAll = async (filter, page, limit, sort) => {
 
 }
 
-module.exports = { getAll }
+const payMethodDetail = async (id) => {
+    const payMethod = await payMethodModel.findById(id);
+    return payMethod;
+}
+
+module.exports = { getAll, payMethodDetail }

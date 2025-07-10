@@ -256,11 +256,16 @@ const getScreeningSchedule = async (filterInput, cinema) => {
     }
 
     const screenings = await screeningModel.find(filter);
-    if (!screenings.length) return result;
+    if (!screenings || !Array.isArray(screenings) || screenings.length <= 0) {
+        return result;
+    }
 
     const roomCache = new Map();
+
     const cinemaCache = new Map();
+
     const movieCache = new Map();
+
     const filmMap = new Map();
 
     for (const screening of screenings) {
@@ -277,6 +282,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         }
 
         let filmData = movieCache.get(screening.id_movie.toString());
+
         if (!filmData) {
             filmData = await movieService.getMovieById(screening.id_movie.toString());
             movieCache.set(screening.id_movie.toString(), filmData);
@@ -322,7 +328,7 @@ const screeningRoom = async (id) => {
 
 
     let filter = {
-        
+
     }
 
     const screening = await screeningModel.findById(id);
@@ -356,9 +362,9 @@ const screeningRoom = async (id) => {
             seat[row].push(number);
         });
     }
-    
+
     room.diagram.element_selected = { ...seat };
-    
+
     return {
         room,
         screening

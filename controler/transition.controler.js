@@ -49,4 +49,13 @@ const getTransition = async (req, res, next) => {
     }
 }
 
+const addTranstion = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: false, message: 'thêm dữ liệu không thành công' })
+    }
+}
+
 module.exports = { getTransition }

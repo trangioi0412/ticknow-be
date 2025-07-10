@@ -46,7 +46,7 @@ const roomById = async (id, location) => {
     }
 
     const cinema = await cinemaService.getCinemaById(room.id_cinema);
-    
+
     if (!cinema) {
         throw new Error('Không tìm thấy rạp');
     }
@@ -71,7 +71,7 @@ const roomId = async (id) => {
         throw new Error('Không tìm thấy phòng');
     }
 
-    const cinema = await cinemaModel.findById(room.id_cinema);
+    const cinema = await cinemaService.getCinemaById(room.id_cinema);
 
     if (!cinema) {
         throw new Error('Không tìm thấy rạp');
@@ -79,7 +79,9 @@ const roomId = async (id) => {
 
     return {
         ...room.toObject(),
+        id_cinema: cinema._id,
         cinema: cinema.name,
+        location: cinema.location
     };
 }
 
@@ -142,7 +144,7 @@ const updateRoom = async (roomData, id) => {
             if (String(rooms._id) === String(id)) {
                 code_room = parseInt(rooms.code_room);
             } else if (rooms.code_room > 0) {
-                
+
                 code_room = parseInt(rooms.code_room) + 1;
             }
         }

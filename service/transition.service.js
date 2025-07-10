@@ -28,4 +28,21 @@ const getAll = async (filter, page, limit, sort) => {
 
 }
 
-module.exports = { getAll }
+const addTransition = async ( transitionData ) => {
+
+    const ticket = await ticketService.getTicketId( transitionData.id_ticket );
+
+    if (!ticket || (typeof ticket === 'object' && Object.keys(ticket).length === 0)) {
+        throw new Error("Thông tin ticket không tồn tại")
+    }
+
+    const payMethod = await payMethodService.payMethodDetail( transitionData.id_payMethod );
+
+    if(!payMethod || (typeof payMethod === 'object' && Object.keys(payMethod).length === 0)){
+        throw new Error("Thông tin payMethod không tồn tại")
+    }
+
+    
+}
+
+module.exports = { getAll, addTransition }
