@@ -28,8 +28,8 @@ const addVoucher = async (voucherData) => {
 
     const voucher = await voucherModel.find({ code: voucherData.code });
 
-    
-    if ( voucher && voucher.length > 0 ) {
+
+    if (voucher && voucher.length > 0) {
         throw new Error("Mã voucher đã tồn tại");
     }
 
@@ -47,13 +47,23 @@ const addVoucher = async (voucherData) => {
 
 const updateVoucher = async (voucherData, id) => {
 
-    let startDate = new Date(`${voucherData.start_date}T00:00:00.000Z`);
-    let endDate = new Date(`${voucherData.end_date}T00:00:00.000Z`);
+    let startDate;
+    let endDate;
 
-    const voucher = await voucherModel.find({ code: voucherData.code });
+    if (voucherData.start_date) {
+        startDate = new Date(`${voucherData.start_date}T00:00:00.000Z`);
+    }
 
-    if (voucher && voucher.lenght > 0) {
-        throw new Error("Mã voucher đã tồn tại");
+    if (voucherData.end_date) {
+        endDate = new Date(`${voucherData.end_date}T00:00:00.000Z`);
+    }
+
+    const voucher = await voucherModel.findById(id);
+
+    
+    if (voucherData.userCount !== undefined) {
+
+        voucherData.user_count = parseInt(voucher.user_count) + 1;
     }
 
     const newVoucher = {

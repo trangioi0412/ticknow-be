@@ -45,7 +45,6 @@ const getMovieById = async (id) => {
 
         if (movie && movie.status === 1) {
             result = await mapGenre.mapGenreMovieOne(movie);
-
         }
 
         return result;

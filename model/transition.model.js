@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require("moment-timezone");
+
 const Schema = mongoose.Schema;
 
 const ObjectId = Schema.ObjectId;
@@ -11,7 +13,7 @@ const transitionSchema = new Schema({
         type: Date,
         default: () => moment().tz("Asia/Ho_Chi_Minh").toDate()
     },
-    status: { type: Number, required: true }
+    status: { type: Number, required: false, default: 2 }
 }, { versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.transition || mongoose.model('transition', transitionSchema);

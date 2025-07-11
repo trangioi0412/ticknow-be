@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const PayOS = require('@payos/node');
+const mongoose = require('mongoose');
+
 
 const { verifyToken } = require('../utils/auth.util');
 
 const ticketService = require('../service/ticket.service');
+const transition = require('../service/transition.service');
+const voucherService = require('../service/vouchers.service');
 
 const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
 
@@ -30,7 +34,7 @@ router.post('/create-payment-link', async (req, res) => {
         await ticketService.checkticket(ticketData, userId);
 
         const data = {
-            ticketData: ticketData,
+            ticketData,
             userId
         }
 
@@ -54,9 +58,14 @@ router.post('/create-payment-link', async (req, res) => {
 
 })
 
-// https://c2e810f29b12.ngrok-free.app/payos/receive-hook
+
+
+// https://evidently-sunny-tiger.ngrok-free.app/payos/receive-hook
 
 router.post('/receive-hook', async (req, res) => {
+    
+    const id_payMethod = "684d203393b6ec82733bd8d5";
+    
     const paymentData = req.body;
 
     const { data } = paymentData;
@@ -72,22 +81,41 @@ router.post('/receive-hook', async (req, res) => {
 
     const extraDataRaw = extraDataMap.get(data.orderCode);
 
+    if (!extraDataRaw) {
+        console.error("Không tìm thấy extraData cho orderCode:", data.orderCode);
+        return res.status(400).json({ message: "Không tìm thấy thông tin đơn hàng" });
+    }
 
     try {
         const { ticketData, userId } = extraDataRaw;
 
-        await ticketService.addTicket(ticketData, userId);
+        const ticket = await ticketService.addTicket(ticketData, userId);
+
+        const transitionData = {
+            id_ticket: new mongoose.Types.ObjectId(ticket._id),
+            id_payMethod: new mongoose.Types.ObjectId(id_payMethod),
+            price: ticketData.price
+        }
+
+        transition.addTransition(transitionData);
+
+        let voucherData = {};
+
+        if (ticketData.voucher) {
+            voucherData = {
+                userCount : 0
+            };
+            await voucherService.updateVoucher(voucherData, ticketData.voucher)
+        }
 
         return res.status(200).json({ message: "Đặt vé thành công" });
-        
+
     } catch (err) {
         console.error("Lỗi giải mã extraData:", err);
         return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
     }
 
 });
-
-
 
 
 module.exports = router;
