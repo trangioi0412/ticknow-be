@@ -18,8 +18,6 @@ const paginateQuery = async (Model, filter = {}, page, limit, sort = {}) => {
         };
     }
 
-    console.log(data._id);
-
     return { data, pagination };
 };
 

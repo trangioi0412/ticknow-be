@@ -108,7 +108,6 @@ router.get('/check-payment-vnpay', (req, res) => {
 
         const ticketData = pendingTickets[txnRef];
 
-        console.log(ticketData);
         }
         
     } catch (error) {
