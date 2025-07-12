@@ -54,8 +54,6 @@ const getMovieById = async (id, status) => {
     }
 };
 
-
-
 const getMovieId = async (id) => {
     try {
         let result;

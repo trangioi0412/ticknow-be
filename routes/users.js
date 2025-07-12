@@ -13,6 +13,6 @@ router.post('/register', userControler.register);
 
 router.patch('/update/:id', userControler.updateUser);
 
-router.get('/detail', userControler.getDetail);
+router.post('/detail', userControler.getDetail);
 
 module.exports = router;
