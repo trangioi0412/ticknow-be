@@ -36,13 +36,14 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
             name: cinemaRoom.name_cinema
         }
 
-        const movieId = await movieService.getMovieById(screening.id_movie)
+        const movieId = await movieService.getMovieById(screening.id_movie);
 
         movie = {
             id: movieId._id,
             name: movieId.name,
             img: movieId.image
         };
+
         screeningMap.set(screening._id.toString(), screening.time_start)
     })
 

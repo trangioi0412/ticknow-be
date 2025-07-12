@@ -34,17 +34,35 @@ const getMovies = async (filter = {}, limit = "", page = "", sort) => {
 
 }
 
-const getMovieById = async (id) => {
+const getMovieById = async (id, status) => {
     try {
-        let result;
         const movie = await movieModel.findById(id);
 
         if (!movie) {
             throw new Error('❌ Không tìm thấy movie với id này');
         }
 
-        if (movie && movie.status == 1) {
-            result = await mapGenre.mapGenreMovieOne(movie);
+        if (status !== undefined && movie.status != status) {
+            throw new Error('❌ Trạng thái của movie không khớp');
+        }
+
+        return await mapGenre.mapGenreMovieOne(movie);
+
+    } catch (error) {
+        console.error(error.message);
+        throw new Error('❌ Lỗi lấy dữ liệu của movie');
+    }
+};
+
+
+
+const getMovieId = async (id) => {
+    try {
+        let result;
+        const movie = await movieModel.findById(id);
+
+        if (!movie) {
+            throw new Error('❌ Không tìm thấy movie với id này');
         }
 
         return result;
@@ -296,6 +314,7 @@ module.exports = {
     getMovies,
     getDetailMovie,
     getMovieById,
+    getMovieId,
     filterMovie,
     filterSchedule,
     addMovies,

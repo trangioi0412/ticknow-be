@@ -285,7 +285,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         let filmData = movieCache.get(screening.id_movie.toString());
 
         if (!filmData) {
-            filmData = await movieService.getMovieById(screening.id_movie.toString());
+            filmData = await movieService.getMovieById(screening.id_movie.toString(), filter.status);
             movieCache.set(screening.id_movie.toString(), filmData);
         }
 
