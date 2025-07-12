@@ -256,6 +256,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
     }
 
     const screenings = await screeningModel.find(filter);
+
     if (!screenings || !Array.isArray(screenings) || screenings.length <= 0) {
         return result;
     }
@@ -286,6 +287,10 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         if (!filmData) {
             filmData = await movieService.getMovieById(screening.id_movie.toString());
             movieCache.set(screening.id_movie.toString(), filmData);
+        }
+
+        if (!filmData || filmData === undefined) {
+            continue;
         }
 
         const filmId = filmData._id.toString();

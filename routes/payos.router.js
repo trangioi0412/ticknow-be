@@ -3,7 +3,6 @@ const router = express.Router();
 const PayOS = require('@payos/node');
 const mongoose = require('mongoose');
 
-
 const { verifyToken } = require('../utils/auth.util');
 
 const ticketService = require('../service/ticket.service');
@@ -65,7 +64,7 @@ router.post('/create-payment-link', async (req, res) => {
 router.post('/receive-hook', async (req, res) => {
     
     const id_payMethod = "684d203393b6ec82733bd8d5";
-    
+
     const paymentData = req.body;
 
     const { data } = paymentData;
