@@ -94,8 +94,11 @@ const register = async (user) => {
     throw new Error(" Email đã tồn tại! ");
   }
 
-  const date = new Date(user.year);
-  const year = date.getFullYear();
+  let year;
+
+  if (user.year) {
+    year = new Date(`${user.year}`);
+  }
 
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(user.password, salt);
@@ -152,20 +155,24 @@ const updateUser = async (userData, id) => {
     userData.password = hashPassword;
   }
 
+  if (userData.year) {
+    year = new Date(`${userData.year}`);
+  }
+
 
   if (user.role === true && userData.role) {
     throw new Error("Không thể đổi role của user này");
   }
 
-  if(userData.status){
+  if (userData.status) {
     userData.status = parseBoolean(userData.status);
   }
 
-  if(userData.role){
+  if (userData.role) {
     userData.role = parseBoolean(userData.role);
   }
 
-  const {retypePassword, ...rest} = userData;
+  const { retypePassword, ...rest } = userData;
   const newUser = rest
   const result = await userModel.findByIdAndUpdate(
     id,
@@ -174,7 +181,7 @@ const updateUser = async (userData, id) => {
   )
 
   if (userData.status === false) {
-      
+
     await sendMail({
       email: user.email,
       subject: "THÔNG Báo TỪ TICKNOW",
@@ -183,7 +190,7 @@ const updateUser = async (userData, id) => {
     `
     })
   }
-  
+
   return result;
 
 }

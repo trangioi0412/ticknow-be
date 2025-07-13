@@ -11,7 +11,7 @@ const voucherService = require('../service/vouchers.service');
 
 const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
 
-const YOUR_DOMAIN = 'http://localhost:1001';
+const YOUR_DOMAIN = 'http://localhost:3000';
 
 const extraDataMap = new Map();
 
@@ -41,7 +41,7 @@ router.post('/create-payment-link', async (req, res) => {
             amount: ticketData.price,
             description: 'Thanh toán vé xem phim',
             orderCode: ticketData.code,
-            returnUrl: `${YOUR_DOMAIN}/success.html`,
+            returnUrl: `${YOUR_DOMAIN}//booking-successful`,
             cancelUrl: `${YOUR_DOMAIN}/cancel.html`
         };
 
