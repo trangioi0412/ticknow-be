@@ -238,7 +238,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         data: []
     };
 
-    const filter = { ...filterInput };
+    const {status, ...filter} = filterInput;
 
     if (!filter.date) {
         const now = new Date();
@@ -256,6 +256,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
     }
 
     const screenings = await screeningModel.find(filter);
+
 
     if (!screenings || !Array.isArray(screenings) || screenings.length <= 0) {
         return result;
@@ -284,13 +285,16 @@ const getScreeningSchedule = async (filterInput, cinema) => {
 
         let filmData = movieCache.get(screening.id_movie.toString());
 
-        if (!filmData) {
-            filmData = await movieService.getMovieById(screening.id_movie.toString(), filter.status);
-            movieCache.set(screening.id_movie.toString(), filmData);
-        }
+        console.log(filmData);
 
-        if (!filmData || filmData === undefined) {
-            continue;
+        if (!filmData) {
+            filmData = await movieService.getMovieById(screening.id_movie.toString(), status);
+            if (filmData) {
+                movieCache.set(screening.id_movie.toString(), filmData);
+            } else {
+                console.warn(`Không tìm thấy filmData cho movieId: ${screening.id_movie}`);
+                continue;
+            }
         }
 
         const filmId = filmData._id.toString();

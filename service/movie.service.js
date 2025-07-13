@@ -42,8 +42,10 @@ const getMovieById = async (id, status) => {
             throw new Error('❌ Không tìm thấy movie với id này');
         }
 
-        if (status !== undefined && movie.status != status) {
-            throw new Error('❌ Trạng thái của movie không khớp');
+        console.log(movie);
+
+        if (status !== undefined && movie.status !== parseInt(status)) {
+            return undefined;
         }
 
         return await mapGenre.mapGenreMovieOne(movie);
