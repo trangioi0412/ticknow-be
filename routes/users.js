@@ -9,6 +9,11 @@ router.get('/', userControler.getAllUsers);
 
 router.post('/login', userControler.login);
 
+router.post('/auth-admin', (req, res, next) => {
+    req.requireRole = true;
+    next();
+}, userControler.login);
+
 router.post('/register', userControler.register);
 
 router.patch('/update/:id', userControler.updateUser);

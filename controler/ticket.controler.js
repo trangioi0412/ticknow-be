@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const ticketService = require('../service/ticket.service');
 
 const { verifyToken } = require('../utils/auth.util');
@@ -31,13 +33,30 @@ const getTickets = async (req, res, next) => {
             filter.id_voucher = { $in: voucherArray };
         }
 
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            try {
+                const token = authHeader.split(' ')[1];
+
+                const userId = await verifyToken(token);
+
+                filter.id_user = new mongoose.Types.ObjectId(userId);
+
+                console.log(1);
+
+            } catch (err) {
+                console.warn('Token không hợp lệ:', err.message);
+            }
+        }
+
         const tickets = await ticketService.getTicket(filter, page, limit, sort);
 
         if (!tickets) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
         }
 
-        return res.status(299).json({ data: tickets, status: true, message: 'Lấy tất cả vé thành công' })
+        return res.status(200).json({ data: tickets, status: true, message: 'Lấy tất cả vé thành công' })
 
     } catch (error) {
 
@@ -49,23 +68,23 @@ const getTickets = async (req, res, next) => {
 
 const getDetail = async (req, res, next) => {
     try {
-            const { id } = req.params;
-    
-            let result = await ticketService.getDetail( id );
-    
-            if (result) {
-    
-                return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
-    
-            } else {
-    
-                return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
-    
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ status: false, message: error.message })
+        const { id } = req.params;
+
+        let result = await ticketService.getDetail(id);
+
+        if (result) {
+
+            return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+        } else {
+
+            return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
+
         }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
 
 }
 
@@ -92,7 +111,7 @@ const addTicket = async (req, res, next) => {
 
         console.error(error);
         res.status(500).json({ status: false, message: error.message });
-        
+
     }
 
 

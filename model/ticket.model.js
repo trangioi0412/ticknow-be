@@ -11,6 +11,9 @@ const ticketSchema = new Schema ({
     id_voucher: { type: ObjectId, required: false, default: null},
     price: { type: Number, required: true },
     type: { type: Number, required: false, default: 2},
+    autoDeleteAt: { type: Date, required: false }
 }, {versionKey: false, timestamps: true})
+
+ticketSchema.index({autoDeleteAt: 1}, {autoDeleteAt: 0});
 
 module.exports = mongoose.models.ticket || mongoose.model('ticket', ticketSchema);
