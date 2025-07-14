@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Router
 const router = require('./routes');
 app.use('/', router);
+app.use(express.json());
 
 // port
 

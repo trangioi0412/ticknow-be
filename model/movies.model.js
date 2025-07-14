@@ -16,9 +16,9 @@ const movieSchema = new Schema({
     image: {type: String, required: true},
     banner: {type: String, required: true},
     genre: [ { _id: false, id: { type: ObjectId, ref: 'genre', required: true } } ],
-    status: { type: Number, enum: [1, 2, 3], required: false, default: 2 },
-    language: {type: String, required: false, default: 'Đang Cập Nhật'},
+    status: { type: Number, enum: [1, 2, 3], required: false, default: 1 },
+    language: {type: String, required: false},
     star: {type: Number, required: false, default: 0}
-}, { versionKey: false});
+}, { versionKey: false, timestamps: true});
 
 module.exports = mongoose.models.movie || mongoose.model('movie', movieSchema );

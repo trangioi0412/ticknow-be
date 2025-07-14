@@ -7,7 +7,9 @@ const roomService = require('../service/room.service');
 
 const cinemaService = require('../service/cinema.service');
 
-const getScreeings = async (filter) => {
+const paginate = require('../utils/pagination');
+
+const getScreeings = async (filter, page, limit, sort) => {
     try {
         const movieService = require('../service/movie.service');
 
@@ -29,9 +31,15 @@ const getScreeings = async (filter) => {
 
         });
 
-        const screenings = await screeningModel.find(filter);
+        const { data, pagination } = await paginate.paginateQuery(
+            screeningModel,
+            filter,
+            page,
+            limit,
+            sort
+        );
 
-        const result = screenings.map(screening => {
+        const result = data.map(screening => {
             const movieId = screening.id_movie.toString();
             const roomId = screening.id_room.toString();
 
@@ -44,7 +52,10 @@ const getScreeings = async (filter) => {
             }
         })
 
-        return result;
+        return {
+            result,
+            pagination
+        };
 
     } catch (error) {
         console.error(error)
@@ -63,31 +74,22 @@ const getScreeingById = async (id) => {
 
 }
 
-const getScreeingByDay = async (date = "", cinema = "") => {
-    let day = date
+const getScreeingByDay = async (filter) => {
 
-    if (!date) {
-        const now = new Date();
-        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+    let screenings
 
-        const year = vnTime.getUTCFullYear();
-        const month = vnTime.getUTCMonth();
-        const date = vnTime.getUTCDate();
-
-        day = new Date(Date.UTC(year, month, date));
+    if (filter.date) {
+        screenings = await screeningModel.find({ date: filter.date });
+    } else {
+        screenings = await screeningModel.find();
     }
 
-
-    let screenings = await screeningModel.find({ date: day });
-
-    if (cinema) {
-        let rooms = await roomService.roomByIdCinema(cinema);
+    if (filter.cinema) {
+        let rooms = await roomService.roomByIdCinema(filter.cinema);
         const roomIds = rooms.map(r => r.id);
 
         screenings = screenings.filter(s => roomIds.includes(s.id_room.toString()));
     }
-
-    console.log(cinema);
 
     return screenings;
 }
@@ -228,17 +230,19 @@ const getScreeningByCinema = async (cinemaId, filter = {}) => {
 
 }
 
-const getScreeningSchedule = async (filter, cinema) => {
+const getScreeningSchedule = async (filterInput, cinema) => {
     const movieService = require('../service/movie.service');
 
     const result = {
         date: "",
-        films: []
+        data: []
     };
+
+    const {status, ...filter} = filterInput;
 
     if (!filter.date) {
         const now = new Date();
-        const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        const vnTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
         filter.date = new Date(Date.UTC(vnTime.getUTCFullYear(), vnTime.getUTCMonth(), vnTime.getUTCDate()));
     }
 
@@ -246,28 +250,58 @@ const getScreeningSchedule = async (filter, cinema) => {
 
     if (cinema) {
         const rooms = await roomService.roomByIdCinema(cinema);
-        if (rooms?.length) {
-            filter.id_room = { $in: rooms.map(r => r._id) };
-        }
-    }
+        if (!rooms?.length) return result;
 
+        filter.id_room = { $in: rooms.map(r => r._id) };
+    }
 
     const screenings = await screeningModel.find(filter);
 
+
+    if (!screenings || !Array.isArray(screenings) || screenings.length <= 0) {
+        return result;
+    }
+
+    const roomCache = new Map();
+
+    const cinemaCache = new Map();
+
+    const movieCache = new Map();
+
     const filmMap = new Map();
 
-    for (let screening of screenings) {
-        const room = await roomService.roomById(screening.id_room.toString());
-        const cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
+    for (const screening of screenings) {
+        let room = roomCache.get(screening.id_room.toString());
+        if (!room) {
+            room = await roomService.roomById(screening.id_room.toString());
+            roomCache.set(screening.id_room.toString(), room);
+        }
 
-        const filmData = await movieService.getMovieById(screening.id_movie.toString());
+        let cinemaData = cinemaCache.get(room.id_cinema.toString());
+        if (!cinemaData) {
+            cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
+            cinemaCache.set(room.id_cinema.toString(), cinemaData);
+        }
+
+        let filmData = movieCache.get(screening.id_movie.toString());
+
+        console.log(filmData);
+
+        if (!filmData) {
+            filmData = await movieService.getMovieById(screening.id_movie.toString(), status);
+            if (filmData) {
+                movieCache.set(screening.id_movie.toString(), filmData);
+            } else {
+                console.warn(`Không tìm thấy filmData cho movieId: ${screening.id_movie}`);
+                continue;
+            }
+        }
 
         const filmId = filmData._id.toString();
 
         if (!filmMap.has(filmId)) {
             filmMap.set(filmId, {
-                id: filmId,
-                name: filmData.name,
+                film: filmData,
                 cinemas: []
             });
         }
@@ -275,39 +309,46 @@ const getScreeningSchedule = async (filter, cinema) => {
         const film = filmMap.get(filmId);
 
         let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
-
         if (!cinemaItem) {
             cinemaItem = {
                 id: cinemaData._id.toString(),
-                location: cinema.location,
+                name: cinemaData.name,
+                location: cinemaData.location,
                 showtimes: []
-            }
+            };
             film.cinemas.push(cinemaItem);
         }
 
         cinemaItem.showtimes.push({
             id: screening._id,
-            time: screening.time_Start,
+            time: screening.time_start,
             showtype: screening.showtype
-        })
+        });
     }
 
-    result.films = Array.from(filmMap.values());
-
+    result.data = Array.from(filmMap.values());
     return result;
 };
 
+
 const screeningRoom = async (id) => {
+
     const ticketService = require('../service/ticket.service');
 
 
-    let filter = {}
+    let filter = {
+
+    }
 
     const screening = await screeningModel.findById(id);
 
+    if (screening === null || screening === undefined) {
+        return screening;
+    }
+
     const room = await roomService.roomId(screening.id_room);
 
-    if (!screening) {
+    if (!room) {
         throw new Error("Không Tìm Thấy Phòng")
     }
 
@@ -331,9 +372,12 @@ const screeningRoom = async (id) => {
         });
     }
 
-    room.diagram.element_selected = { ...seat }
+    room.diagram.element_selected = { ...seat };
 
-    return room;
+    return {
+        room,
+        screening
+    };
 }
 
 const addSceening = async (screeningData) => {
@@ -345,7 +389,7 @@ const addSceening = async (screeningData) => {
     let date = new Date(`${screeningData.date}T00:00:00.000Z`);
 
     if (!room && room.length < 0) {
-        throw new Error("Không tìm thấy room");
+        throw new Error("Không tìm thấy phòng");
     }
 
     if (room.status === 1) {
@@ -363,7 +407,10 @@ const addSceening = async (screeningData) => {
         throw new Error("Không tìm thấy phim")
     }
 
+    screeningData.time_start = moment(screeningData.time_start, "HH:mm").format("HH:mm");
+
     let time_end = moment(screeningData.time_start, "HH:mm").add(movie.duration, 'minutes').format("HH:mm");
+
 
     const conflict = await screeningModel.findOne({
         id_room: screeningData.id_room,
@@ -388,7 +435,8 @@ const addSceening = async (screeningData) => {
     return data;
 }
 
-const updateSceening = async (screeningData) => {
+
+const updateSceening = async (screeningData, id) => {
 
     const movieService = require('../service/movie.service');
 
@@ -436,7 +484,7 @@ const updateSceening = async (screeningData) => {
     };
 
     const result = await screeningModel.findByIdAndUpdate(
-        screeningData.id,
+        id,
         newScreening,
         { new: true }
     )

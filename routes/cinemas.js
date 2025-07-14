@@ -7,9 +7,9 @@ router.get('/', CinemaControler.getCinema);
 
 router.post('/add', CinemaControler.addCinema);
 
-router.post('/update', CinemaControler.updateCinema);
+router.patch('/update/:id', CinemaControler.updateCinema);
 
-router.delete('/delete/:id', CinemaControler.deleteCinema);
+// router.delete('/delete/:id', CinemaControler.deleteCinema);
 
 router.get('/:id', CinemaControler.getDetail)
 

@@ -9,6 +9,6 @@ const rateSchema = new Schema ({
     score: {type: Number, required: true},
     comment: { type: String, required: false, default: ""},
     date: {type: Date, required: false, default: Date.now()}
-})
+}, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.rate || mongoose.model('rate', rateSchema);

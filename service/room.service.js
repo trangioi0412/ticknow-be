@@ -5,8 +5,7 @@ const cinemaModel = require('../model/cinemas.model');
 
 const cinemaService = require('../service/cinema.service');
 
-
-const getAll = async (page, limit) => {
+const getAll = async (filter, page, limit, sort) => {
     const cinemas = await cinemaService.getCinema();
     const cinemaMap = new Map();
 
@@ -14,7 +13,7 @@ const getAll = async (page, limit) => {
         cinemaMap.set(cinema._id.toString(), cinema.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(roomModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(roomModel, filter, page, limit, sort);
 
 
     const room = data.map(room => {
@@ -41,11 +40,13 @@ const roomById = async (id, location) => {
     }
 
     const room = await roomModel.findById(id);
+
     if (!room) {
         throw new Error('Không tìm thấy phòng');
     }
 
-    const cinema = await cinemaModel.findById(room.id_cinema);
+    const cinema = await cinemaService.getCinemaById(room.id_cinema);
+
     if (!cinema) {
         throw new Error('Không tìm thấy rạp');
     }
@@ -55,6 +56,7 @@ const roomById = async (id, location) => {
         code_room: room.code_room,
         id_cinema: cinema._id,
         name_cinema: cinema.name,
+        location: cinema.location
     };
 };
 
@@ -68,13 +70,25 @@ const roomId = async (id) => {
     if (!room) {
         throw new Error('Không tìm thấy phòng');
     }
-    console.log(room)
 
-    return room;
+    const cinema = await cinemaService.getCinemaById(room.id_cinema);
+
+    if (!cinema) {
+        throw new Error('Không tìm thấy rạp');
+    }
+
+    return {
+        ...room.toObject(),
+        id_cinema: cinema._id,
+        cinema: cinema.name,
+        location: cinema.location
+    };
 }
 
 const roomByIdCinema = async (id) => {
+
     const room = await roomModel.find({ id_cinema: id });
+
     if (!room) {
         throw new Error('Không tìm thấy room');
     }
@@ -87,11 +101,13 @@ const addRoom = async (roomData) => {
 
     }).sort({ code_room: -1 }).limit(1);
 
-    if (!rooms && rooms.length < 0) {
-        throw new Error("Cinema không tồn tại")
-    }
+    let code_room
 
-    let code_room = parseInt(rooms.code_room) + 1;
+    code_room = 1;
+
+    if (rooms.code_room > 0) {
+        code_room = parseInt(rooms.code_room) + 1;
+    }
 
     let element_remove = roomData.seatRemoved;
 
@@ -107,31 +123,61 @@ const addRoom = async (roomData) => {
         }
     };
 
-    const newRoom = await roomModel.create(roomDatas)
+    const newRoom = await roomModel.create(roomDatas);
 
     return newRoom;
 
 }
 
-const updateRoom = async (roomData) => {
-    const roomCheck = await roomModel.findById(roomData.id);
+const updateRoom = async (roomData, id) => {
+
+    if (roomData.id_cinema) {
+
+        const rooms = await roomModel.findOne({
+            id_cinema: roomData.id_cinema,
+
+        }).sort({ code_room: -1 }).limit(1);
+
+        let code_room = 1
+
+        if (rooms) {
+            if (String(rooms._id) === String(id)) {
+                code_room = parseInt(rooms.code_room);
+            } else if (rooms.code_room > 0) {
+
+                code_room = parseInt(rooms.code_room) + 1;
+            }
+        }
+
+        roomData.code_room = code_room;
+
+    }
+
+
+    const { screeningRoom } = require('./screening.service');
+
+    const roomCheck = await roomModel.findById(id);
+
+    const screening = await screeningRoom(id);
+
+    if (screening != null || screening != undefined) {
+        throw new Error("Hiện tại phòng đang chiếu");
+    }
 
     if (
         roomCheck.diagram.element_selected instanceof Map &&
         roomCheck.diagram.element_selected.size > 0
     ) {
-        throw new Error("Hiện tại phòng đang có suất chiếu");
+        throw new Error("Hiện tại phòng đang chiếu");
     }
 
     let element_remove = roomData.seatRemoved || roomCheck.diagram.element_remove;
 
-    if (roomData.status === undefined || roomData.status === null || roomData.status === "") {
-        roomData.status = 1;
-    }
-
     roomData.row = roomData.row || roomCheck.diagram.row;
     roomData.column = roomData.column || roomCheck.diagram.column;
     roomData.id_cinema = roomData.id_cinema || roomCheck.id_cinema;
+    roomData.element_selected = roomData.element_selected || roomCheck.element_selected || {};
+    roomData.element_selecting = roomData.element_selecting || roomCheck.element_selecting || {};
 
     const row = parseInt(roomData.row);
     const column = parseInt(roomData.column);
@@ -142,16 +188,19 @@ const updateRoom = async (roomData) => {
 
     const roomDatas = {
         id_cinema: roomData.id_cinema,
+        code_room: roomData.code_room,
         diagram: {
             row,
             column,
-            element_remove
+            element_remove,
+            element_selected: roomData.element_selected,
+            element_selecting: roomData.element_selecting
         },
         status: roomData.status
     };
 
     const newRoom = await roomModel.findByIdAndUpdate(
-        roomData.id,
+        id,
         roomDatas,
         { new: true }
     );

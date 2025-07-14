@@ -7,12 +7,14 @@ const locationModel = require("../model/location.model");
 
 const cinemaModel = require('../model/cinemas.model');
 
+const roomModel = require('../model/room.model');
+
 const paginate = require('../utils/pagination');
 const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
 
 
 
-const getCinema = async (page = "", limit = "") => {
+const getCinema = async (filter, page = "", limit = "", sort) => {
     const locations = await locationService.getAll();
 
     const locationMap = new Map();
@@ -21,7 +23,7 @@ const getCinema = async (page = "", limit = "") => {
         locationMap.set(loca._id.toString(), loca.name);
     })
 
-    const { data, pagination } = await paginate.paginateQuery(cinemaModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(cinemaModel, filter, page, limit, sort);
 
     const cinema = data.map(cinema => {
         const idLoca = cinema.location.id_location.toString();
@@ -94,7 +96,7 @@ const addCinema = async (cinemaData, file) => {
     const checkCinema = await cinemaModel.findOne({ name: cinemaData.name });
 
     if (checkCinema) {
-        throw new Error('Tên Phim Đã Tồn Tại');
+        throw new Error('Tên Cinema Đã Tồn Tại');
     }
 
     if (file) {
@@ -119,18 +121,25 @@ const addCinema = async (cinemaData, file) => {
     return data;
 }
 
-const updateCinema = async (cinemaData, file) => {
+const updateCinema = async (cinemaData, file, id) => {
 
-    const cinema = await cinemaModel.findById(cinemaData.id);
+    const cinema = await cinemaModel.findById(id);
 
     if (!cinema) {
-        throw new Error(' Không tìm thấy rạp để xóa ');
+        throw new Error(' Không tìm thấy rạp để sửa ');
     }
 
     const locations = await locationModel.find({ _id: { $in: cinemaData.id_location } });
 
     if (!locations && locations.length <= 0) {
         throw new Error('Địa chỉ không tồn tại')
+    }
+
+    if (cinemaData.status && cinemaData.status === 3) {
+        const roomActive = await roomModel.find({ id_cinema: id, status: 2 });
+        if (roomActive) {
+            throw new Error('Hiện tại rạp vẫn đang còn phòng hoạt động!')
+        }
     }
 
     if (file) {
@@ -156,7 +165,7 @@ const updateCinema = async (cinemaData, file) => {
     }
 
     const result = await cinemaModel.findByIdAndUpdate(
-        cinemaData.id,
+        id,
         newCinema,
         { new: true }
     )
@@ -165,29 +174,4 @@ const updateCinema = async (cinemaData, file) => {
 
 }
 
-const deleteCinema = async (id) => {
-    const roomModel = require('../model/room.model');
-
-    const rooms = await roomModel.find({ id_cinema: id });
-
-    if (rooms && rooms.length > 0) {
-        throw new Error('Rạp Đang Còn Phòng');
-    }
-
-    const cinema = await cinemaModel.findById(id);
-
-    if (!cinema) {
-        throw new Error(' Không tìm thấy rạp để xóa ');
-    }
-
-    const imagePath = path.join(__dirname, '../public/images/cinema', cinema.image);
-
-    if (cinema.image && fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-    }
-
-    return await cinemaModel.findByIdAndDelete(id);
-
-}
-
-module.exports = { getCinema, getCinemaById, cinemaDetail, addCinema, deleteCinema, updateCinema }
+module.exports = { getCinema, getCinemaById, cinemaDetail, addCinema, updateCinema }

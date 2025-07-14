@@ -8,20 +8,30 @@ const upload = getUploader()
 
 const getMovies = async (req, res, next) => {
     try {
-        // query host
-        const { name, status, date } = req.query;
+
+        const sortField = req.query.sortField || '_id';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const sort = { [sortField]: sortOrder };
+
+        const { name, status, date, genre, star } = req.query;
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
-        // create variable storage
         let filter = {};
 
-        let result
+        let result;
 
-        // check variable  
-        if (status) filter.status = status;
+        if (genre) {
+            const genreArray = Array.isArray(genre) ? genre : genre.split(',').map(id => id.trim())
+            filter['genre.id'] = { $in: genreArray };
+        }
+
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
+            filter.status = { $in: statusArray }
+        }
 
         if (date) filter.release_date = check.checkDate(date);
 
@@ -29,10 +39,20 @@ const getMovies = async (req, res, next) => {
             filter.name = new RegExp(name, 'i');
         }
 
-        // get data
-        result = await movieService.getMovies(filter, limit, page);
+        if (star) {
+            const parts = star.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
 
-        // check data
+            if (parts.length === 2) {
+                const [min, max] = parts;
+                filter.star = { $gte: min, $lte: max };
+            } else if (parts.length === 1) {
+                const value = parts[0];
+                filter.star = { $gte: value, $lt: value + 1 };
+            }
+        }
+
+        result = await movieService.getMovies(filter, limit, page, sort);
+
         if (!result) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
         }
@@ -122,7 +142,7 @@ const filterSChedule = async (req, res, next) => {
     try {
         // query host
 
-        const { status, date, cinema, id } = req.query;
+        const { status, date, cinema, movie } = req.query;
 
         const limit = parseInt(req.query.limit);
 
@@ -138,7 +158,7 @@ const filterSChedule = async (req, res, next) => {
 
         if (date) filter.date = check.checkDate(date);
 
-        if (id) filter.id = id;
+        if (movie) filter.id_movie = movie;
 
         // get data
         result = await movieService.filterSchedule(filter, cinema, limit, page);
@@ -181,20 +201,20 @@ const addMovie = [
 ]
 
 const deleteMovie = async (req, res, next) => {
-    try{
+    try {
 
         const { id } = req.params;
 
-        if(!id){
-            return res.status(401).json({status: false, message: "Id Không hợp lệ"});
+        if (!id) {
+            return res.status(401).json({ status: false, message: "Id Không hợp lệ" });
         }
 
         const result = await movieService.deleteMovie(id);
 
-        return res.status(200).json({ status: true, message: "Xóa phim thành công"})
-    }catch (error) {
+        return res.status(200).json({ status: true, message: "Xóa phim thành công" })
+    } catch (error) {
         console.error(error);
-        return res.status(500).json({status: false, message: error.message})
+        return res.status(500).json({ status: false, message: error.message })
     }
 }
 
@@ -207,9 +227,15 @@ const updateMovie = [
         try {
             const movie = req.body;
 
-            const file = req.files
+            const { id } = req.params;
 
-            const result = await movieService.updateMovie(movie, file);
+            if (!id) {
+                res.status(404).json({ status: false, message: " Vui lòng truyền id " })
+            }
+
+            const file = req.files || {};
+
+            const result = await movieService.updateMovie(movie, file, id);
 
             if (!result) {
                 res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })

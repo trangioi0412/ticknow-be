@@ -8,7 +8,8 @@ const cinemaSchema = new Schema({
     location: {
         id_location: { type: ObjectId, ref: 'location',required: true},
         deatil_location: {type: String, required: true}
-    }
-}, { versionKey: false})
+    },
+    status: {type: Number, required: false, default: 1}
+}, { versionKey: false, timestamps: true},)
 
 module.exports = mongoose.models.cinema || mongoose.model('cinema', cinemaSchema);

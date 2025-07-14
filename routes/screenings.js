@@ -13,7 +13,7 @@ router.get('/filter', screeningControler.filterScreening);
 
 router.post('/add', upload.none(), screeningControler.addSceening);
 
-router.post('/update', upload.none(), screeningControler.updateSceening);
+router.patch('/update/:id', upload.none(), screeningControler.updateSceening);
 
 router.get('/:id', screeningControler.ScreeningRoom);
 

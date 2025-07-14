@@ -14,10 +14,10 @@ const fs = require('fs');
 const path = require('path');
 
 
-const getMovies = async (filter = {}, limit = "", page = "") => {
+const getMovies = async (filter = {}, limit = "", page = "", sort) => {
     try {
 
-        const { data, pagination } = await paginate.paginateQuery(movieModel, filter, page, limit);
+        const { data, pagination } = await paginate.paginateQuery(movieModel, filter, page, limit, sort);
 
         const movie = await mapGenre.mapGenreMovie(data);
 
@@ -34,12 +34,37 @@ const getMovies = async (filter = {}, limit = "", page = "") => {
 
 }
 
-const getMovieById = async (id) => {
+const getMovieById = async (id, status) => {
     try {
-
         const movie = await movieModel.findById(id);
 
-        const result = await mapGenre.mapGenreMovieOne(movie);
+        if (!movie) {
+            throw new Error('❌ Không tìm thấy movie với id này');
+        }
+
+        console.log(movie);
+
+        if (status !== undefined && movie.status !== parseInt(status)) {
+            return undefined;
+        }
+
+        return await mapGenre.mapGenreMovieOne(movie);
+
+    } catch (error) {
+        console.error(error.message);
+        throw new Error('❌ Lỗi lấy dữ liệu của movie');
+    }
+};
+
+const getMovieId = async (id) => {
+    try {
+        let result;
+        const movie = await movieModel.findById(id);
+
+        if (!movie) {
+            throw new Error('❌ Không tìm thấy movie với id này');
+        }
+
         return result;
 
     } catch (error) {
@@ -84,15 +109,21 @@ const filterMovie = async (filter = {}, genre = "", limit = "", page = "") => {
 
     let movies = [];
 
-    let screeningDay = await screeningService.getScreeingByDay(filter.date, filter.cinema);
+    if (Object.keys(filter).length > 1) {
 
-    for (const screening of screeningDay) {
-        const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
+        let screeningDay = await screeningService.getScreeingByDay(filter);
 
-        if (movie) {
-            movies.push(movie);
+        for (const screening of screeningDay) {
+            const movie = await movieModel.findOne({ _id: screening.id_movie, status: filter.status });
+
+            if (movie) {
+                movies.push(movie);
+            }
+
         }
-
+    } else {
+        const movie = await movieModel.find({ status: filter.status });
+        movies = [...movie]
     }
 
     movies = movies.filter((movie, index, self) =>
@@ -214,22 +245,22 @@ const deleteMovie = async (id) => {
 
 }
 
-const updateMovie = async (movieData, file) => {
+const updateMovie = async (movieData, file, id) => {
 
     let genreIds = movieData.genre;
 
-    const movieId = await movieModel.findById(movieData.id);
+    const movieId = await movieModel.findById(id);
 
     if (!movieId) {
         throw new Error('Phim Không tồn tại');
     }
 
-    if (file.image && file.image.length > 0) {
-        movieData.image = file.image[0].filename
+    if (file?.image?.length > 0) {
+        movieData.image = file.image[0].filename;
     }
 
-    if (file.banner && file.banner.length > 0) {
-        movieData.banner = file.banner[0].filename
+    if (file?.banner?.length > 0) {
+        movieData.banner = file.banner[0].filename;
     }
 
     const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
@@ -248,7 +279,7 @@ const updateMovie = async (movieData, file) => {
     if (file?.image?.[0]) {
         const imageFile = file.image[0];
         const imageName = Date.now() + '-' + imageFile.originalname;
-        console.log(movieId.image);
+
         if (movieId.image) {
             deleteImageFromDisk(movieId.image, 'movie');
         }
@@ -271,7 +302,7 @@ const updateMovie = async (movieData, file) => {
     movieData.genre = genre
 
     const result = await movieModel.findByIdAndUpdate(
-        movieData.id,
+        id,
         movieData,
         { new: true }
     )
@@ -283,6 +314,7 @@ module.exports = {
     getMovies,
     getDetailMovie,
     getMovieById,
+    getMovieId,
     filterMovie,
     filterSchedule,
     addMovies,

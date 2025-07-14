@@ -3,9 +3,9 @@ const paginate = require('../utils/pagination');
 const transitionModel = require('../model/transition.model');
 
 const ticketService = require('../service/ticket.service');
-const payMethodService = require('../service/payMethods.service'); 
+const payMethodService = require('../service/payMethods.service');
 
-const getAll = async (page, limit) => {
+const getAll = async (filter, page, limit, sort) => {
 
     const tickets = await ticketService.getTicket();
     const ticketMap = new Map();
@@ -19,7 +19,7 @@ const getAll = async (page, limit) => {
         payMethodMap.set(payMethod._id, payMethod.name)
     })
 
-    const { data, pagination } = await paginate.paginateQuery(transitionModel, {}, page, limit);
+    const { data, pagination } = await paginate.paginateQuery(transitionModel, filter, page, limit, sort);
 
     return {
         data,
@@ -28,4 +28,28 @@ const getAll = async (page, limit) => {
 
 }
 
-module.exports = { getAll }
+const addTransition = async (transitionData) => {
+
+    const ticket = await ticketService.getTicketId(transitionData.id_ticket);
+
+    if (!ticket || (typeof ticket === 'object' && Object.keys(ticket).length === 0)) {
+        throw new Error("Thông tin ticket không tồn tại")
+    }
+
+    const payMethod = await payMethodService.payMethodDetail(transitionData.id_payMethod);
+
+    if (!payMethod || (typeof payMethod === 'object' && Object.keys(payMethod).length === 0)) {
+        throw new Error("Thông tin payMethod không tồn tại")
+    }
+
+    const newTransitions = {
+        ...transitionData,
+        amount: parseInt(transitionData.price)
+    }
+
+    const newTransition = await transitionModel.create(newTransitions);
+
+    return newTransition
+}
+
+module.exports = { getAll, addTransition }

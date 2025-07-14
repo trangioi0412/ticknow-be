@@ -4,12 +4,13 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const ticketSchema = new Schema ({
+    code: {type: Number, required: true},
     id_user: { type: ObjectId, required: true },
     id_screening: { type: ObjectId, required: true },
     seat: { type: Array, required: true },
-    id_voucher: { type: ObjectId, required: false, default: ""},
+    id_voucher: { type: ObjectId, required: false, default: null},
     price: { type: Number, required: true },
-    type: { type: String, required: true },
-})
+    type: { type: Number, required: false, default: 2},
+}, {versionKey: false, timestamps: true})
 
 module.exports = mongoose.models.ticket || mongoose.model('ticket', ticketSchema);
