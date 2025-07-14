@@ -49,7 +49,7 @@ const getUserDetail = async (id) => {
 
 }
 
-const login = async (email, password) => {
+const login = async (email, password, role) => {
   const checkUser = await userModel.findOne({ email: email });
 
   if (!checkUser) {
@@ -69,6 +69,10 @@ const login = async (email, password) => {
     const error = new Error(" Tài khoản của bạn đã bị khóa");
     error.status = 400;
     throw error;
+  }
+
+  if (role && checkUser.role != role) {
+    throw new Error("Tài khoản của bạn không có quyền admin");
   }
 
   const jwtSecret = process.env.JWT_SECRET;
@@ -194,5 +198,7 @@ const updateUser = async (userData, id) => {
   return result;
 
 }
+
+
 
 module.exports = { getUsers, getUserDetail, login, register, updateUser };

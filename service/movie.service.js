@@ -42,8 +42,6 @@ const getMovieById = async (id, status) => {
             throw new Error('❌ Không tìm thấy movie với id này');
         }
 
-        console.log(movie);
-
         if (status !== undefined && movie.status !== parseInt(status)) {
             return undefined;
         }

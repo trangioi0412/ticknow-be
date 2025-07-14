@@ -92,6 +92,7 @@ const getDetail = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const { requireRole } = req;
 
     if (!email || !password) {
       return res
@@ -99,12 +100,19 @@ const login = async (req, res, next) => {
         .json({ status: false, message: "Email và Password là bắt buộc" });
     }
 
-    const result = await userService.login(email, password);
-    if (!result || !result.token) {
+    const result = await userService.login(email, password, requireRole);
+
+    if (!result || !result.token || !result.user) {
       return res
         .status(401)
-        .json({ status: false, message: "Đăng Nhập thất bại, sai thông tin" });
+        .json({ status: false, message: "Đăng Nhập thất bại, sai thông tin hoặc không có quyền admin" });
     }
+
+    // if (requireRole && result.user.role != requireRole) {
+    //   return res
+    //     .status(403)
+    //     .json({ status: false, message: `Tài khoản không có quyền admin` });
+    // }
 
     return res
       .status(200)
