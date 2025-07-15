@@ -113,7 +113,8 @@ const addCinema = async (cinemaData, file) => {
         location: {
             id_location: new mongoose.Types.ObjectId(cinemaData.id_location),
             deatil_location: cinemaData.deatil_location
-        }
+        },
+        status: cinemaData.status
     })
 
     const data = await newCinema.save();
