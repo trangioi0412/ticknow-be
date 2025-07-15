@@ -95,10 +95,6 @@ const updateRate = async (rateData) => {
         throw new Error("vui Lòng chọn số sao và số dưới phải lớn hơn 0.5");
     }
 
-    if (!rateData.comment && rateData.comment == "") {
-        throw new Error("vui Lòng nhập nội dung bình luận");
-    }
-
     rateData.is_active = 3
 
     const rate = await rateModel.findByIdAndUpdate(rates._id, rateData, { new: true });
