@@ -78,7 +78,9 @@ const updateRate = async (rateData, id) => {
         throw new Error("Không thể sửa phim hay vé");
     }
 
-    const ticket = await ticketService.getTicketId(id);
+    const rateOld = await rateModel.findById(id)
+
+    const ticket = await ticketService.getTicketId(rateOld.id_ticket);
 
     if (!ticket) {
         throw new Error("vé không tồn tại");
@@ -91,9 +93,10 @@ const updateRate = async (rateData, id) => {
     if(!rateData.comment && rateData.comment == ""){
         throw new Error("vui Lòng nhập nội dung bình luận");
     }
-
+    
     const rate = await rateModel.findByIdAndUpdate(id, rateData, { new: true });
-
+    
+    console.log(rate);
     return rate;
 
 }

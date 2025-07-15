@@ -75,20 +75,19 @@ const rate = async (req, res, next) => {
         const { id } = req.params;
 
         if (!id) {
-            res.status(404).json({ status: false, message: " Vui lòng truyền id " })
+            return res.status(404).json({ status: false, message: " Vui lòng truyền id " })
         }
 
         const result = await rateService.updateRate(data, id);
 
         if (!result) {
-            res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
+            return res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
         }
 
-        res.status(200).json({ data: result, status: true, message: " Sửa cinema Thành Công " })
+        return res.status(200).json({ data: result, status: true, message: " Sửa cinema Thành Công " })
     } catch (error) {
-
         console.error(error);
-        res.status(500).json({ status: false, message: error.message });
+        return res.status(500).json({ status: false, message: error.message });
     }
 }
 
