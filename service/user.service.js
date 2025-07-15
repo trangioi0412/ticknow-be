@@ -80,7 +80,7 @@ const login = async (email, password, role) => {
   const token = jwt.sign(
     { id: checkUser._id, role: checkUser.role },
     jwtSecret,
-    { expiresIn: "1h" }
+    { expiresIn: "1d" }
   );
 
   const { password: pwd, ...userWithoutPassword } = checkUser.toObject();
