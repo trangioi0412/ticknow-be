@@ -4,6 +4,7 @@ const PayOS = require('@payos/node');
 const mongoose = require('mongoose');
 
 const { verifyToken } = require('../utils/auth.util');
+const generateCinemaCode = require('../utils/randomCodeTicket')
 
 const ticketService = require('../service/ticket.service');
 const ticketModel = require('../model/ticket.model');
@@ -14,7 +15,7 @@ const rateService = require('../service/rate.service');
 
 const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
 
-const YOUR_DOMAIN = 'http://localhost:1001';
+const YOUR_DOMAIN = 'http://localhost:3000';
 
 const extraDataMap = new Map();
 
@@ -44,12 +45,14 @@ router.post('/create-payment-link', async (req, res) => {
 
         await ticketService.addTicket(ticket, userId);
 
+        const code = generateCinemaCode()
+
         const order = {
             amount: ticketData.price,
             description: 'Thanh toán vé xem phim',
-            orderCode: ticketData.code,
-            returnUrl: `${YOUR_DOMAIN}/success.html`,
-            cancelUrl: `${YOUR_DOMAIN}/cancel.html`,
+            orderCode: code,
+            returnUrl: `${YOUR_DOMAIN}/booking-successful`,
+            cancelUrl: `${YOUR_DOMAIN}/booking-failed`,
             callbackUrl: 'https://d1817ee1488c.ngrok-free.app/payos/receive-hook'
         };
 
