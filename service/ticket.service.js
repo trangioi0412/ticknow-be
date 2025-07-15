@@ -8,6 +8,7 @@ const ticketModel = require('../model/ticket.model');
 const screeningService = require('./screening.service')
 const usersService = require('./user.service');
 const roomService = require('./room.service');
+const rateModel = require('../model/rates.model');
 
 const voucherService = require('./vouchers.service');
 
@@ -113,6 +114,8 @@ const getDetail = async (id) => {
         throw new Error("Không tìm thấy movie")
     }
 
+    const rate = await rateModel.findOne({id_movie: screening.id_movie, id_ticket: id});
+
     const room = await roomService.roomById(screening.id_room);
 
     return {
@@ -120,7 +123,8 @@ const getDetail = async (id) => {
         user,
         screening,
         movie,
-        room
+        room,
+        rate
     }
 
 }
