@@ -155,13 +155,26 @@ const updateCinema = async (cinemaData, file, id) => {
         cinemaData.image = imageName;
     }
 
+    if(!cinemaData.id_location){
+        cinemaData.id_location = cinema.location.id_location
+    }
+
+    if(!cinemaData.deatil_location){
+        cinemaData.deatil_location = cinema.location.deatil_location
+    }
+
+    if(!cinemaData.status){
+        cinemaData.status = cinema.location.status
+    }
+
     const newCinema = {
         name: cinemaData.name,
         image: cinemaData.image,
         location: {
             id_location: new mongoose.Types.ObjectId(cinemaData.id_location),
             deatil_location: cinemaData.deatil_location
-        }
+        },
+        status: cinemaData.status
     }
 
     const result = await cinemaModel.findByIdAndUpdate(
