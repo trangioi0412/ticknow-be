@@ -3,11 +3,14 @@ const moment = require('moment');
 
 const screeningModel = require('../model/screening.model');
 
-const roomService = require('../service/room.service');
+const roomService = require('./room.service');
 
-const cinemaService = require('../service/cinema.service');
+const rateModel = require('../model/rates.model');
+
+const cinemaService = require('./cinema.service');
 
 const paginate = require('../utils/pagination');
+const ratesModel = require('../model/rates.model');
 
 const getScreeings = async (filter, page, limit, sort) => {
     try {
@@ -238,7 +241,7 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         data: []
     };
 
-    const {status, ...filter} = filterInput;
+    const { status, ...filter } = filterInput;
 
     if (!filter.date) {
         const now = new Date();
@@ -380,6 +383,32 @@ const screeningRoom = async (id) => {
     };
 }
 
+const expireRatesBasedOnScreening = async () => {
+    const now = new Date();
+    const screenings = await screeningModel.find({ status: { $ne: 1 } }).select('id_movie time_end date');
+    const expiredIds = []
+
+    for (const screening of screenings) {
+        const dateStr = screening.date.toISOString().split('T')[0];
+
+        const fullEndTime = new Date(`${dateStr}T${screening.time_end}:00`);
+        if (fullEndTime < now) {
+            expiredIds.push(screening.id_movie);
+        }
+    }
+
+    const result = await rateModel.updateMany({
+        id_movie: { $in: expiredIds },
+        is_active: 1
+    },
+        {
+            $set: { is_active: 2 },
+        }
+    );
+
+    return result.modifiedCount;
+}
+
 const addSceening = async (screeningData) => {
 
     const movieService = require('../service/movie.service');
@@ -501,6 +530,7 @@ module.exports = {
     getScreeningByCinema,
     getScreeningSchedule,
     screeningRoom,
+    expireRatesBasedOnScreening,
     addSceening,
     updateSceening
 }

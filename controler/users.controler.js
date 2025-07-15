@@ -176,9 +176,10 @@ const resetPassword = async (req, res, next) => {
 const newPassword = async (req, res, next ) => {
   try {
     const { password } = req.body;
+    await userService.newPassword(password)
     res.json({ message: 'Thay Đổi mật khẩu thành công' })
   }catch (error){
-    
+
   }
 }
 

@@ -53,4 +53,49 @@ const getByIdMovie = async (movieId) => {
 
 }
 
-module.exports = { getAll, getByIdMovie }
+const addRate = async (rateData) => {
+    const movieService = require('../service/movie.service');
+
+    const ticket = await ticketService.getTicketId(rateData.id_ticket);
+    if (!ticket) {
+        throw new Error("Vé không hợp lệ")
+    }
+
+    const movie = await movieService.getMovieId(rateData.id_movie);
+
+    if (!movie) {
+        throw new Error("Phim Không hợp lệ");
+    }
+
+    const newRate = await rateModel.create(rateData);
+
+    return newRate;
+}
+
+const updateRate = async (rateData, id) => {
+
+    if (rateData.movie || rateData.ticket) {
+        throw new Error("Không thể sửa phim hay vé");
+    }
+
+    const ticket = await ticketService.getTicketId(id);
+
+    if (!ticket) {
+        throw new Error("vé không tồn tại");
+    }
+
+    if(!rateData.score && rateData.score <= 0 ){
+        throw new Error("vui Lòng chọn số sao và số dưới phải lớn hơn 0.5");
+    }
+
+    if(!rateData.comment && rateData.comment == ""){
+        throw new Error("vui Lòng nhập nội dung bình luận");
+    }
+
+    const rate = await rateModel.findByIdAndUpdate(id, rateData, { new: true });
+
+    return rate;
+
+}
+
+module.exports = { getAll, getByIdMovie, addRate, updateRate }

@@ -136,7 +136,7 @@ const updateCinema = [
                 res.status(404).json({ status: false, message: " Vui lòng truyền id " })
             }
 
-            const result = await cinemaService.updateCinema(cinema, file);
+            const result = await cinemaService.updateCinema(cinema, file, id);
 
             if (!result) {
                 res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })

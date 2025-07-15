@@ -56,10 +56,10 @@ const getMovieById = async (id, status) => {
 
 const getMovieId = async (id) => {
     try {
-        let result;
-        const movie = await movieModel.findById(id);
 
-        if (!movie) {
+        const result = await movieModel.findById(id);
+
+        if (!result) {
             throw new Error('❌ Không tìm thấy movie với id này');
         }
 

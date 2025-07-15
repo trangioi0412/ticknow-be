@@ -9,6 +9,8 @@ const ticketService = require('../service/ticket.service');
 const ticketModel = require('../model/ticket.model');
 const transition = require('../service/transition.service');
 const voucherService = require('../service/vouchers.service');
+const screeningService = require('../service/screening.service');
+const rateService = require('../service/rate.service');
 
 const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
 
@@ -86,8 +88,6 @@ router.post('/receive-hook', async (req, res) => {
         
         let ticket = await ticketModel.findOne({code: data.orderCode});
 
-        console.log(ticket);
-
         if (!ticket) return res.sendStatus(404);
 
         ticket.type = 2;
@@ -114,13 +114,20 @@ router.post('/receive-hook', async (req, res) => {
 
             };
 
-            await voucherService.updateVoucher(voucherData, ticket.voucher);
+            await voucherService.updateVoucher(voucherData, ticket.id_voucher);
         }
+
+        let rateData = {};
+        rateData.id_ticket = ticket._id;
+        const screening = await screeningService.getScreeingById(ticket.id_screening);
+        rateData.id_movie = screening.id_movie;
+
+        rateService.addRate(rateData);
 
         return res.status(200).json({ message: "Đặt vé thành công" });
 
     } catch (err) {
-        console.error("Lỗi giải mã extraData:", err);
+        console.error( err);
         return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
     }
 

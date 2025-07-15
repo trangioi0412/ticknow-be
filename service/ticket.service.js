@@ -94,12 +94,6 @@ const getTicketId = async (id) => {
     return ticket
 }
 
-const getTicketUser = async (idUser) => {
-    const ticket = await ticketModel.find({ id_user: idUser });
-
-
-}
-
 const getDetail = async (id) => {
     const movieService = require('./movie.service');
 

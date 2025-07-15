@@ -104,8 +104,8 @@ const register = async (user) => {
     year = new Date(`${user.year}`);
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(user.password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(user.password, salt);
 
   const newUser = new userModel({
     name: user.name,
