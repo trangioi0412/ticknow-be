@@ -74,7 +74,7 @@ const rate = async (req, res, next) => {
     try {
         const data = req.body;
 
-        const result = await rateService.updateRate(data, userId);
+        const result = await rateService.updateRate(data);
 
         if (!result) {
             return res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
