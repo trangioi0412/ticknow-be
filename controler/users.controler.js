@@ -140,7 +140,7 @@ const register = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-
+    console.log(req.params);
     const user = req.body;
 
     const { id } = req.params;
@@ -162,4 +162,24 @@ const updateUser = async (req, res, next) => {
   }
 }
 
-module.exports = { getAllUsers, login, register, getDetail, updateUser };
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    await userService.resetPassword(email)
+    res.json({ message: 'Đã gửi email đặt lại mật khẩu' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: false, message: error.message })
+  }
+}
+
+const newPassword = async (req, res, next ) => {
+  try {
+    const { password } = req.body;
+    res.json({ message: 'Thay Đổi mật khẩu thành công' })
+  }catch (error){
+    
+  }
+}
+
+module.exports = { getAllUsers, login, register, getDetail, updateUser, resetPassword };

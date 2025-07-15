@@ -20,4 +20,6 @@ router.patch('/update/:id', userControler.updateUser);
 
 router.post('/info', userControler.getDetail);
 
+router.post('/reset-password', userControler.resetPassword)
+
 module.exports = router;

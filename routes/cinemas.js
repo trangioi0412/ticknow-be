@@ -11,6 +11,8 @@ router.patch('/update/:id', CinemaControler.updateCinema);
 
 // router.delete('/delete/:id', CinemaControler.deleteCinema);
 
-router.get('/:id', CinemaControler.getDetail)
+router.get('/detail/:id', CinemaControler.getIdCinema);
+
+router.get('/:id', CinemaControler.getDetail);
 
 module.exports = router;

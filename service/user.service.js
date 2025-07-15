@@ -7,7 +7,7 @@ const userModel = require('../model/users.model');
 const paginate = require('../utils/pagination');
 
 const sendMail = require("../utils/send.mail");
-const parseBoolean = require("../utils/translate")
+const parseBoolean = require("../utils/translate");
 
 const getUsers = async (filter, page, limit, sort) => {
   const { data, pagination } = await paginate.paginateQuery(
@@ -199,6 +199,37 @@ const updateUser = async (userData, id) => {
 
 }
 
+const resetPassword = async (email) => {
 
+  const user = await userModel.findOne({ email: email });
 
-module.exports = { getUsers, getUserDetail, login, register, updateUser };
+  if(!user){
+    throw new Error('Email không tồn tại');
+  }
+
+  const token = jwt.sign(
+    {id: user._id},
+    process.env.JWT_RESET_SECRET,
+    {expiresIn: '20m'}
+  )
+
+  const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+  await sendMail({email: email, subject: '🔐 Yêu cầu đặt lại mật khẩu - TickNow', html: `
+    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f2f4f8; color: #333;">
+        <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+          <h2 style="color: #e50914;">TickNow - Đặt lại mật khẩu</h2>
+          <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nhấn vào nút bên dưới để tạo mật khẩu mới:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" target="_blank" style="padding: 12px 24px; background-color: #e50914; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              Đặt lại mật khẩu
+            </a>
+          </div>
+          <p>Nếu bạn không yêu cầu điều này, vui lòng bỏ qua email này. Liên kết này sẽ hết hạn sau 15 phút vì lý do bảo mật.</p>
+          <hr style="margin: 40px 0;">
+          <p style="font-size: 14px; color: #999;">© 2025 TickNow. Tất cả các quyền được bảo lưu.</p>
+        </div>
+      </div>
+    ` });
+}
+
+module.exports = { getUsers, getUserDetail, login, register, updateUser, resetPassword };

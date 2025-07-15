@@ -29,12 +29,12 @@ const getCinema = async (req, res, next) => {
             filter['location.id_location'] = { $in: locationArray };
         }
 
-        if(status){
-            const statusArray = Array.isArray(status) ? status.map( s => Number(s) ) : status.split(',').map(sta => Number( sta.trim()) );
+        if (status) {
+            const statusArray = Array.isArray(status) ? status.map(s => Number(s)) : status.split(',').map(sta => Number(sta.trim()));
             filter.status = { $in: statusArray }
         }
 
-        if(name){
+        if (name) {
             filter.name = { $regex: name, $options: 'i' }
         }
 
@@ -66,6 +66,25 @@ const getDetail = async (req, res, next) => {
 
         let result = await cinemaService.cinemaDetail(id, filter);
 
+        if (result) {
+
+            return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' })
+
+        } else {
+
+            return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
+
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
+const getIdCinema = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        let result = await cinemaService.getCinemaById(id);
 
         if (result) {
 
@@ -133,4 +152,4 @@ const updateCinema = [
 ]
 
 
-module.exports = { getCinema, getDetail, addCinema, updateCinema }
+module.exports = { getCinema, getDetail, getIdCinema, addCinema, updateCinema }
