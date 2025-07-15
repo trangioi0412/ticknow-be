@@ -36,16 +36,17 @@ router.post('/create-payment-link', async (req, res) => {
 
         const userId = await verifyToken(token);
 
+        const code = generateCinemaCode()
+
         const ticketData = req.body;
         const ticket = {
             ...ticketData,
+            code: code,
             type: 1,
             autoDeleteAt: new Date(Date.now() + expiresInMs)
         }
 
         await ticketService.addTicket(ticket, userId);
-
-        const code = generateCinemaCode()
 
         const order = {
             amount: ticketData.price,
