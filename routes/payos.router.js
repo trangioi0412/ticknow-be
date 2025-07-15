@@ -36,7 +36,7 @@ router.post('/create-payment-link', async (req, res) => {
 
         const userId = await verifyToken(token);
 
-        const code = generateCinemaCode()
+        const code = generateCinemaCode(ticketModel);
 
         const ticketData = req.body;
         const ticket = {
