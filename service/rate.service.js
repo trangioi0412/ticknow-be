@@ -4,6 +4,10 @@ const rateModel = require('../model/rates.model');
 
 const ticketService = require('../service/ticket.service');
 
+const mongoose = require('mongoose');
+
+const userService = require('./user.service')
+
 
 const getAll = async (filter, page, limit, sort) => {
     const movieService = require('../service/movie.service');
@@ -72,31 +76,33 @@ const addRate = async (rateData) => {
     return newRate;
 }
 
-const updateRate = async (rateData, id) => {
+const updateRate = async (rateData) => {
 
-    if (rateData.movie || rateData.ticket) {
-        throw new Error("Không thể sửa phim hay vé");
+    const movieService = require('../service/movie.service');
+
+    const movie = await movieService.getMovieId(rateData.movie);
+
+    if (!movie) {
+        throw new Error("Phim Không hợp lệ");
     }
 
-    const rateOld = await rateModel.findById(id)
+    const rates = await rateModel.findOne({
+        id_movie: new mongoose.Types.ObjectId(movie._id),
+        id_ticket: new mongoose.Types.ObjectId(rateData.ticket)
+    })
 
-    const ticket = await ticketService.getTicketId(rateOld.id_ticket);
-
-    if (!ticket) {
-        throw new Error("vé không tồn tại");
-    }
-
-    if(!rateData.score && rateData.score <= 0 ){
+    if (!rateData.score && rateData.score <= 0) {
         throw new Error("vui Lòng chọn số sao và số dưới phải lớn hơn 0.5");
     }
 
-    if(!rateData.comment && rateData.comment == ""){
+    if (!rateData.comment && rateData.comment == "") {
         throw new Error("vui Lòng nhập nội dung bình luận");
     }
-    
-    const rate = await rateModel.findByIdAndUpdate(id, rateData, { new: true });
-    
-    console.log(rate);
+
+    rateData.is_active = 3
+
+    const rate = await rateModel.findByIdAndUpdate(rates._id, rateData, { new: true });
+
     return rate;
 
 }

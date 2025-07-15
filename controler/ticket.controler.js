@@ -43,8 +43,6 @@ const getTickets = async (req, res, next) => {
 
                 filter.id_user = new mongoose.Types.ObjectId(userId);
 
-                console.log(1);
-
             } catch (err) {
                 console.warn('Token không hợp lệ:', err.message);
             }

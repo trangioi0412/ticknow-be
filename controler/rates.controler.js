@@ -4,6 +4,8 @@ const check = require('../utils/checkDateQuery');
 
 const rateService = require('../service/rate.service');
 
+const { verifyToken } = require('../utils/auth.util');
+
 const getRate = async (req, res, next) => {
     try {
 
@@ -72,13 +74,7 @@ const rate = async (req, res, next) => {
     try {
         const data = req.body;
 
-        const { id } = req.params;
-
-        if (!id) {
-            return res.status(404).json({ status: false, message: " Vui lòng truyền id " })
-        }
-
-        const result = await rateService.updateRate(data, id);
+        const result = await rateService.updateRate(data, userId);
 
         if (!result) {
             return res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
