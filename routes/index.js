@@ -37,5 +37,7 @@ router.use('/momo', require('./momo.router'));
 
 router.use('/payos', require('./payos.router'));
 
+router.use('/contact', require('./contact.router'));
+
 
 module.exports = router;

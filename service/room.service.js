@@ -96,6 +96,7 @@ const roomByIdCinema = async (id) => {
 }
 
 const addRoom = async (roomData) => {
+    
     const rooms = await roomModel.findOne({
         id_cinema: roomData.id_cinema,
 
@@ -108,6 +109,7 @@ const addRoom = async (roomData) => {
     if (rooms.code_room > 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
+
 
     let element_remove = roomData.seatRemoved;
 

@@ -43,6 +43,8 @@ const addRoom = async (req, res, next) => {
 
         const room = req.body;
 
+        console.log(room);
+
         const result = await roomService.addRoom(room);
 
         if (!result) {

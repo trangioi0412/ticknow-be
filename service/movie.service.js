@@ -194,6 +194,8 @@ const addMovies = async (movieData, file) => {
         movieData.genre = [movieData.genre];
     }
 
+    
+
     const genre = convertGenreIds(movieData.genre);
 
     const newMovie = new movieModel({
