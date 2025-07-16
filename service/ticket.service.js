@@ -32,7 +32,7 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
             const screeningId = screening._id.toString();
 
             screeningMap.set(screeningId, screening.time_start);
-            movieMap.set(screeningId, movieInfo.name);
+            movieMap.set(screeningId, {id: movieInfo._id, name:movieInfo.name});
             roomMap.set(screeningId, {
                 id: cinemaRoom.id_room,
                 code: cinemaRoom.code_room,
@@ -53,20 +53,28 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
 
     const { data, pagination } = await paginate.paginateQuery(ticketModel, filter, page, limit, sort);
 
-    const ticket = data.map(ticket => {
+    const tickets = await Promise.all(data.map(async ticket => {
         const screeningId = ticket.id_screening.toString();
+        const movies = movieMap.get(screeningId)
+
+        const rate = await rateModel
+            .findOne({ id_movie: movies.id, id_ticket: ticket._id })
+            .select('is_active');
+            
         return {
             ...ticket.toObject(),
             userName: userMap.get(ticket.id_user.toString()),
             screeningTime: screeningMap.get(screeningId),
-            movie: movieMap.get(screeningId),
+            movie: movies.name,
             room: roomMap.get(screeningId),
             cinema: cinemaMap.get(screeningId),
+            status_cmt: rate?.is_active,
         };
-    });
+    }));
+
 
     return {
-        ticket,
+        tickets,
         pagination,
     };
 };
@@ -114,7 +122,7 @@ const getDetail = async (id) => {
         throw new Error("Không tìm thấy movie")
     }
 
-    const rate = await rateModel.findOne({id_movie: screening.id_movie, id_ticket: id});
+    const rate = await rateModel.findOne({ id_movie: screening.id_movie, id_ticket: id });
 
     const room = await roomService.roomById(screening.id_room);
 
@@ -123,8 +131,7 @@ const getDetail = async (id) => {
         user,
         screening,
         movie,
-        room,
-        rate
+        room
     }
 
 }
