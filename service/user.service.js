@@ -208,7 +208,7 @@ const resetPassword = async (email) => {
   }
 
   const token = jwt.sign(
-    { id: user._id },
+    { user },
     process.env.JWT_RESET_SECRET,
     { expiresIn: '20m' }
   )
@@ -233,18 +233,24 @@ const resetPassword = async (email) => {
     ` });
 }
 
-const newPassword = async (id, password) => {
-  const user = await userModel.findById(id);
+const newPassword = async (user, password) => {
+  const users = await userModel.findById(user._id);
 
-  if (!user || user.status === false) {
+  console.log(user);
+
+  if (!users || users.status === false) {
     throw new Error('Người dùng không tồn tại hoặc đã bị khóa');
   }
+
+  if (user.password !== users.password) {
+  throw new Error("Token không hợp lệ. Vui lòng đăng nhập lại.");
+}
 
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(password, salt);
 
   const result = await userModel.findByIdAndUpdate(
-    id,
+    user._id,
     { password: hashPassword },
     { new: true }
   );

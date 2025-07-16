@@ -41,8 +41,8 @@ const verifyTokenEmail = async (token) => {
         const jwtSecret = process.env.JWT_RESET_SECRET;
 
         const decoded = jwt.verify(token, jwtSecret);
-        
-        return decoded.id;
+
+        return decoded;
     } catch (err) {
         switch (err.name) {
             case 'TokenExpiredError':

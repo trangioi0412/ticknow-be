@@ -24,7 +24,7 @@ const getAll = async (filter, page, limit, sort) => {
 
     const ticketMap = new Map();
 
-    tickets.ticket.forEach(ticket => {
+    tickets.tickets.forEach(ticket => {
         ticketMap.set(ticket._id.toString(), ticket.userName)
     })
 

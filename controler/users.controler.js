@@ -179,10 +179,10 @@ const newPassword = async (req, res, next) => {
 
     if (!token) throw new Error('Token Không hợp lệ');
 
-    const userId = await verifyTokenEmail(token);
+    const { user } = await verifyTokenEmail(token);
 
-    await userService.newPassword(userId, password);
-    
+    await userService.newPassword(user, password);
+
     return res.json({ message: 'Thay Đổi mật khẩu thành công' })
   } catch (error) {
     console.log(error);
