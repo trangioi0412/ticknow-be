@@ -104,8 +104,8 @@ const register = async (user) => {
     year = new Date(`${user.year}`);
   }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(user.password, salt);
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(user.password, salt);
 
   const newUser = new userModel({
     name: user.name,
@@ -203,18 +203,19 @@ const resetPassword = async (email) => {
 
   const user = await userModel.findOne({ email: email });
 
-  if(!user){
+  if (!user) {
     throw new Error('Email không tồn tại');
   }
 
   const token = jwt.sign(
-    {id: user._id},
+    { id: user._id },
     process.env.JWT_RESET_SECRET,
-    {expiresIn: '20m'}
+    { expiresIn: '20m' }
   )
 
   const resetLink = `http://localhost:3000/reset-password?token=${token}`;
-  await sendMail({email: email, subject: '🔐 Yêu cầu đặt lại mật khẩu - TickNow', html: `
+  await sendMail({
+    email: email, subject: '🔐 Yêu cầu đặt lại mật khẩu - TickNow', html: `
     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f2f4f8; color: #333;">
         <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
           <h2 style="color: #e50914;">TickNow - Đặt lại mật khẩu</h2>
@@ -232,4 +233,23 @@ const resetPassword = async (email) => {
     ` });
 }
 
-module.exports = { getUsers, getUserDetail, login, register, updateUser, resetPassword };
+const newPassword = async (id, password) => {
+  const user = await userModel.findById(id);
+
+  if (!user || user.status === false) {
+    throw new Error('Người dùng không tồn tại hoặc đã bị khóa');
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(password, salt);
+
+  const result = await userModel.findByIdAndUpdate(
+    id,
+    { password: hashPassword },
+    { new: true }
+  );
+
+  return result;
+}
+
+module.exports = { getUsers, getUserDetail, login, register, updateUser, resetPassword, newPassword };

@@ -1,6 +1,6 @@
 const userService = require("../service/user.service");
 
-const { verifyToken } = require('../utils/auth.util');
+const { verifyToken, verifyTokenEmail } = require('../utils/auth.util');
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -173,14 +173,21 @@ const resetPassword = async (req, res, next) => {
   }
 }
 
-const newPassword = async (req, res, next ) => {
+const newPassword = async (req, res, next) => {
   try {
-    const { password } = req.body;
-    await userService.newPassword(password)
-    res.json({ message: 'Thay Đổi mật khẩu thành công' })
-  }catch (error){
+    const { token, password } = req.body;
 
+    if (!token) throw new Error('Token Không hợp lệ');
+
+    const userId = await verifyTokenEmail(token);
+
+    await userService.newPassword(userId, password);
+    
+    return res.json({ message: 'Thay Đổi mật khẩu thành công' })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: false, message: error.message })
   }
 }
 
-module.exports = { getAllUsers, login, register, getDetail, updateUser, resetPassword };
+module.exports = { getAllUsers, login, register, getDetail, updateUser, resetPassword, newPassword };
