@@ -56,7 +56,6 @@ const getMovieById = async (id, status) => {
 
 const getMovieId = async (id) => {
     try {
-
         const result = await movieModel.findById(id);
 
         if (!result) {

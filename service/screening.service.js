@@ -466,39 +466,51 @@ const addSceening = async (screeningData) => {
 
 
 const updateSceening = async (screeningData, id) => {
-
     const movieService = require('../service/movie.service');
+    const screening = await screeningModel.findById(id);
 
-    const room = await roomService.roomByIdCinema(screeningData.id_room);
-
-    let date = new Date(`${screeningData.date}T00:00:00.000Z`);
-
-    if (!room && room.length < 0) {
-        throw new Error("Không tìm thấy room");
+    if (!screening || screening.status === 1) {
+        throw new Error("Suất không có hoặc không còn hoạt động");
     }
 
-    if (room.status === 1) {
-        throw new Error("Phòng không còn hoạt động")
+    const date = screeningData.date
+        ? new Date(`${screeningData.date}T00:00:00.000Z`)
+        : screening.date;
+
+    if (screeningData.id_room) {
+        const room = await roomService.roomByIdCinema(screeningData.id_room);
+
+        if (!room) {
+            throw new Error("Không tìm thấy phòng");
+        }
+
+        if (room.status === 1) {
+            throw new Error("Phòng không còn hoạt động");
+        }
     }
 
-    if (!screeningData.time_start && screeningData.time_start === "") {
-        throw new Error("Vui lòng nhập thời gian bắt đầu suất chiếu")
+    if (!screeningData.time_start || screeningData.time_start.trim() === "") {
+        screeningData.time_start = screening.time_start
     }
 
-    const movie = await movieService.getMovieById(screeningData.id_movie);
+    const movieId = screening.id_movie;
+    let movie = await movieService.getMovieById(movieId);
 
-
-    if (!movie && movie.length < 0) {
-        throw new Error("Không tìm thấy phim")
+    if (!movie) {
+        throw new Error("Không tìm thấy phim");
     }
 
-    let time_end = moment(screeningData.time_start, "HH:mm").add(movie.duration, 'minutes').format("HH:mm");
+    const timeStart = screeningData.time_start;
+    const timeEnd = moment(timeStart, "HH:mm")
+        .add(movie.duration, 'minutes')
+        .format("HH:mm");
 
     const conflict = await screeningModel.findOne({
+        _id: { $ne: id },
         id_room: screeningData.id_room,
         date: date,
-        time_start: { $lt: time_end },
-        time_end: { $gt: screeningData.time_start }
+        time_start: { $lt: timeEnd },
+        time_end: { $gt: timeStart }
     });
 
     if (conflict) {
@@ -507,20 +519,16 @@ const updateSceening = async (screeningData, id) => {
 
     const newScreening = {
         ...screeningData,
-        id_movie: new mongoose.Types.ObjectId(screeningData.id_movie),
-        id_room: new mongoose.Types.ObjectId(screeningData.id_room),
-        time_end: time_end
+        id_movie: new mongoose.Types.ObjectId(movieId),
+        id_room: new mongoose.Types.ObjectId(screeningData.id_room || screening.id_room),
+        date: date,
+        time_end: timeEnd
     };
 
-    const result = await screeningModel.findByIdAndUpdate(
-        id,
-        newScreening,
-        { new: true }
-    )
+    const result = await screeningModel.findByIdAndUpdate(id, newScreening, { new: true });
 
-    return result
-
-}
+    return result;
+};
 
 module.exports = {
     getScreeings,
