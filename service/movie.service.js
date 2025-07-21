@@ -264,6 +264,10 @@ const updateMovie = async (movieData, file, id) => {
         throw new Error('Phim Không tồn tại');
     }
 
+    if(movieData.status && movieId.status == 3){
+        throw new Error('Phim dã ngưng chiếu không thể sửa status');
+    }
+
     if (file?.image?.length > 0) {
         movieData.image = file.image[0].filename;
     }
@@ -272,18 +276,22 @@ const updateMovie = async (movieData, file, id) => {
         movieData.banner = file.banner[0].filename;
     }
 
-    const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
+    let genre
 
-    if (foundGenre.length !== genreIds.length) {
-        throw new Error('Một hoặc nhiều danh mục không tồn tại');
+    if(genreIds){
+        const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
+
+        if (foundGenre.length !== genreIds.length) {
+            throw new Error('Một hoặc nhiều danh mục không tồn tại');
+        }
+        if (typeof movieData.genre === "string") {
+    
+            movieData.genre = [movieData.genre];
+        }
+    
+        genre = convertGenreIds(genreIds);
     }
 
-    if (typeof movieData.genre === "string") {
-
-        movieData.genre = [movieData.genre];
-    }
-
-    const genre = convertGenreIds(genreIds);
 
     if (file?.image?.[0]) {
         const imageFile = file.image[0];

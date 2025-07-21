@@ -11,6 +11,6 @@ router.get('/newUser', statisticalControler.revenueUser)
 
 router.get('/cinema', statisticalControler.revenueCinema)
 
-router.get('/movieDay', statisticalControler.revenueCinemaDay)
+router.get('/movieDay', statisticalControler.revenueMovie)
 
 module.exports = router
