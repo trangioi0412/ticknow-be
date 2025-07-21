@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const screeningSchema = new Schema ({
-    id_room: { type: ObjectId, required: true },
-    id_movie: { type: ObjectId, required: true },
+    id_room: { type: ObjectId, ref: 'room',required: true },
+    id_movie: { type: ObjectId, ref: 'movie',required: true },
     time_start: { type: String, required: true },
     time_end: { type: String, required: false },
     date: { type: Date, required: false, default: Date.now()},

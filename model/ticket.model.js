@@ -5,8 +5,8 @@ const ObjectId = Schema.ObjectId;
 
 const ticketSchema = new Schema ({
     code: {type: Number, required: true},
-    id_user: { type: ObjectId, required: true },
-    id_screening: { type: ObjectId, required: true },
+    id_user: { type: ObjectId, ref: 'user',required: true },
+    id_screening: { type: ObjectId, ref: 'screening',required: true },
     seat: { type: Array, required: true },
     id_voucher: { type: ObjectId, required: false, default: null},
     price: { type: Number, required: true },

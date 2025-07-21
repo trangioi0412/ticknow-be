@@ -13,6 +13,7 @@ const rateModel = require('../model/rates.model');
 const voucherService = require('./vouchers.service');
 
 const getTicket = async (filter, page = "", limit = "", sort) => {
+
     const movieService = require('./movie.service');
 
     const screenings = await screeningService.getScreeings();
