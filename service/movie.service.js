@@ -153,6 +153,16 @@ const filterSchedule = async (filter = {}, cinema = "") => {
 
 const addMovies = async (movieData, file) => {
 
+    if (movieData.release_date) {
+        let day = new Date();
+
+        let date = new Date(movieData.release_date);
+
+        if (day < date) {
+            movieData.status = 2
+        }
+    }
+
     let genreIds = movieData.genre;
 
     if (!Array.isArray(genreIds)) {
@@ -193,7 +203,7 @@ const addMovies = async (movieData, file) => {
         movieData.genre = [movieData.genre];
     }
 
-    
+
 
     const genre = convertGenreIds(movieData.genre);
 

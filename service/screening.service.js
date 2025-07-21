@@ -469,7 +469,7 @@ const updateSceening = async (screeningData, id) => {
     const movieService = require('../service/movie.service');
     const screening = await screeningModel.findById(id);
 
-    if (!screening || screening.status === 1) {
+    if (!screening || screening.status === 3) {
         throw new Error("Suất không có hoặc không còn hoạt động");
     }
 

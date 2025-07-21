@@ -39,5 +39,7 @@ router.use('/payos', require('./payos.router'));
 
 router.use('/contact', require('./contact.router'));
 
+router.use('/statistical', require('./statistical.router'))
+
 
 module.exports = router;
