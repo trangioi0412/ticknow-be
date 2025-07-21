@@ -65,9 +65,9 @@ const revenueYear = async (req, res, next) => {
 const revenueCinema = async (req, res, next) => {
     try {
 
-        const { start, end } = req.query;
+        const { start, end, page, limit } = req.query;
 
-        const data = await statisticalService.statisticalCinema(start, end);
+        const data = await statisticalService.statisticalCinema(start, end, page, limit);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
 
@@ -77,12 +77,11 @@ const revenueCinema = async (req, res, next) => {
     }
 }
 
-const revenueCinemaDay = async (req, res, next) => {
+const revenueMovie = async (req, res, next) => {
     try {
+        const { start, end, page, limit } = req.query;
 
-        const { start, end } = req.query;
-
-        const data = await statisticalService.statisticalMovie(start, end);
+        const data = await statisticalService.statisticalMovie(start, end, page, limit);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
 
@@ -93,4 +92,4 @@ const revenueCinemaDay = async (req, res, next) => {
 }
 
 
-module.exports = { revenue, revenueYear, revenueUser, revenueCinema, revenueCinemaDay }
+module.exports = { revenue, revenueYear, revenueUser, revenueCinema, revenueMovie }

@@ -141,7 +141,7 @@ const newUserDay = async (type, value) => {
     }
 }
 
-const statisticalCinema = async (startDay, endDay) => {
+const statisticalCinema = async (startDay, endDay, pages, limits) => {
 
     let filter = {};
 
@@ -151,7 +151,7 @@ const statisticalCinema = async (startDay, endDay) => {
         filter.createdAt = { $gte: start, $lte: end };
     }
 
-    const tickets = await ticketModel.find(filter).populate({
+    let ticketQuery = ticketModel.find(filter).populate({
         path: 'id_screening',
         populate: {
             path: 'id_room',
@@ -160,6 +160,18 @@ const statisticalCinema = async (startDay, endDay) => {
             }
         }
     });
+
+    if (pages && limits) {
+        console.log(pages);
+        console.log(limits);
+        const pageNum = parseInt(pages);
+        const limitNum = parseInt(limits);
+        const skip = (pageNum - 1) * limitNum;
+
+        ticketQuery = ticketQuery.skip(skip).limit(limitNum);
+    }
+
+    const tickets = await ticketQuery;
 
     const cinemaRevenueMap = {};
 
@@ -189,22 +201,34 @@ const statisticalCinema = async (startDay, endDay) => {
     return result
 }
 
-const statisticalMovie = async (startDay, endDay) => {
+const statisticalMovie = async (startDay, endDay, pages, limits) => {
 
-    let start = new Date(`${startDay}T00:00:00.000Z`);
-    let end = new Date(`${endDay}T23:59:59.999Z`);
+    let filter = {};
 
-    const tickets = await ticketModel.find({
-        createdAt: {
-            $gte: start,
-            $lte: end
-        }
-    }).populate({
-        path: 'id_screening',
-        populate: {
-            path: 'id_movie',
-        }
-    });
+    if (startDay && endDay) {
+        const start = new Date(`${startDay}T00:00:00.000Z`);
+        const end = new Date(`${endDay}T23:59:59.999Z`);
+        filter.createdAt = { $gte: start, $lte: end };
+    }
+
+    let ticketQuery = await ticketModel.find(filter)
+        .populate({
+            path: 'id_screening',
+            populate: {
+                path: 'id_movie',
+            }
+        });
+
+    if (pages && limits) {
+
+        const pageNum = parseInt(pages);
+        const limitNum = parseInt(limits);
+        const skip = (pageNum - 1) * limitNum;
+
+        ticketQuery = ticketQuery.skip(skip).limit(limitNum);
+    }
+
+    const tickets = await ticketQuery
 
     const movieRevenueMap = {};
 
