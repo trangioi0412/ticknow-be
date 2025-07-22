@@ -4,7 +4,8 @@ const PayOS = require('@payos/node');
 const mongoose = require('mongoose');
 
 const { verifyToken } = require('../utils/auth.util');
-const generateCinemaCode = require('../utils/randomCodeTicket')
+const generateCinemaCode = require('../utils/randomCodeTicket');
+const sendMailTicket =  require('../utils/sendMail_ticket.utils');
 
 const ticketService = require('../service/ticket.service');
 const ticketModel = require('../model/ticket.model');
@@ -16,8 +17,6 @@ const rateService = require('../service/rate.service');
 const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
 
 const YOUR_DOMAIN = 'http://localhost:3000';
-
-const extraDataMap = new Map();
 
 const expiresInMs = 60 * 60 * 1000;
 
@@ -53,7 +52,7 @@ router.post('/create-payment-link', async (req, res) => {
             description: 'Thanh toán vé xem phim',
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
-            cancelUrl: `${YOUR_DOMAIN}/booking-failed`,
+            cancelUrl: `http://localhost:1001/payos/cancel-payment?orderCode=${code}`,
             callbackUrl: 'https://d1817ee1488c.ngrok-free.app/payos/receive-hook'
         };
 
@@ -65,9 +64,7 @@ router.post('/create-payment-link', async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 
-})
-
-
+});
 
 // https://d1817ee1488c.ngrok-free.app/payos/receive-hook
 
@@ -83,14 +80,15 @@ router.post('/receive-hook', async (req, res) => {
         return res.status(400).json({ message: 'Thiếu dữ liệu đơn hàng' });
     }
 
+    let ticket = await ticketModel.findOne({ code: data.orderCode });
+
     if (data.code != "00") {
         console.log('Thanh toán thất bại');
+        await ticketService.cancelTicket(ticket._id);
         return res.status(400).json({ message: 'Thanh toán thất bại' });
     }
 
     try {
-        
-        let ticket = await ticketModel.findOne({code: data.orderCode});
 
         if (!ticket) return res.sendStatus(404);
 
@@ -99,6 +97,8 @@ router.post('/receive-hook', async (req, res) => {
         ticket.autoDeleteAt = undefined;
 
         await ticket.save();
+
+        sendMailTicket(ticket)
 
         const transitionData = {
             id_ticket: new mongoose.Types.ObjectId(ticket._id),
@@ -131,11 +131,27 @@ router.post('/receive-hook', async (req, res) => {
         return res.status(200).json({ message: "Đặt vé thành công" });
 
     } catch (err) {
-        console.error( err);
+        console.error(err);
         return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
     }
 
 });
 
+router.get('/cancel-payment', async (req, res) => {
+    try {
+        const { orderCode } = req.query;
+
+        let ticket = await ticketModel.findOne({ code: orderCode });
+
+        console.log(`Đơn Hàng ${orderCode} đã bị hủy bởi người dùng`);
+
+        await ticketService.cancelTicket(ticket._id);
+
+        return res.redirect(`http://localhost:3000/booking-failed?orderCode=${orderCode}`);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Lỗi xử lý hủy thanh toán');
+    }
+});
 
 module.exports = router;

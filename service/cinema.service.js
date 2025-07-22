@@ -154,17 +154,24 @@ const updateCinema = async (cinemaData, file, id) => {
         saveImageToDisk(imageFile.buffer, imageName, 'cinema');
 
         cinemaData.image = imageName;
+
+    } else if (cinemaData.removeImage === 'true') {
+        if (cinema.image) {
+            deleteImageFromDisk(cinema.image, 'cinema');
+        }
+
+        cinemaData.image = null;
     }
 
-    if(!cinemaData.id_location){
+    if (!cinemaData.id_location) {
         cinemaData.id_location = cinema.location.id_location
     }
 
-    if(!cinemaData.deatil_location){
+    if (!cinemaData.deatil_location) {
         cinemaData.deatil_location = cinema.location.deatil_location
     }
 
-    if(!cinemaData.status){
+    if (!cinemaData.status) {
         cinemaData.status = cinema.location.status
     }
 

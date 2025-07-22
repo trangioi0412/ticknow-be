@@ -4,13 +4,16 @@ const paginate = require('../utils/pagination');
 const generateUniqueTicketCode = require('../utils/randomCodeTicket');
 
 const ticketModel = require('../model/ticket.model');
+const rateModel = require('../model/rates.model');
+const moviesModel = require('../model/movies.model');
+const cinemasModel = require('../model/cinemas.model');
 
 const screeningService = require('./screening.service')
 const usersService = require('./user.service');
 const roomService = require('./room.service');
-const rateModel = require('../model/rates.model');
-
 const voucherService = require('./vouchers.service');
+
+
 
 const getTicket = async (filter, page = "", limit = "", sort) => {
 
@@ -33,7 +36,7 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
             const screeningId = screening._id.toString();
 
             screeningMap.set(screeningId, screening.time_start);
-            movieMap.set(screeningId, {id: movieInfo._id, name:movieInfo.name});
+            movieMap.set(screeningId, { id: movieInfo._id, name: movieInfo.name });
             roomMap.set(screeningId, {
                 id: cinemaRoom.id_room,
                 code: cinemaRoom.code_room,
@@ -61,7 +64,7 @@ const getTicket = async (filter, page = "", limit = "", sort) => {
         const rate = await rateModel
             .findOne({ id_movie: movies.id, id_ticket: ticket._id })
             .select('is_active');
-            
+
         return {
             ...ticket.toObject(),
             userName: userMap.get(ticket.id_user.toString()),
@@ -151,6 +154,8 @@ const addTicket = async (tickets, idUser) => {
         throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
     }
 
+    const movie = await moviesModel.findById(screening.id_movie)
+
     const rooms = await screeningService.screeningRoom(tickets.screening);
     const isExist = tickets.seat.some(seat => {
 
@@ -178,6 +183,14 @@ const addTicket = async (tickets, idUser) => {
     }
 
     const newTicket = await ticketModel.create(newTickets);
+
+    const seats = tickets.seat.flatMap(seat => {
+        const row = seat[0];
+        const numbers = seat.slice(1);
+        return numbers.split('').map(n => row + n);
+    });
+
+
 
     return newTicket;
 }
@@ -231,4 +244,18 @@ const checkticket = async (tickets, idUser) => {
 
 }
 
-module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, checkticket }
+const cancelTicket = async (id) => {
+    const ticket = await ticketModel.findById(id);
+
+    if (!ticket) {
+        throw new Error('Không tìm thấy ticket đểcancel');
+    }
+
+    if (ticket.type == 2) {
+        throw new Error('Đơn hàng này đã được thanh toán không thể xóa');
+    }
+
+    await ticketModel.findByIdAndDelete(id);
+}
+
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, checkticket, cancelTicket }

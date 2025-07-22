@@ -22,9 +22,16 @@ const getDetail = async (id) => {
 }
 
 const addVoucher = async (voucherData) => {
+    
+    let startDate
+    if (voucherData.start_date) {
+        startDate = new Date(`${voucherData.start_date}T00:00:00.000Z`);
+    }
 
-    let startDate = new Date(`${voucherData.start_date}T00:00:00.000Z`);
-    let endDate = new Date(`${voucherData.end_date}T00:00:00.000Z`);
+    let endDate
+    if (voucherData.end_date) {
+        endDate = new Date(`${voucherData.end_date}T00:00:00.000Z`);
+    }
 
     const voucher = await voucherModel.find({ code: voucherData.code });
 
@@ -35,8 +42,8 @@ const addVoucher = async (voucherData) => {
 
     const newVoucher = new voucherModel({
         ...voucherData,
-        start_date: startDate,
-        end_date: endDate
+        start_date: startDate || null,
+        end_date: endDate || null
     })
 
     const result = await newVoucher.save();
@@ -60,7 +67,7 @@ const updateVoucher = async (voucherData, id) => {
 
     const voucher = await voucherModel.findById(id);
 
-    
+
     if (voucherData.userCount !== undefined) {
 
         voucherData.user_count = parseInt(voucher.user_count) + 1;
