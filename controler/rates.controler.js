@@ -74,7 +74,9 @@ const rateByMovie = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const result = await rateService.getByIdMovie(id);
+        const {page, limit} =  req.query
+
+        const result = await rateService.getByIdMovie(id, page, limit);
 
         if (!result) {
             return res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })

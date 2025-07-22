@@ -49,31 +49,57 @@ const getAll = async (filter, page, limit, sort) => {
 }
 
 
-const getByIdMovie = async (movieId) => {
+const getByIdMovie = async (movieId, page, limit) => {
+    
+    const filter = { id_movie: movieId, is_active: 3 };
 
-    const rate = await rateModel.find({ id_movie: movieId })
-    .populate({
-        path: 'id_ticket',
-        populate: {
-            path: 'id_user',
-            select: '-password -__v'
-        }
-    });
+    const total = await rateModel.countDocuments(filter);
 
-    const rates =  rate.map(item => {
-        const user = item.id_ticket.id_user || null
+    let skip = 0;
+    if (page && limit) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = total;
+    }
+
+    let rate = await rateModel.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+            path: 'id_ticket',
+            populate: {
+                path: 'id_user',
+                select: '-password -__v'
+            }
+        });
+
+    const rates = rate.map(item => {
+        const user = item.id_ticket?.id_user || null;
         const plain = item.toObject();
         delete plain.id_ticket;
 
         return {
             ...plain,
             user
+        };
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+        data: rates,
+        pagination: {
+            total,
+            totalPages,
+            page,
+            limit
         }
-    })
+    };
+};
 
-    return rates;
-
-}
 
 const addRate = async (rateData) => {
     const movieService = require('../service/movie.service');
