@@ -264,10 +264,6 @@ const updateMovie = async (movieData, file, id) => {
         throw new Error('Phim Không tồn tại');
     }
 
-    if(movieData.status && movieId.status == 3){
-        throw new Error('Phim dã ngưng chiếu không thể sửa status');
-    }
-
     if (file?.image?.length > 0) {
         movieData.image = file.image[0].filename;
     }
