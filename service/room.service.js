@@ -102,11 +102,13 @@ const addRoom = async (roomData) => {
 
     }).sort({ code_room: -1 }).limit(1);
 
+    console.log(rooms)
+
     let code_room
 
     code_room = 1;
 
-    if (rooms.code_room > 0) {
+    if ( rooms && rooms.code_room > 0 ) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
