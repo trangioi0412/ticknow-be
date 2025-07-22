@@ -51,9 +51,27 @@ const getAll = async (filter, page, limit, sort) => {
 
 const getByIdMovie = async (movieId) => {
 
-    const rate = await rateModel.find({ id_movie: movieId });
+    const rate = await rateModel.find({ id_movie: movieId })
+    .populate({
+        path: 'id_ticket',
+        populate: {
+            path: 'id_user',
+            select: '-password -__v'
+        }
+    });
 
-    return rate;
+    const rates =  rate.map(item => {
+        const user = item.id_ticket.id_user || null
+        const plain = item.toObject();
+        delete plain.id_ticket;
+
+        return {
+            ...plain,
+            user
+        }
+    })
+
+    return rates;
 
 }
 

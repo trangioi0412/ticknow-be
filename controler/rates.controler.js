@@ -70,6 +70,23 @@ const getRate = async (req, res, next) => {
     }
 }
 
+const rateByMovie = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const result = await rateService.getByIdMovie(id);
+
+        if (!result) {
+            return res.status(404).json({ status: false, message: " Sửa Dữ Liệu Không Thành Công " })
+        }
+
+        return res.status(200).json({ data: result, status: true, message: " Sửa cinema Thành Công " })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: false, message: error.message });
+    }
+}
+
 const rate = async (req, res, next) => {
     try {
         const data = req.body;
@@ -87,4 +104,4 @@ const rate = async (req, res, next) => {
     }
 }
 
-module.exports = { getRate, rate }
+module.exports = { getRate, rate, rateByMovie }

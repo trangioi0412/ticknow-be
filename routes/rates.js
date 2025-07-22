@@ -7,4 +7,6 @@ router.get('/', rateControler.getRate);
 
 router.post('/update-rate', rateControler.rate);
 
+router.get('/movie/:id', rateControler.rateByMovie);
+
 module.exports = router;
