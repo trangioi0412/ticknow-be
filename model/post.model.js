@@ -10,7 +10,8 @@ const postSchema = new Schema({
     start_day: {type: Date, required: true},
     end_day: { type: Date, required: true},
     status: { type: Number, required: false, default: 2 },
-    image: {type: String, required: true}
+    image: {type: String, required: true},
+    voucher: {type: String, require: false, default: ""}
 }, {versionKey: false, timestamps: true })
 
 module.exports = mongoose.models.post || mongoose.model('post', postSchema);
