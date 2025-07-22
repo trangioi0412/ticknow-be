@@ -10,47 +10,111 @@ const userService = require('./user.service')
 
 
 const getAll = async (filter, page, limit, sort) => {
-    const movieService = require('../service/movie.service');
 
-    const movies = await movieService.getMovies();
+    const total = await rateModel.countDocuments(filter);
 
-    const movieMap = new Map();
+    let skip = 0;
+    if (page && limit) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = total;
+    }
 
-    movies.movie.forEach(movie => {
-        movieMap.set(movie._id.toString(), movie.name)
-    })
+    let query = rateModel.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .populate([
+            {
+                path: 'id_ticket',
+                populate: {
+                    path: 'id_user',
+                    select: 'name'
+                }
+            },
+            {
+                path: 'id_movie',
+                select: 'name'
+            }
+        ]);
 
-    const tickets = await ticketService.getTicket();
+    if (sort) {
+        query = query.sort(sort);
+    }
 
-    const ticketMap = new Map();
+    const rateDocs = await query;
 
-    tickets.tickets.forEach(ticket => {
-        ticketMap.set(ticket._id.toString(), ticket.userName)
-    })
-
-    const { data, pagination } = await paginate.paginateQuery(rateModel, filter, page, limit, sort);
-
-    const rate = data.map(rate => {
-
-        const userName = ticketMap.get(rate.id_ticket.toString());
-        const movieName = movieMap.get(rate.id_movie.toString());
-
+    const rates = rateDocs.map(item => {
+        const user = item.id_ticket?.id_user || null;
+        const movie = item.id_movie;
+        const plain = item.toObject();
         return {
-            ...rate.toObject(),
-            userName: userName,
-            movieName: movieName,
-        }
-    })
+            ...plain,
+            id_ticket: item.id_ticket?._id,
+            id_movie: movie?._id,
+            userName: user?.name || null,
+            movieName: movie?.name || null
+        };
+    });
+
+    console.log(rates);
+
+
+    const totalPages = Math.ceil(total / limit);
 
     return {
-        rate,
-        pagination
+        data: rates,
+        pagination: {
+            total,
+            totalPages,
+            page,
+            limit
+        }
     };
+
+    // const movieService = require('../service/movie.service');
+
+    // const movies = await movieService.getMovies();
+
+    // const movieMap = new Map();
+
+    // movies.movie.forEach(movie => {
+    //     movieMap.set(movie._id.toString(), movie.name)
+    // })
+
+    // const tickets = await ticketService.getTicket();
+
+    // const ticketMap = new Map();
+
+    // tickets.tickets.forEach(ticket => {
+    //     ticketMap.set(ticket._id.toString(), ticket.userName)
+    // })
+
+    // const { data, pagination } = await paginate.paginateQuery(rateModel, filter, page, limit, sort);
+
+    // const rate = data.map(rate => {
+
+    //     const userName = ticketMap.get(rate.id_ticket.toString());
+    //     const movieName = movieMap.get(rate.id_movie.toString());
+
+    //     return {
+    //         ...rate.toObject(),
+    //         userName: userName,
+    //         movieName: movieName,
+    //     }
+    // })
+
+    // return {
+    //     rate,
+    //     pagination
+    // };
 }
 
 
 const getByIdMovie = async (movieId, page, limit) => {
-    
+
     const filter = { id_movie: movieId, is_active: 3 };
 
     const total = await rateModel.countDocuments(filter);

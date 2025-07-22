@@ -185,6 +185,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
     });
 
     let result = Object.values(cinemaRevenueMap);
+    const total = result.length;
 
     if (pages && limits) {
 
