@@ -151,7 +151,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
         filter.createdAt = { $gte: start, $lte: end };
     }
 
-    let ticketQuery = ticketModel.find(filter).populate({
+    let tickets = await ticketModel.find(filter).populate({
         path: 'id_screening',
         populate: {
             path: 'id_room',
@@ -159,19 +159,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
                 path: 'id_cinema'
             }
         }
-    });
-
-    if (pages && limits) {
-        console.log(pages);
-        console.log(limits);
-        const pageNum = parseInt(pages);
-        const limitNum = parseInt(limits);
-        const skip = (pageNum - 1) * limitNum;
-
-        ticketQuery = ticketQuery.skip(skip).limit(limitNum);
-    }
-
-    const tickets = await ticketQuery;
+    })
 
     const cinemaRevenueMap = {};
 
@@ -196,9 +184,35 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
         cinemaRevenueMap[cinemaId].ticketCount += 1;
     });
 
-    const result = Object.values(cinemaRevenueMap);
+    let result = Object.values(cinemaRevenueMap);
 
-    return result
+    if (pages && limits) {
+
+        const pageNum = parseInt(pages);
+        const limitNum = parseInt(limits);
+        const startIndex = (pageNum - 1) * limitNum;
+        const endIndex = startIndex + limitNum;
+
+        result = result.slice(startIndex, endIndex);
+
+        return {
+            data: result,
+            pagination: {
+                total,
+                page: pageNum,
+                limit: limitNum
+            }
+        };
+    }
+
+    return {
+        data: result,
+        pagination: {
+            total,
+            page: 1,
+            limit: total
+        }
+    };
 }
 
 const statisticalMovie = async (startDay, endDay, pages, limits) => {
@@ -211,24 +225,13 @@ const statisticalMovie = async (startDay, endDay, pages, limits) => {
         filter.createdAt = { $gte: start, $lte: end };
     }
 
-    let ticketQuery = await ticketModel.find(filter)
+    let tickets = await ticketModel.find(filter)
         .populate({
             path: 'id_screening',
             populate: {
                 path: 'id_movie',
             }
         });
-
-    if (pages && limits) {
-
-        const pageNum = parseInt(pages);
-        const limitNum = parseInt(limits);
-        const skip = (pageNum - 1) * limitNum;
-
-        ticketQuery = ticketQuery.skip(skip).limit(limitNum);
-    }
-
-    const tickets = await ticketQuery
 
     const movieRevenueMap = {};
 
@@ -252,9 +255,37 @@ const statisticalMovie = async (startDay, endDay, pages, limits) => {
         movieRevenueMap[movieId].ticketCount += 1;
     });
 
-    const result = Object.values(movieRevenueMap);
+    let result = Object.values(movieRevenueMap);
 
-    return result;
+    const total = result.length;
+
+    if (pages && limits) {
+
+        const pageNum = parseInt(pages);
+        const limitNum = parseInt(limits);
+        const startIndex = (pageNum - 1) * limitNum;
+        const endIndex = startIndex + limitNum;
+
+        result = result.slice(startIndex, endIndex);
+
+        return {
+            data: result,
+            pagination: {
+                total,
+                page: pageNum,
+                limit: limitNum
+            }
+        };
+    }
+
+    return {
+        data: result,
+        pagination: {
+            total,
+            page: 1,
+            limit: total
+        }
+    };
 
 }
 
