@@ -115,4 +115,16 @@ const addTicket = async (req, res, next) => {
 
 }
 
-module.exports = { getTickets, addTicket, getDetail }
+const ticketCancel = async (req, res, next) => {
+    const { code } = req.body;
+
+    const ticket = ticketService.cancelRefund(code);
+
+    if (!ticket) {
+        return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
+    }
+
+    return res.status(200).json(ticket)
+}
+
+module.exports = { getTickets, addTicket, getDetail, ticketCancel }

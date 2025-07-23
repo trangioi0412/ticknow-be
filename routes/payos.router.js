@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const { verifyToken } = require('../utils/auth.util');
 const generateCinemaCode = require('../utils/randomCodeTicket');
-const sendMailTicket =  require('../utils/sendMail_ticket.utils');
+const sendMailTicket = require('../utils/sendMail_ticket.utils');
 
 const ticketService = require('../service/ticket.service');
 const ticketModel = require('../model/ticket.model');
@@ -153,5 +153,6 @@ router.get('/cancel-payment', async (req, res) => {
         return res.status(500).send('Lỗi xử lý hủy thanh toán');
     }
 });
+
 
 module.exports = router;

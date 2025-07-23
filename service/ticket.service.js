@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const paginate = require('../utils/pagination');
 const generateUniqueTicketCode = require('../utils/randomCodeTicket');
+const refundPayment = require('../utils/refundPayment.utils');
 
 const ticketModel = require('../model/ticket.model');
 const rateModel = require('../model/rates.model');
@@ -258,4 +259,33 @@ const cancelTicket = async (id) => {
     await ticketModel.findByIdAndDelete(id);
 }
 
-module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, checkticket, cancelTicket }
+const cancelRefund = async (orderCode) => {
+    const ticket = await ticketModel.findOne({ code: orderCode });
+
+    if (!ticket) {
+        throw new Error("Không tìm thấy vé");
+    }
+
+    if (ticket.type === 3) {
+        throw new Error('Vé đã bị hủy trước đó');
+    }
+
+    ticket.type = 3;
+    await ticket.save();
+
+    const refundResult = await refundPayment(ticket.code, ticket.price);
+
+    if (!refundResult.success) {
+        console.error('Lỗi hoàn tiền PayOS:', refundResult.error); 
+        throw new Error('Hủy vé thành công nhưng hoàn tiền thất bại');
+    }
+
+    return {
+        success: true,
+        message: 'Hủy vé và hoàn tiền thành công',
+        refund: refundResult.data
+    };
+
+}
+
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, checkticket, cancelTicket, cancelRefund }
