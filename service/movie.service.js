@@ -218,6 +218,30 @@ const addMovies = async (movieData, file) => {
 
 }
 
+const expireMovie = async () => {
+    const now = new Date();
+    const movies = await movieModel.find({ status: 2 }).select('_id release_date');
+    const expiredIds = [];
+
+    for (const movie of movies) {
+        const fullEndTime = new Date(movie.release_date);
+
+        if (fullEndTime < now) {
+            expiredIds.push(screening._id);
+        }
+    }
+
+    if (expiredIds.length === 0) return 0;
+
+    const result = await movieModel.updateMany(
+        { _id: { $in: expiredIds } },
+        { $set: { status: 1 } }
+    );
+
+    return result.modifiedCount;
+};
+
+
 const deleteMovie = async (id) => {
     const screeningModel = require('../model/screening.model');
 
@@ -274,17 +298,17 @@ const updateMovie = async (movieData, file, id) => {
 
     let genre
 
-    if(genreIds){
+    if (genreIds) {
         const foundGenre = await genreModel.find({ _id: { $in: genreIds } });
 
         if (foundGenre.length !== genreIds.length) {
             throw new Error('Một hoặc nhiều danh mục không tồn tại');
         }
         if (typeof movieData.genre === "string") {
-    
+
             movieData.genre = [movieData.genre];
         }
-    
+
         genre = convertGenreIds(genreIds);
     }
 
@@ -331,6 +355,7 @@ module.exports = {
     filterMovie,
     filterSchedule,
     addMovies,
+    expireMovie,
     deleteMovie,
     updateMovie
 };
