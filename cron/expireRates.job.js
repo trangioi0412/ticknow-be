@@ -3,9 +3,17 @@ const cron = require('node-cron');
 const screeningService = require('../service/screening.service');
 
 cron.schedule('* * * * *', async () => {
-    try{
+    try {
         await screeningService.expireRatesBasedOnScreening();
-    }catch(error){
+    } catch (error) {
+        console.error('Cron job lỗi:', error);
+    }
+})
+
+cron.schedule('* * * * *', async () => {
+    try {
+        const result = await screeningService.expireScreening();
+    } catch (error) {
         console.error('Cron job lỗi:', error);
     }
 })

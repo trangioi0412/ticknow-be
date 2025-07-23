@@ -243,6 +243,8 @@ const getScreeningSchedule = async (filterInput, cinema) => {
 
     const { status, ...filter } = filterInput;
 
+    filter.status = 2
+
     if (!filter.date) {
         const now = new Date();
         const vnTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
@@ -407,6 +409,32 @@ const expireRatesBasedOnScreening = async () => {
     return result.modifiedCount;
 }
 
+const expireScreening = async () => {
+    const now = new Date();
+    const screenings = await screeningModel.find({ status: { $ne: 1 } }).select('_id time_start date');
+    const expiredIds = [];
+
+    for (const screening of screenings) {
+        const fullEndTime = new Date(screening.date);
+        const [hours, minutes] = screening.time_start.split(':');
+        fullEndTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+        if (fullEndTime < now) {
+            expiredIds.push(screening._id);
+        }
+    }
+
+    if (expiredIds.length === 0) return 0;
+
+    const result = await screeningModel.updateMany(
+        { _id: { $in: expiredIds } },
+        { $set: { status: 1 } }
+    );
+
+    return result.modifiedCount;
+};
+
+
 const addSceening = async (screeningData) => {
 
     const movieService = require('../service/movie.service');
@@ -538,5 +566,6 @@ module.exports = {
     screeningRoom,
     expireRatesBasedOnScreening,
     addSceening,
-    updateSceening
+    updateSceening,
+    expireScreening
 }
