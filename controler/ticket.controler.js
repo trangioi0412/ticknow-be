@@ -14,9 +14,16 @@ const getTickets = async (req, res, next) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const { screening, voucher, type } = req.query
+        const { screening, voucher, type, startDay, endDay, movieId } = req.query
 
         const filter = {};
+
+        if (startDay || endDay) {
+            const updatedAt = {};
+            if (startDay) updatedAt.$gte = new Date(new Date(startDay).setHours(0, 0, 0, 0));
+            if (endDay) updatedAt.$lte = new Date(new Date(endDay).setHours(23, 59, 59, 999));
+            filter.updatedAt = updatedAt;
+        }
 
         if (type) {
             const typeArray = Array.isArray(type) ? type.map(s => Number(s)) : type.split(',').map(sta => Number(sta.trim()));
@@ -48,9 +55,9 @@ const getTickets = async (req, res, next) => {
             }
         }
 
-        const tickets = await ticketService.getTicket(filter, page, limit, sort);
+        const tickets = await ticketService.getTicket(filter, page, limit, sort, movieId);
 
-        if (!tickets) { 
+        if (!tickets) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
         }
 
@@ -116,15 +123,23 @@ const addTicket = async (req, res, next) => {
 }
 
 const ticketCancel = async (req, res, next) => {
-    const { code } = req.body;
+    try {
+        const { code } = req.body;
 
-    const ticket = ticketService.cancelRefund(code);
+        const ticket = await ticketService.cancelRefund(code);
 
-    if (!ticket) {
-        return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
+        if (!ticket) {
+            return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
+        }
+
+        return res.status(200).json({ status: true, message: "Hủy Vé Thành Công"});
     }
+    catch (error) {
 
-    return res.status(200).json(ticket)
+        console.error(error);
+        return res.status(500).json({ status: false, message: 'Hủy Vé không thành công' });
+
+    }
 }
 
 module.exports = { getTickets, addTicket, getDetail, ticketCancel }
