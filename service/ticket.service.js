@@ -334,6 +334,15 @@ const cancelRefund = async (orderCode) => {
             </div>
         `
     })
+
+    await rateModel.updateMany({
+        id_ticket: ticket._id,
+    },
+        {
+            $set: { is_active: 4 },
+        }
+    );
+
     return 'Hủy vé thành công'
 
 }
