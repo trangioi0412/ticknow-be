@@ -1,5 +1,6 @@
 const genreModel = require('../model/genres.model');
 const movieModel = require('../model/movies.model');
+const ratesModel = require('../model/rates.model');
 
 
 const mapGenre = require('../utils/mapGenreMovie');
@@ -13,7 +14,6 @@ const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
 const fs = require('fs');
 const path = require('path');
 
-
 const getMovies = async (filter = {}, limit = "", page = "", sort) => {
     try {
 
@@ -25,6 +25,7 @@ const getMovies = async (filter = {}, limit = "", page = "", sort) => {
             movie,
             pagination
         }
+
         return result;
 
     } catch (error) {
@@ -241,6 +242,15 @@ const expireMovie = async () => {
     return result.modifiedCount;
 };
 
+const updateRate = async (id) => {
+    const rate = await ratesModel.find({ id_movie: id, is_active: 3 });
+
+    const totalScore = rate.reduce((sum, rate) => sum + rate.score, 0);
+
+    const average = rate.length ? totalScore / rate.length : 0;
+
+    await movieModel.findByIdAndUpdate(id, { star: average });
+}
 
 const deleteMovie = async (id) => {
     const screeningModel = require('../model/screening.model');
@@ -356,6 +366,7 @@ module.exports = {
     filterSchedule,
     addMovies,
     expireMovie,
+    updateRate,
     deleteMovie,
     updateMovie
 };

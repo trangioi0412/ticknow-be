@@ -168,6 +168,8 @@ const updateRate = async (rateData) => {
 
     const rate = await rateModel.findByIdAndUpdate(rates._id, rateData, { new: true });
 
+    await movieService.updateRate(rateData.movie);
+
     return rate;
 
 }

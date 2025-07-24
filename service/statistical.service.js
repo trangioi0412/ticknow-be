@@ -41,6 +41,8 @@ const statisticalByType = async (type, value) => {
         $lte: end
     }
 
+    filter.type = 2
+
     const { tickets } = await ticketService.getTicket(filter);
 
     const revenue = tickets.reduce((sum, item) => {
@@ -61,6 +63,7 @@ const revenueEachMonthInYear = async (year) => {
     const ticket = await ticketModel.aggregate([
         {
             $match: {
+                type: 2,
                 createdAt: {
                     $gte: startOfYear,
                     $lt: endOfYear
@@ -145,6 +148,8 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
 
     let filter = {};
 
+    filter.type = 2
+
     if (startDay && endDay) {
         const start = new Date(`${startDay}T00:00:00.000Z`);
         const end = new Date(`${endDay}T23:59:59.999Z`);
@@ -219,6 +224,8 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
 const statisticalMovie = async (startDay, endDay, pages, limits) => {
 
     let filter = {};
+
+    filter.type = 2
 
     if (startDay && endDay) {
         const start = new Date(`${startDay}T00:00:00.000Z`);
