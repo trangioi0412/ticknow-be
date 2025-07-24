@@ -62,10 +62,10 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         ])
 
     if (sort) {
-        query = ticket.sort(sort);
+        ticket = ticket.sort(sort);
     }
 
-    const ticketDocs = await query;
+    const ticketDocs = await ticket;
 
 
     const tickets = ticketDocs.map(item => {
