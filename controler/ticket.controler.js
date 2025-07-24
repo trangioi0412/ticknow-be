@@ -14,15 +14,29 @@ const getTickets = async (req, res, next) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
 
-        const { screening, voucher, type, startDay, endDay, movieId } = req.query
+        const { screening, voucher, type, date, movieId } = req.query
 
         const filter = {};
 
-        if (startDay || endDay) {
-            const updatedAt = {};
-            if (startDay) updatedAt.$gte = new Date(new Date(startDay).setHours(0, 0, 0, 0));
-            if (endDay) updatedAt.$lte = new Date(new Date(endDay).setHours(23, 59, 59, 999));
-            filter.updatedAt = updatedAt;
+        if (date) {
+            const dateArray = Array.isArray(date)
+                ? date
+                : date.split(',').map(day => day.trim());
+
+            const orConditions = dateArray.map(day => {
+                const start = new Date(day);
+                start.setHours(0, 0, 0, 0);
+
+                const end = new Date(start);
+                end.setHours(23, 59, 59, 999);
+
+                return {
+                    updatedAt: { $gte: start, $lte: end }
+                };
+            });
+
+            filter.$or = orConditions;
+
         }
 
         if (type) {
@@ -132,7 +146,7 @@ const ticketCancel = async (req, res, next) => {
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
         }
 
-        return res.status(200).json({ status: true, message: "Hủy Vé Thành Công"});
+        return res.status(200).json({ status: true, message: "Hủy Vé Thành Công" });
     }
     catch (error) {
 
