@@ -18,70 +18,107 @@ const voucherService = require('./vouchers.service');
 
 const getTicket = async (filter, page = "", limit = "", sort) => {
 
-    const movieService = require('./movie.service');
+    const total = await rateModel.countDocuments(filter);
 
-    const screenings = await screeningService.getScreeings();
+    let skip = 0;
+    if (page && limit) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = total;
+    }
 
-    const screeningMap = new Map();
-    const movieMap = new Map();
-    const roomMap = new Map();
-    const cinemaMap = new Map();
+    const ticket = ticketModel.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .populate([
+            {
+                path: 'id_user',
+                select: '_id name'
+            },
+            {
+                path: 'id_screening',
+                select: 'time_start',
+                populate: [
+                    {
+                        path: 'id_movie',
+                        select: 'name'
+                    },
+                    {
+                        path: 'id_room',
+                        select: '_id code_room',
+                        populate: {
+                            path: 'id_cinema',
+                            select: '_id name'
+                        }
+                    }
+                ]
+            },
+            {
+                path: 'rates',
+                select: 'is_active'
+            }
+        ])
 
-    await Promise.all(
-        screenings.result.map(async (screening) => {
-            const [cinemaRoom, movieInfo] = await Promise.all([
-                roomService.roomById(screening.id_room),
-                movieService.getMovieById(screening.id_movie),
-            ]);
+    if (sort) {
+        query = ticket.sort(sort);
+    }
 
-            const screeningId = screening._id.toString();
+    const rateDocs = await query;
 
-            screeningMap.set(screeningId, screening.time_start);
-            movieMap.set(screeningId, { id: movieInfo._id, name: movieInfo.name });
-            roomMap.set(screeningId, {
-                id: cinemaRoom.id_room,
-                code: cinemaRoom.code_room,
-            });
-            cinemaMap.set(screeningId, {
-                id: cinemaRoom.id_cinema,
-                name: cinemaRoom.name_cinema,
-            });
-        })
-    );
 
-    const users = await usersService.getUsers();
-    const userMap = new Map();
+    const tickets = rateDocs.map(item => {
+        const id_user = item.id_user?._id || null;
+        const userName = item.id_user?.name || null;
+        const movie = item.id_screening.id_movie.name;
+        const room = {
+            id: item.id_screening.id_room._id,
+            code: item.id_screening.id_room.code_room
+        }
 
-    users.user.forEach(user => {
-        userMap.set(user._id.toString(), user.name);
+        const cinema = {
+            id: item.id_screening.id_movie._id,
+            name: item.id_screening.id_movie.name
+        }
+
+        const id_screening = item.id_screening._id
+        const screeningTime = item.id_screening.time_start
+        const status_cmt = item.rates?.[0]?.is_active ?? null;
+
+        const plain = item.toObject();
+        delete plain.id_user;
+        delete plain.id_movie;
+        delete plain.id_screening;
+        delete plain.rates;
+        delete plain.id;
+        return {
+            ...plain,
+            id_ticket: item.id_ticket?._id,
+            id_user,
+            userName,
+            movie: movie,
+            id_screening,
+            screeningTime,
+            room,
+            cinema,
+            status_cmt
+        };
     });
 
-    const { data, pagination } = await paginate.paginateQuery(ticketModel, filter, page, limit, sort);
-
-    const tickets = await Promise.all(data.map(async ticket => {
-        const screeningId = ticket.id_screening.toString();
-        const movies = movieMap.get(screeningId)
-
-        const rate = await rateModel
-            .findOne({ id_movie: movies.id, id_ticket: ticket._id })
-            .select('is_active');
-
-        return {
-            ...ticket.toObject(),
-            userName: userMap.get(ticket.id_user.toString()),
-            screeningTime: screeningMap.get(screeningId),
-            movie: movies.name,
-            room: roomMap.get(screeningId),
-            cinema: cinemaMap.get(screeningId),
-            status_cmt: rate?.is_active,
-        };
-    }));
-
+    const totalPages = Math.ceil(total / limit);
 
     return {
         tickets,
-        pagination,
-    };
+        pagination: {
+            total,
+            totalPages,
+            page,
+            limit
+        }
+    }
+    
 };
 
 
@@ -276,7 +313,7 @@ const cancelRefund = async (orderCode) => {
     const refundResult = await refundPayment(ticket.code, ticket.price);
 
     if (!refundResult.success) {
-        console.error('Lỗi hoàn tiền PayOS:', refundResult.error); 
+        console.error('Lỗi hoàn tiền PayOS:', refundResult.error);
         throw new Error('Hủy vé thành công nhưng hoàn tiền thất bại');
     }
 

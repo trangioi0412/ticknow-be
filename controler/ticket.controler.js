@@ -50,7 +50,7 @@ const getTickets = async (req, res, next) => {
 
         const tickets = await ticketService.getTicket(filter, page, limit, sort);
 
-        if (!tickets) {
+        if (!tickets) { 
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })
         }
 
