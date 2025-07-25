@@ -21,7 +21,7 @@ const usersModel = require('../model/users.model');
 
 const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
 
-    const total = await rateModel.countDocuments(filter);
+    const total = await ticketModel.countDocuments(filter);
 
     let skip = 0;
     if (page && limit) {
