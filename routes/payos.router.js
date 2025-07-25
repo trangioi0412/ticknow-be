@@ -71,7 +71,7 @@ router.post('/create-payment-link', async (req, res) => {
 
 // https://ticknow-be.onrender.com/payos/receive-hook
 
-router.get('/receive-hook', async (req, res) => {
+router.post('/receive-hook', async (req, res) => {
 
     return res.status(200).json({ message: "Đặt vé thành công" });
 
