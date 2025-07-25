@@ -151,7 +151,7 @@ const ticketCancel = async (req, res, next) => {
     catch (error) {
 
         console.error(error);
-        return res.status(500).json({ status: false, message: 'Hủy Vé không thành công' });
+        return res.status(500).json({ status: false, message: error.message });
 
     }
 }
