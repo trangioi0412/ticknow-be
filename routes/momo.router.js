@@ -26,8 +26,8 @@ router.post('/create-qr', async (req, res) => {
     const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
     const orderInfo = 'pay with MoMo';
     const partnerCode = 'MOMO';
-    const redirectUrl = 'http://localhost:1001/momo/ipn';
-    const ipnUrl = 'http://localhost:1001/momo/ipn';
+    const redirectUrl = 'https://ticknow-be.onrender.com/momo/ipn';
+    const ipnUrl = 'https://ticknow-be.onrender.com/momo/ipn';
     const requestType = "payWithMethod";
     const amount = `${ticketData.price}`;
 

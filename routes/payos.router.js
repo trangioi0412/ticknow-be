@@ -55,7 +55,7 @@ router.post('/create-payment-link', async (req, res) => {
             description: 'Thanh toán vé xem phim',
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
-            cancelUrl: `http://localhost:1001/payos/cancel-payment?orderCode=${code}`,
+            cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`,
             callbackUrl: 'https://d1817ee1488c.ngrok-free.app/payos/receive-hook'
         };
 
