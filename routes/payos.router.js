@@ -69,9 +69,9 @@ router.post('/create-payment-link', async (req, res) => {
 
 });
 
-// https://d1817ee1488c.ngrok-free.app/payos/receive-hook
+// https://ticknow-be.onrender.com/payos/receive-hook
 
-router.post('/receive-hook', async (req, res) => {
+router.get('/receive-hook', async (req, res) => {
 
     return res.status(200).json({ message: "Đặt vé thành công" });
 
