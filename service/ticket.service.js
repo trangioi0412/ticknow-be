@@ -276,7 +276,12 @@ const cancelTicket = async (id) => {
 }
 
 const cancelRefund = async (id) => {
-    const ticket = await ticketModel.findById(id);
+    const ticket = await ticketModel.findById(id)
+        .populate({
+            path: 'id_screening',
+            select: 'status'
+        });
+
     const user = await usersModel.findById(ticket.id_user);
 
     if (!ticket) {
@@ -285,6 +290,10 @@ const cancelRefund = async (id) => {
 
     if (ticket.type == 1 || ticket.type == 3) {
         throw new Error('Vé đã bị hủy trước đó hoặc chưa thanh toán');
+    }
+
+    if (ticket.id_screening.status == 1) {
+        throw new Error('Suất đã chiếu không thể hủy vé');
     }
 
     ticket.type = 3;
