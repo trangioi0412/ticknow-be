@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const router = express.Router();
 const PayOS = require('@payos/node');
@@ -14,7 +16,7 @@ const voucherService = require('../service/vouchers.service');
 const screeningService = require('../service/screening.service');
 const rateService = require('../service/rate.service');
 
-const payos = new PayOS('f4183646-18dd-4621-a493-de07f6b6b93a', '447887c6-1628-433c-9f63-b52bc05d29bd', '645d652132ec6507e3f038d335da5a476c3d2a88b67d011bfae54a0f3dd0bf86');
+const payos = new PayOS(process.env.CLIENTID, process.env.APIKEY, process,env.CHECKSUMKEY);
 
 const YOUR_DOMAIN = 'http://localhost:3000';
 
