@@ -16,7 +16,8 @@ const voucherService = require('../service/vouchers.service');
 const screeningService = require('../service/screening.service');
 const rateService = require('../service/rate.service');
 
-const payos = new PayOS(process.env.CLIENTID, process.env.APIKEY, process,env.CHECKSUMKEY);
+const payos = new PayOS(process.env.CLIENTID, process.env.APIKEY, process.env.CHECKSUMKEY);
+
 
 const YOUR_DOMAIN = 'http://localhost:3000';
 
