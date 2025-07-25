@@ -41,7 +41,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         filter.id_screening = { $in: screeningIds };
     }
 
-    const ticket = ticketModel.find(filter)
+    let ticket = ticketModel.find(filter)
         .skip(skip)
         .limit(limit)
         .populate([
