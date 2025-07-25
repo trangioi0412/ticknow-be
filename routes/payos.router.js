@@ -73,70 +73,73 @@ router.post('/create-payment-link', async (req, res) => {
 
 router.post('/receive-hook', async (req, res) => {
 
-    const paymentData = req.body;
+    return res.status(200).json({ message: "Đặt vé thành công" });
 
-    const id_payMethod = "684d203393b6ec82733bd8d5";
 
-    const { data } = paymentData;
+    // const paymentData = req.body;
 
-    if (!data || !data.orderCode) {
-        return res.status(400).json({ message: 'Thiếu dữ liệu đơn hàng' });
-    }
+    // const id_payMethod = "684d203393b6ec82733bd8d5";
 
-    let ticket = await ticketModel.findOne({ code: data.orderCode });
+    // const { data } = paymentData;
 
-    if (data.code != "00") {
-        console.log('Thanh toán thất bại');
-        await ticketService.cancelTicket(ticket._id);
-        return res.status(400).json({ message: 'Thanh toán thất bại' });
-    }
+    // if (!data || !data.orderCode) {
+    //     return res.status(400).json({ message: 'Thiếu dữ liệu đơn hàng' });
+    // }
 
-    try {
+    // let ticket = await ticketModel.findOne({ code: data.orderCode });
 
-        if (!ticket) return res.sendStatus(404);
+    // if (data.code != "00") {
+    //     console.log('Thanh toán thất bại');
+    //     await ticketService.cancelTicket(ticket._id);
+    //     return res.status(400).json({ message: 'Thanh toán thất bại' });
+    // }
 
-        ticket.type = 2;
+    // try {
 
-        ticket.autoDeleteAt = undefined;
+    //     if (!ticket) return res.sendStatus(404);
 
-        await ticket.save();
+    //     ticket.type = 2;
 
-        sendMailTicket(ticket)
+    //     ticket.autoDeleteAt = undefined;
 
-        const transitionData = {
-            id_ticket: new mongoose.Types.ObjectId(ticket._id),
-            id_payMethod: new mongoose.Types.ObjectId(id_payMethod),
-            price: ticket.price
-        }
+    //     await ticket.save();
 
-        transition.addTransition(transitionData);
+    //     sendMailTicket(ticket)
 
-        let voucherData = {};
+    //     const transitionData = {
+    //         id_ticket: new mongoose.Types.ObjectId(ticket._id),
+    //         id_payMethod: new mongoose.Types.ObjectId(id_payMethod),
+    //         price: ticket.price
+    //     }
 
-        if (ticket.voucher) {
+    //     transition.addTransition(transitionData);
 
-            voucherData = {
+    //     let voucherData = {};
 
-                userCount: 0
+    //     if (ticket.voucher) {
 
-            };
+    //         voucherData = {
 
-            await voucherService.updateVoucher(voucherData, ticket.id_voucher);
-        }
+    //             userCount: 0
 
-        let rateData = {};
-        rateData.id_ticket = ticket._id;
-        const screening = await screeningService.getScreeingById(ticket.id_screening);
-        rateData.id_movie = screening.id_movie;
+    //         };
 
-        rateService.addRate(rateData);
+    //         await voucherService.updateVoucher(voucherData, ticket.id_voucher);
+    //     }
 
-        return res.status(200).json({ message: "Đặt vé thành công" });
+    //     let rateData = {};
+    //     rateData.id_ticket = ticket._id;
+    //     const screening = await screeningService.getScreeingById(ticket.id_screening);
+    //     rateData.id_movie = screening.id_movie;
 
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
-    }
+    //     rateService.addRate(rateData);
+
+    //     return res.status(200).json({ message: "Đặt vé thành công" });
+
+    // } catch (err) {
+    //     console.error(err);
+    //     return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
+    // }
 
 });
 
