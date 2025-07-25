@@ -138,9 +138,9 @@ const addTicket = async (req, res, next) => {
 
 const ticketCancel = async (req, res, next) => {
     try {
-        const { code } = req.body;
+        const { id } = req.params;
 
-        const ticket = await ticketService.cancelRefund(code);
+        const ticket = await ticketService.cancelRefund(id);
 
         if (!ticket) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liêu không thành công' })

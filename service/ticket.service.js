@@ -275,8 +275,8 @@ const cancelTicket = async (id) => {
     await ticketModel.findByIdAndDelete(id);
 }
 
-const cancelRefund = async (orderCode) => {
-    const ticket = await ticketModel.findOne({ code: orderCode });
+const cancelRefund = async (id) => {
+    const ticket = await ticketModel.findById(id);
     const user = await usersModel.findById(ticket.id_user);
 
     if (!ticket) {

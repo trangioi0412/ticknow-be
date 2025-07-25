@@ -7,7 +7,7 @@ router.get('/', ticketControler.getTickets);
 
 router.post('/add', ticketControler.addTicket);
 
-router.post('/cancel', ticketControler.ticketCancel);
+router.post('/cancel/:id', ticketControler.ticketCancel);
 
 router.get('/:id', ticketControler.getDetail);
 
