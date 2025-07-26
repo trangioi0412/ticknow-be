@@ -35,6 +35,21 @@ const getVouchers = async (req, res, next) => {
             filter.is_active = { $in: activeArray }
         }
 
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            try {
+                const token = authHeader.split(' ')[1];
+
+                const userId = await verifyToken(token);
+
+                filter.id_user = new mongoose.Types.ObjectId(userId);
+
+            } catch (err) {
+                console.warn('Token không hợp lệ:', err.message);
+            }
+        }
+
         const result = await voucherService.getAll(filter, page, limit, sort);
 
         if (!result) {

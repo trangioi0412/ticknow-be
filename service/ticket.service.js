@@ -21,8 +21,6 @@ const usersModel = require('../model/users.model');
 
 const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
 
-    const total = await ticketModel.countDocuments(filter);
-
     let skip = 0;
     if (page && limit) {
         page = parseInt(page);
@@ -105,6 +103,8 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
             status_cmt
         };
     });
+
+    const total = tickets.length;
 
     const totalPages = Math.ceil(total / limit);
 
