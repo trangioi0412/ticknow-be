@@ -28,7 +28,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         skip = (page - 1) * limit;
     } else {
         page = 1;
-        limit = total;
+        limit = 5;
     }
 
     let screeningIds = undefined;
