@@ -315,7 +315,6 @@ const getScreeningSchedule = async (filterInput, cinema) => {
 
 };
 
-
 const screeningRoom = async (id) => {
 
     const ticketService = require('../service/ticket.service');

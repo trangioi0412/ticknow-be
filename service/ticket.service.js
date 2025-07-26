@@ -28,7 +28,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         skip = (page - 1) * limit;
     } else {
         page = 1;
-        limit = 5;
+        limit = null;
     }
 
     let screeningIds = undefined;
@@ -40,8 +40,6 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
     }
 
     let ticket = ticketModel.find(filter)
-        .skip(skip)
-        .limit(limit)
         .populate([
             { path: 'id_user', select: '_id name' },
             {
@@ -57,7 +55,11 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
                 ]
             },
             { path: 'rates', select: 'is_active' }
-        ])
+        ]);
+
+    if (limit !== null) {
+        ticket = ticket.skip(skip).limit(limit);
+    }
 
     if (sort) {
         ticket = ticket.sort(sort);
