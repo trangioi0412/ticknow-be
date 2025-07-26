@@ -260,77 +260,59 @@ const getScreeningSchedule = async (filterInput, cinema) => {
         filter.id_room = { $in: rooms.map(r => r._id) };
     }
 
-    const screenings = await screeningModel.find(filter);
-
-
-    if (!screenings || !Array.isArray(screenings) || screenings.length <= 0) {
-        return result;
-    }
-
-    const roomCache = new Map();
-
-    const cinemaCache = new Map();
-
-    const movieCache = new Map();
-
-    const filmMap = new Map();
-
-    for (const screening of screenings) {
-        let room = roomCache.get(screening.id_room.toString());
-        if (!room) {
-            room = await roomService.roomById(screening.id_room.toString());
-            roomCache.set(screening.id_room.toString(), room);
-        }
-
-        let cinemaData = cinemaCache.get(room.id_cinema.toString());
-        if (!cinemaData) {
-            cinemaData = await cinemaService.getCinemaById(room.id_cinema.toString());
-            cinemaCache.set(room.id_cinema.toString(), cinemaData);
-        }
-
-        let filmData = movieCache.get(screening.id_movie.toString());
-
-        if (!filmData) {
-            filmData = await movieService.getMovieById(screening.id_movie.toString(), status);
-            if (filmData) {
-                movieCache.set(screening.id_movie.toString(), filmData);
-            } else {
-                console.warn(`Không tìm thấy filmData cho movieId: ${screening.id_movie}`);
-                continue;
+    const screenings = await screeningModel.find(filter).populate([
+        {
+            path: "id_movie",
+        },
+        {
+            path: "id_room",
+            populate: {
+                path: "id_cinema",
+                populate: {
+                    path: "location.id_location"
+                },
             }
         }
+    ])
 
-        const filmId = filmData._id.toString();
+    const screening = screenings.map(item => {
+        const plain = item.toObject();
 
-        if (!filmMap.has(filmId)) {
-            filmMap.set(filmId, {
-                film: filmData,
-                cinemas: []
-            });
-        }
+        const film = plain.id_movie;
+        const cinema = plain.id_room?.id_cinema;
 
-        const film = filmMap.get(filmId);
+        const location = cinema?.location;
+        console.log(location);
 
-        let cinemaItem = film.cinemas.find(c => c.id === cinemaData._id.toString());
-        if (!cinemaItem) {
-            cinemaItem = {
-                id: cinemaData._id.toString(),
-                name: cinemaData.name,
-                location: cinemaData.location,
-                showtimes: []
-            };
-            film.cinemas.push(cinemaItem);
-        }
+        const showtimes = [
+            {
+                id: item._id,
+                time: plain.time_start,
+                showtype: plain.showtype
+            }
+        ];
 
-        cinemaItem.showtimes.push({
-            id: screening._id,
-            time: screening.time_start,
-            showtype: screening.showtype
-        });
-    }
+        return {
+            film,
+            cinemas: [
+                {
+                    id: cinema?._id,
+                    name: cinema?.name,
+                    location: {
+                        id_location: location?.id_location._id,
+                        deatil_location: location?.deatil_location,
+                        location: location?.id_location.name
+                    },
+                    showtimes
+                }
+            ]
+        };
+    });
 
-    result.data = Array.from(filmMap.values());
-    return result;
+    result.data = screening
+
+    return result
+
 };
 
 
