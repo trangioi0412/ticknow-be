@@ -41,7 +41,7 @@ const getRate = async (req, res, next) => {
         }
 
         if (start_day || end_day) {
-            filter.date = {};
+            filter.updatedAt = {};
 
             if (start_day) {
                 const startDate = new Date(start_day);

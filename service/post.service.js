@@ -47,6 +47,58 @@ const getDetail = async  (id) => {
     return postDetail
 }
 
+const expirepost = async () => {
+    const now = new Date();
+    const posts = await postModel.find();
+    const expiredIds = [];
+
+    for (const post of posts) {
+        const fullEndTime = new Date(post.end_day);
+
+        const isExpired = fullEndTime < now;
+
+        if (isExpired) {
+            expiredIds.push(post._id);
+        }
+    }
+
+    if (expiredIds.length === 0) return 0;
+
+    const result = await postModel.updateMany(
+        { _id: { $in: expiredIds } },
+        { $set: { status: 1 } }
+    );
+
+    return result.modifiedCount;
+};
+
+
+const activatepost = async () => {
+    const now = new Date();
+    const posts = await postModel.find();
+    const activateIds = [];
+
+    for (const post of posts) {
+        const start = new Date(post.start_day);
+        const end = new Date(post.end_day);
+
+        const isValidTime = start <= now && now <= end;
+
+        if (isValidTime) {
+            activateIds.push(post._id);
+        }
+    }
+
+    if (activateIds.length === 0) return 0;
+
+    const result = await postModel.updateMany(
+        { _id: { $in: activateIds } },
+        { $set: { status: 2 } }
+    );
+
+    return result.modifiedCount;
+};
+
 const addPost = async (postData, file) => {
 
     if (!postData.title && postData.title === "") {
@@ -145,4 +197,4 @@ const deletePost = async (id) => {
 
 }
 
-module.exports = { getAll, addPost, updatepost, deletePost, getDetail }
+module.exports = { getAll, addPost, updatepost, deletePost, getDetail, expirepost, activatepost }

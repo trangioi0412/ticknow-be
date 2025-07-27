@@ -274,42 +274,50 @@ const getScreeningSchedule = async (filterInput, cinema) => {
             }
         }
     ])
+    const screeningMap = [];
 
-    const screening = screenings.map(item => {
+    for (const item of screenings) {
         const plain = item.toObject();
-
         const film = plain.id_movie;
         const cinema = plain.id_room?.id_cinema;
-
         const location = cinema?.location;
-        console.log(location);
 
-        const showtimes = [
-            {
-                id: item._id,
-                time: plain.time_start,
-                showtype: plain.showtype
-            }
-        ];
-
-        return {
-            film,
-            cinemas: [
-                {
-                    id: cinema?._id,
-                    name: cinema?.name,
-                    location: {
-                        id_location: location?.id_location._id,
-                        deatil_location: location?.deatil_location,
-                        location: location?.id_location.name
-                    },
-                    showtimes
-                }
-            ]
+        const showtime = {
+            id: item._id,
+            time: plain.time_start,
+            showtype: plain.showtype
         };
-    });
 
-    result.data = screening
+        let filmEntry = screeningMap.find(f => f.film._id.toString() === film._id.toString());
+        if (!filmEntry) {
+            filmEntry = {
+                film,
+                cinemas: []
+            };
+            screeningMap.push(filmEntry);
+        }
+
+        const cinemaId = cinema?._id?.toString();
+        let cinemaEntry = filmEntry.cinemas.find(c => c.id.toString() === cinemaId);
+
+        if (!cinemaEntry) {
+            cinemaEntry = {
+                id: cinemaId,
+                name: cinema?.name,
+                location: {
+                    id_location: location?.id_location?._id,
+                    deatil_location: location?.deatil_location,
+                    location: location?.id_location?.name
+                },
+                showtimes: []
+            };
+            filmEntry.cinemas.push(cinemaEntry);
+        }
+
+        cinemaEntry.showtimes.push(showtime);
+    }
+
+    result.data = screeningMap
 
     return result
 

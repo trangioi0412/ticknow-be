@@ -1,7 +1,7 @@
 const paginate = require('../utils/pagination');
 
 const voucherModel = require('../model/vouchers.model');
-const ticketService = require('../service/ticket.service');
+const ticketModel = require('../model/ticket.model');
 
 
 const getAll = async (filter, page, limit, sort) => {
@@ -80,6 +80,60 @@ const checkVouchers = async (code, user) => {
 
 }
 
+const expireVoucher = async () => {
+    const now = new Date();
+    const vouchers = await voucherModel.find();
+    const expiredIds = [];
+
+    for (const voucher of vouchers) {
+        const fullEndTime = new Date(voucher.end_date);
+
+        const isExpired = fullEndTime < now;
+        const isUsedUp = voucher.user_count >= voucher.max_users;
+
+        if (isExpired || isUsedUp) {
+            expiredIds.push(voucher._id);
+        }
+    }
+
+    if (expiredIds.length === 0) return 0;
+
+    const result = await voucherModel.updateMany(
+        { _id: { $in: expiredIds } },
+        { $set: { status: false } }
+    );
+
+    return result.modifiedCount;
+};
+
+
+const activateVoucher = async () => {
+    const now = new Date();
+    const vouchers = await voucherModel.find();
+    const activateIds = [];
+
+    for (const voucher of vouchers) {
+        const start = new Date(voucher.start_date);
+        const end = new Date(voucher.end_date);
+
+        const isValidTime = start <= now && now <= end;
+
+        if (isValidTime) {
+            activateIds.push(voucher._id);
+        }
+    }
+
+    if (activateIds.length === 0) return 0;
+
+    const result = await voucherModel.updateMany(
+        { _id: { $in: activateIds } },
+        { $set: { status: true } }
+    );
+
+    return result.modifiedCount;
+};
+
+
 const addVoucher = async (voucherData) => {
 
     let startDate
@@ -147,4 +201,4 @@ const updateVoucher = async (voucherData, id) => {
     return result;
 }
 
-module.exports = { getAll, getDetail, addVoucher, updateVoucher, checkVouchers }
+module.exports = { getAll, getDetail, addVoucher, updateVoucher, checkVouchers, expireVoucher, activateVoucher }

@@ -52,6 +52,7 @@ module.exports = app;
 
 // cron-node
 require('./cron/expireRates.job');
+require('./cron/auto-update.job');
 
 
 app.get('/', function(req,res) {
