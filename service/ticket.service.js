@@ -33,6 +33,8 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
 
     let screeningIds = undefined;
 
+    const total = await ticketModel.countDocuments(filter);
+
     if (movieId) {
         const screenings = await screeningModel.find({ id_movie: movieId }, '_id');
         screeningIds = screenings.map(s => s._id);
@@ -106,7 +108,9 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         };
     });
 
-    const total = tickets.length;
+    if(movieId){
+        total = tickets.length;
+    }
 
     const totalPages = Math.ceil(total / limit);
 
