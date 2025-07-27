@@ -35,6 +35,29 @@ const getVouchers = async (req, res, next) => {
             filter.is_active = { $in: activeArray }
         }
 
+        const result = await voucherService.getAll(filter, page, limit, sort);
+
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" });
+        }
+
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' });
+
+    } catch (error) {
+
+        console.error(error.message)
+        return res.status(500).json({ status: false, message: error.message });
+
+    }
+}
+
+const checkVouchers = async (req, res, next) => {
+    try {
+
+        const { code } = req.body;
+
+        let user
+
         const authHeader = req.headers.authorization;
 
         if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -43,20 +66,16 @@ const getVouchers = async (req, res, next) => {
 
                 const userId = await verifyToken(token);
 
-                filter.id_user = new mongoose.Types.ObjectId(userId);
+                user = new mongoose.Types.ObjectId(userId);
 
             } catch (err) {
                 console.warn('Token không hợp lệ:', err.message);
             }
         }
 
-        const result = await voucherService.getAll(filter, page, limit, sort);
+        const result = await voucherService.checkVouchers(code, user)
 
-        if (!result) {
-            return res.status(404).json({ status: false, message: "Lấy dữ liệu thật bại" });
-        }
-
-        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' });
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' }); 
 
     } catch (error) {
 
@@ -109,4 +128,4 @@ const updateVoucher = async (req, res, next) => {
     }
 }
 
-module.exports = { getVouchers, addVoucher, updateVoucher }
+module.exports = { getVouchers, addVoucher, updateVoucher, checkVouchers }
