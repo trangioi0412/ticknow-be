@@ -234,7 +234,6 @@ const getScreeningByCinema = async (cinemaId, filter = {}) => {
 }
 
 const getScreeningSchedule = async (filterInput, cinema) => {
-    const movieService = require('../service/movie.service');
 
     const result = {
         date: "",
