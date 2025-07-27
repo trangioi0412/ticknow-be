@@ -46,13 +46,13 @@ const getRate = async (req, res, next) => {
             if (start_day) {
                 const startDate = new Date(start_day);
                 startDate.setHours(0, 0, 0, 0);
-                filter.createAt.$gte = startDate;
+                filter.updatedAt.$gte = startDate;
             }
 
             if (end_day) {
                 const endDate = new Date(end_day);
                 endDate.setHours(23, 59, 59, 999);
-                filter.createAt.$lte = endDate;
+                filter.updatedAt.$lte = endDate;
             }
         }
 
