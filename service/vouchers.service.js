@@ -49,8 +49,6 @@ const getDetail = async (id) => {
 const checkVouchers = async (code, user) => {
     const voucher = await voucherModel.findOne({ code: code });
 
-    console.log(voucher);
-
     if (!voucher || voucher === null || voucher.is_active === false) {
         throw new Error("Mã ưu đãi không hợp lệ");
     }
@@ -84,14 +82,20 @@ const checkVouchers = async (code, user) => {
 
 const expireVoucher = async () => {
     const now = new Date();
-    const vouchers = await voucherModel.find({is_active: true});
+    const vouchers = await voucherModel.find({ is_active: true });
     const expiredIds = [];
 
     for (const voucher of vouchers) {
-        const fullEndTime = new Date(voucher.end_date);
+        let isExpired = false;
+        let isUsedUp = false;
 
-        const isExpired = fullEndTime < now;
-        const isUsedUp = voucher.user_count >= voucher.max_users;
+        if (voucher.end_date) {
+            isExpired = new Date(voucher.end_date) < now;
+        }
+
+        if (voucher.max_users != null) {
+            isUsedUp = voucher.user_count >= voucher.max_users;
+        }
 
         if (isExpired || isUsedUp) {
             expiredIds.push(voucher._id);
@@ -112,7 +116,7 @@ const expireVoucher = async () => {
 
 const activateVoucher = async () => {
     const now = new Date();
-    const vouchers = await voucherModel.find({is_active: false});
+    const vouchers = await voucherModel.find({ is_active: false });
     const activateIds = [];
 
     for (const voucher of vouchers) {
