@@ -1,4 +1,6 @@
 const voucherService = require('../service/vouchers.service');
+const { verifyToken } = require('../utils/auth.util');
+
 
 const getVouchers = async (req, res, next) => {
     try {
@@ -56,26 +58,19 @@ const checkVouchers = async (req, res, next) => {
 
         const { code } = req.body;
 
-        let user
-
         const authHeader = req.headers.authorization;
 
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            try {
-                const token = authHeader.split(' ')[1];
+        if (!authHeader) throw new Error('Không có token');
 
-                const userId = await verifyToken(token);
+        const token = req.headers.authorization.split(' ')[1];
 
-                user = new mongoose.Types.ObjectId(userId);
+        if (!token) throw new Error('Token Không hợp lệ');
 
-            } catch (err) {
-                console.warn('Token không hợp lệ:', err.message);
-            }
-        }
+        const userId = await verifyToken(token);
 
-        const result = await voucherService.checkVouchers(code, user)
+        const result = await voucherService.checkVouchers(code, userId)
 
-        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' }); 
+        return res.status(200).json({ data: result, status: true, message: 'Lấy dữ liệu thành công' });
 
     } catch (error) {
 

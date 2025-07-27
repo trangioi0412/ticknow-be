@@ -47,9 +47,11 @@ const getDetail = async (id) => {
 }
 
 const checkVouchers = async (code, user) => {
-    const voucher = voucherModel.find({ code: code });
+    const voucher = await voucherModel.findOne({ code: code });
 
-    if (!voucher || voucher.is_active === false) {
+    console.log(voucher);
+
+    if (!voucher || voucher === null || voucher.is_active === false) {
         throw new Error("Mã ưu đãi không hợp lệ");
     }
 
