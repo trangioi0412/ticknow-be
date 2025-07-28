@@ -113,9 +113,11 @@ router.post('/receive-hook', async (req, res) => {
 
         let voucherData = {};
 
-        console.log(ticket.voucher)
+        console.log(ticket);
+
+        console.log(ticket.id_voucher)
         
-        if (ticket.voucher) {
+        if (ticket.id_voucher) {
             
             voucherData = {
 
