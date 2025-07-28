@@ -112,10 +112,6 @@ router.post('/receive-hook', async (req, res) => {
         transition.addTransition(transitionData);
 
         let voucherData = {};
-
-        console.log(ticket);
-
-        console.log(ticket.id_voucher)
         
         if (ticket.id_voucher) {
             

@@ -347,6 +347,8 @@ const screeningRoom = async (id) => {
 
     let seat = {}
 
+    filter.type = 2;
+
     const tickets = await ticketService.filterTicket(filter);
 
     for (let ticket of tickets) {
