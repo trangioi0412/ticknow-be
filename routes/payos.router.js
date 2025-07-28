@@ -19,7 +19,7 @@ const rateService = require('../service/rate.service');
 const payos = new PayOS(process.env.CLIENTID, process.env.APIKEY, process.env.CHECKSUMKEY);
 
 
-const YOUR_DOMAIN = 'http://ticknow-be.onrender.com';
+const YOUR_DOMAIN = 'http://ticknow.xyz';
 
 const expiresInMs = 60 * 60 * 1000;
 
