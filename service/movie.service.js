@@ -226,9 +226,8 @@ const expireMovie = async () => {
 
     for (const movie of movies) {
         const fullEndTime = new Date(movie.release_date);
-
         if (fullEndTime < now) {
-            expiredIds.push(screening._id);
+            expiredIds.push(movie._id);
         }
     }
 
