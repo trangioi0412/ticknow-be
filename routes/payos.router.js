@@ -56,7 +56,7 @@ router.post('/create-payment-link', async (req, res) => {
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
             cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`,
-            callbackUrl: 'https://d1817ee1488c.ngrok-free.app/payos/receive-hook'
+            callbackUrl: 'http://ticknow-be.onrender.com/payos/payos/receive-hook'
         };
 
         const paymentLink = await payos.createPaymentLink(order);
