@@ -113,10 +113,10 @@ router.post('/receive-hook', async (req, res) => {
 
         let voucherData = {};
 
+        console.log(ticket.voucher)
         
         if (ticket.voucher) {
             
-            console.log(ticket.voucher)
             voucherData = {
 
                 userCount: 0
