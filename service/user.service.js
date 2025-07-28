@@ -236,8 +236,6 @@ const resetPassword = async (email) => {
 const newPassword = async (user, password) => {
   const users = await userModel.findById(user._id);
 
-  console.log(user);
-
   if (!users || users.status === false) {
     throw new Error('Người dùng không tồn tại hoặc đã bị khóa');
   }
