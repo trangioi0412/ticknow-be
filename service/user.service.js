@@ -213,7 +213,7 @@ const resetPassword = async (email) => {
     { expiresIn: '20m' }
   )
 
-  const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+  const resetLink = `http://ticknow.xyz/reset-password?token=${token}`;
   await sendMail({
     email: email, subject: '🔐 Yêu cầu đặt lại mật khẩu - TickNow', html: `
     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f2f4f8; color: #333;">
