@@ -164,7 +164,7 @@ const updatepost = async (postData, file, id) => {
             await cloudinary.uploader.destroy(post.image);
         }
 
-        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'post');
 
         postData.image = result.public_id;
     }

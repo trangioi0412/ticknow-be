@@ -155,7 +155,7 @@ const updateCinema = async (cinemaData, file, id) => {
             await cloudinary.uploader.destroy(cinema.image);
         }
 
-        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'cinema');
 
         cinemaData.image = result.public_id;
 
