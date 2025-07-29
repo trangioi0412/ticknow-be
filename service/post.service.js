@@ -37,10 +37,10 @@ const getAll = async (filter, page = "", limit = "", sort) => {
     };
 }
 
-const getDetail = async  (id) => {
+const getDetail = async (id) => {
     const postDetail = await postModel.findById(id);
 
-    if(!postDetail){
+    if (!postDetail) {
         throw new Error("không tìm thấy bài viết")
     }
 
@@ -112,8 +112,8 @@ const addPost = async (postData, file) => {
     if (file) {
         const imageFile = file;
         const imageName = Date.now() + '-' + imageFile.originalname;
-        saveImageToDisk(imageFile.buffer, imageName, 'post');
-        postData.image = imageName;
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'post');
+        postData.image = `${result.public_id}.${result.format}`
     } else {
         throw new Error("Vui lòng Thêm Ảnh")
     }
@@ -161,12 +161,12 @@ const updatepost = async (postData, file, id) => {
         const imageName = Date.now() + '-' + imageFile.originalname;
 
         if (post.image) {
-            deleteImageFromDisk(post.image, 'post');
+            await cloudinary.uploader.destroy(post.image);
         }
 
-        saveImageToDisk(imageFile.buffer, imageName, 'post');
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
 
-        postData.image = imageName;
+        postData.image = result.public_id;
     }
 
     const result = await postModel.findByIdAndUpdate(

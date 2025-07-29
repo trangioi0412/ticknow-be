@@ -1,3 +1,6 @@
+const { uploadToCloudinary } = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
+
 const genreModel = require('../model/genres.model');
 const movieModel = require('../model/movies.model');
 const ratesModel = require('../model/rates.model');
@@ -188,15 +191,15 @@ const addMovies = async (movieData, file) => {
     if (file?.image?.[0]) {
         const imageFile = file.image[0];
         const imageName = Date.now() + '-' + imageFile.originalname;
-        saveImageToDisk(imageFile.buffer, imageName, 'movie');
-        movieData.image = imageName;
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
+        movieData.image = `${result.public_id}.${result.format}`
     }
 
     if (file?.banner?.[0]) {
         const bannerFile = file.banner[0];
         const bannerName = Date.now() + '-' + bannerFile.originalname;
-        saveImageToDisk(bannerFile.buffer, bannerName, 'banner');
-        movieData.banner = bannerName;
+        const result = await uploadToCloudinary(bannerFile.buffer, bannerName, 'banner');
+        movieData.banner = `${result.public_id}.${result.format}`;
     }
 
     if (typeof movieData.genre === "string") {
@@ -327,22 +330,22 @@ const updateMovie = async (movieData, file, id) => {
         const imageName = Date.now() + '-' + imageFile.originalname;
 
         if (movieId.image) {
-            deleteImageFromDisk(movieId.image, 'movie');
+            await cloudinary.uploader.destroy(movieId.image);
         }
 
-        saveImageToDisk(imageFile.buffer, imageName, 'movie');
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
 
-        movieData.image = imageName;
+        movieData.image = result.public_id;
     }
 
     if (file?.banner?.[0]) {
         const bannerFile = file.banner[0];
         const bannerName = Date.now() + '-' + bannerFile.originalname;
-        if (movieId.banner) {
-            deleteImageFromDisk(movieId.banner, 'banner');
+        if (movieId.image) {
+            await cloudinary.uploader.destroy(movieId.image);
         }
-        saveImageToDisk(bannerFile.buffer, bannerName, 'banner');
-        movieData.banner = bannerName;
+        const result = await uploadToCloudinary(bannerFile.buffer, bannerName, 'banner');
+        movieData.banner = result.public_id;
     }
 
     movieData.genre = genre

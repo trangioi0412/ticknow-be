@@ -85,6 +85,8 @@ router.post('/receive-hook', async (req, res) => {
 
     let ticket = await ticketModel.findOne({ code: data.orderCode });
 
+    await ticketService.checkticket(ticket, ticket.id_user)
+
     if (data.code != "00") {
         console.log('Thanh toán thất bại');
         await ticketService.cancelTicket(ticket._id);
@@ -93,33 +95,39 @@ router.post('/receive-hook', async (req, res) => {
 
     try {
 
-        await ticketService.checkticket(ticket, ticket.id_user);
-
         if (!ticket) return res.sendStatus(404);
 
         ticket.type = 2;
+
         ticket.autoDeleteAt = undefined;
+
         await ticket.save();
 
-        sendMailTicket(ticket);
+        sendMailTicket(ticket)
 
         const transitionData = {
             id_ticket: new mongoose.Types.ObjectId(ticket._id),
             id_payMethod: new mongoose.Types.ObjectId(id_payMethod),
             price: ticket.price
-        };
+        }
 
         transition.addTransition(transitionData);
 
+        let voucherData = {};
+        
         if (ticket.id_voucher) {
-            const voucherData = { userCount: 0 };
+            
+            voucherData = {
+
+                userCount: 0
+
+            };
+
             await voucherService.updateVoucher(voucherData, ticket.id_voucher);
         }
 
-        const rateData = {
-            id_ticket: ticket._id
-        };
-
+        let rateData = {};
+        rateData.id_ticket = ticket._id;
         const screening = await screeningService.getScreeingById(ticket.id_screening);
         rateData.id_movie = screening.id_movie;
 
@@ -127,14 +135,10 @@ router.post('/receive-hook', async (req, res) => {
 
         return res.status(200).json({ message: "Đặt vé thành công" });
 
-    } catch (error) {
-        
-        console.error('Thanh toán hoặc xử lý thất bại:', error.message || error);
-        await ticketService.cancelTicket(ticket._id);
-        return res.status(400).json({ message: 'Thanh toán thất bại' });
-        
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Lỗi xử lý dữ liệu" });
     }
-
 
 });
 

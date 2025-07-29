@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const fs = require('fs');
 const path = require('path');
+const { uploadToCloudinary } = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
 
 const locationService = require('../service/location.service');
 const locationModel = require("../model/location.model");
@@ -102,8 +104,10 @@ const addCinema = async (cinemaData, file) => {
     if (file) {
         const imageFile = file;
         const imageName = Date.now() + '-' + imageFile.originalname;
-        saveImageToDisk(imageFile.buffer, imageName, 'cinema');
-        cinemaData.image = imageName;
+
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'cinema');
+        cinemaData.image = `${result.public_id}.${result.format}`
+
     }
 
 
@@ -148,16 +152,16 @@ const updateCinema = async (cinemaData, file, id) => {
         const imageName = Date.now() + '-' + imageFile.originalname;
 
         if (cinema.image) {
-            deleteImageFromDisk(cinema.image, 'cinema');
+            await cloudinary.uploader.destroy(cinema.image);
         }
 
-        saveImageToDisk(imageFile.buffer, imageName, 'cinema');
+        const result = await uploadToCloudinary(imageFile.buffer, imageName, 'movie');
 
-        cinemaData.image = imageName;
+        cinemaData.image = result.public_id;
 
     } else if (cinemaData.removeImage === 'true') {
         if (cinema.image) {
-            deleteImageFromDisk(cinema.image, 'cinema');
+            await cloudinary.uploader.destroy(cinema.image);
         }
 
         cinemaData.image = null;
