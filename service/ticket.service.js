@@ -209,6 +209,7 @@ const addTicket = async (tickets, idUser) => {
 
     console.log(isExist);
     console.log(tickets.seat);
+    console.log(rooms.room.diagram.element_selected);
 
     if (isExist) {
         throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
