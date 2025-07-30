@@ -1,6 +1,7 @@
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://ticknow.xyz'
+  'https://ticknow.xyz',
+  'https://www.ticknow.xyz'
 ];
 
 const corsOptionsDelegate = (req, callback) => {
