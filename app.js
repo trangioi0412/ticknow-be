@@ -10,6 +10,7 @@ const { Server } = require('socket.io');
 const CONNECT_DB = require('./config/database');
 
 const corsOptionsDelegate = require('./middlewares/corsOption');
+const { allowedOrigins } = require('./middlewares/corsOption');
 const { notFoundHandler, generalErrorHandler } = require('./utils/errorHandler');
 
 const { initTicketSocket } = require('./sockets/ticket.socket');
@@ -22,7 +23,7 @@ require('dotenv').config();
 // socket
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: allowedOrigins,
     methods: ['GET', 'POST']
   },
   transports: ["websocket", "polling"],
