@@ -197,8 +197,6 @@ const addTicket = async (tickets, idUser) => {
         throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
     }
 
-    const movie = await moviesModel.findById(screening.id_movie)
-
     const rooms = await screeningService.screeningRoom(tickets.screening);
     const isExist = tickets.seat.some(seat => {
 
@@ -226,14 +224,6 @@ const addTicket = async (tickets, idUser) => {
     }
 
     const newTicket = await ticketModel.create(newTickets);
-
-    const seats = tickets.seat.flatMap(seat => {
-        const row = seat[0];
-        const numbers = seat.slice(1);
-        return numbers.split('').map(n => row + n);
-    });
-
-
 
     return newTicket;
 }

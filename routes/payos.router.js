@@ -5,6 +5,8 @@ const router = express.Router();
 const PayOS = require('@payos/node');
 const mongoose = require('mongoose');
 
+const screeningModel = require('../model/screening.model')
+
 const { verifyToken } = require('../utils/auth.util');
 const generateCinemaCode = require('../utils/randomCodeTicket');
 const sendMailTicket = require('../utils/sendMail_ticket.utils');
@@ -15,6 +17,8 @@ const transition = require('../service/transition.service');
 const voucherService = require('../service/vouchers.service');
 const screeningService = require('../service/screening.service');
 const rateService = require('../service/rate.service');
+
+const { emitRoomDataChanged } = require('../sockets/ticket.socket');
 
 const payos = new PayOS(process.env.CLIENTID, process.env.APIKEY, process.env.CHECKSUMKEY);
 
@@ -132,6 +136,8 @@ router.post('/receive-hook', async (req, res) => {
         rateData.id_movie = screening.id_movie;
 
         rateService.addRate(rateData);
+
+        emitRoomDataChanged(screening);
 
         return res.status(200).json({ message: "Đặt vé thành công" });
 
