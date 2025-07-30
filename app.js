@@ -56,11 +56,14 @@ app.use(express.json());
 
 // port
 
-const APP_HOST = process.env.APP_HOST
-const APP_PORT = process.env.APP_PORT || 5000
+const PORT = process.env.PORT || 5000;
 
-server.listen(APP_PORT, () => {
-  console.log(`✅ Server đang chạy tại http://${APP_HOST}:${APP_PORT}`);
+server.listen(PORT, () => {
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`✅ Server đang chạy trên Render (port ${PORT})`);
+  } else {
+    console.log(`✅ Server local: http://localhost:${PORT}`);
+  }
 });
 
 
