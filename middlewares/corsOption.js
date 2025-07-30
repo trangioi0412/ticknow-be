@@ -5,12 +5,13 @@ const allowedOrigins = [
 
 const corsOptionsDelegate = (req, callback) => {
   const origin = req.header('Origin');
-  if (allowedOrigins.includes(origin)) {
+  if (!origin || allowedOrigins.includes(origin)) {
     callback(null, {
       origin: true,
       credentials: true
     });
   } else {
+    console.error('Blocked by CORS:', origin);
     callback(new Error('Not allowed by CORS'));
   }
 };
