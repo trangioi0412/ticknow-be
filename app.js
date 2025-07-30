@@ -22,9 +22,11 @@ require('dotenv').config();
 // socket
 const io = new Server(server, {
   cors: {
-    origin : 'https://ticknow.xyz',
+    origin: '*',
     methods: ['GET', 'POST']
-  }
+  },
+  transports: ["websocket", "polling"],
+  path: "/socket.io"
 });
 
 initTicketSocket(io)
@@ -60,6 +62,7 @@ const APP_PORT = process.env.APP_PORT || 5000
 server.listen(APP_PORT, () => {
   console.log(`✅ Server đang chạy tại http://${APP_HOST}:${APP_PORT}`);
 });
+
 
 // Xử lý lỗi
 
