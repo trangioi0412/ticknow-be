@@ -190,7 +190,6 @@ const addTicket = async (tickets, idUser) => {
     if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
         throw new Error("Thông tin user không tồn tại")
     }
-
     const screening = await screeningService.getScreeingById(tickets.screening);
 
     if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
@@ -235,13 +234,13 @@ const checkticket = async (tickets, idUser) => {
         throw new Error("Thông tin user không tồn tại")
     }
 
-    const screening = await screeningService.getScreeingById(tickets.screening);
+    const screening = await screeningService.getScreeingById(tickets.id_screening);
 
     if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
         throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
     }
 
-    const rooms = await screeningService.screeningRoom(tickets.screening);
+    const rooms = await screeningService.screeningRoom(tickets.id_screening);
     const isExist = tickets.seat.some(seat => {
 
         const row = seat[0];

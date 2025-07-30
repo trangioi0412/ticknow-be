@@ -67,6 +67,7 @@ const getScreeings = async (filter, page, limit, sort) => {
 }
 
 const getScreeingById = async (id) => {
+    
     if (!id) {
         throw new Error('Vui Lòng truyền id');
     }

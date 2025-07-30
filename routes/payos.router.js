@@ -132,8 +132,6 @@ router.post('/receive-hook', async (req, res) => {
 
         let rateData = {};
         rateData.id_ticket = ticket._id;
-        console.log(ticket.id_screening)
-        console.log(ticket);
         const screening = await screeningService.getScreeingById(ticket.id_screening);
         rateData.id_movie = screening.id_movie;
         
