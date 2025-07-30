@@ -208,6 +208,7 @@ const addTicket = async (tickets, idUser) => {
     });
 
     console.log(isExist);
+    console.log(tickets.seat);
 
     if (isExist) {
         throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
