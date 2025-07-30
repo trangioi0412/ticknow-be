@@ -22,7 +22,7 @@ require('dotenv').config();
 // socket
 const io = new Server(server, {
   cors: {
-    origin : '*',
+    origin : 'https://ticknow.xyz/',
     methods: ['GET', 'POST']
   }
 });
@@ -57,7 +57,7 @@ app.use(express.json());
 const APP_HOST = process.env.APP_HOST
 const APP_PORT = process.env.APP_PORT || 5000
 
-app.listen(APP_PORT, () => {
+server.listen(APP_PORT, () => {
   console.log(`✅ Server đang chạy tại http://${APP_HOST}:${APP_PORT}`);
 });
 

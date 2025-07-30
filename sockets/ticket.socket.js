@@ -10,11 +10,12 @@ const initTicketSocket = (io) => {
             socket.join(roomId);
             console.log(`socket ${socket.id} joined room ${roomId}`)
         });
+        console.log('User connected', socket.id);
     });
 }
 
 const emitRoomDataChanged = (screening) => {
-    
+
     if (!ioInstance) {
         console.warn('Socket.IO not initialized yet!');
         return;
