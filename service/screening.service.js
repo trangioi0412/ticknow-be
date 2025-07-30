@@ -373,6 +373,55 @@ const screeningRoom = async (id) => {
     };
 }
 
+const screeningRoomAddTicket = async (id) => {
+
+    const ticketService = require('../service/ticket.service');
+
+
+    let filter = {
+
+    }
+
+    const screening = await screeningModel.findById(id);
+
+    if (screening === null || screening === undefined) {
+        return screening;
+    }
+
+    const room = await roomService.roomId(screening.id_room);
+
+    if (!room) {
+        throw new Error("Không Tìm Thấy Phòng")
+    }
+
+    filter.id_screening = screening._id
+
+    let seat = {}
+
+    const tickets = await ticketService.filterTicket(filter);
+
+    for (let ticket of tickets) {
+        ticket.seat.forEach(ticket => {
+
+            const row = ticket[0];
+            const number = parseInt(ticket.slice(1), 10);
+
+            if (!seat[row]) {
+                seat[row] = [];
+            }
+
+            seat[row].push(number);
+        });
+    }
+
+    room.diagram.element_selected = { ...seat };
+
+    return {
+        room,
+        screening
+    };
+}
+
 const expireRatesBasedOnScreening = async () => {
     const now = new Date();
     const screenings = await screeningModel.find({ status: { $ne: 1 } }).select('id_movie time_end date');
@@ -557,5 +606,6 @@ module.exports = {
     expireRatesBasedOnScreening,
     addSceening,
     updateSceening,
-    expireScreening
+    expireScreening,
+    screeningRoomAddTicket
 }

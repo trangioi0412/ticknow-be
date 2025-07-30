@@ -197,7 +197,7 @@ const addTicket = async (tickets, idUser) => {
         throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
     }
 
-    const rooms = await screeningService.screeningRoom(tickets.screening);
+    const rooms = await screeningService.screeningRoomAddTicket(tickets.screening);
     const isExist = tickets.seat.some(seat => {
 
         const row = seat[0];
@@ -206,10 +206,6 @@ const addTicket = async (tickets, idUser) => {
         return Array.isArray(selected) && selected.includes(seatNumber);
 
     });
-
-    console.log(isExist);
-    console.log(tickets.seat);
-    console.log(rooms.room.diagram.element_selected);
 
     if (isExist) {
         throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
