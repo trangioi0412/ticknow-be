@@ -1,3 +1,5 @@
+const { uploadToCloudinary } = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
 const mongoose = require("mongoose");
 const fs = require('fs');
 const path = require('path')
