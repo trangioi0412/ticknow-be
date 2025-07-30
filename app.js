@@ -22,7 +22,7 @@ require('dotenv').config();
 // socket
 const io = new Server(server, {
   cors: {
-    origin : 'https://ticknow.xyz/',
+    origin : 'https://ticknow.xyz',
     methods: ['GET', 'POST']
   }
 });
