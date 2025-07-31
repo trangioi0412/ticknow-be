@@ -227,29 +227,29 @@ const addTicket = async (tickets, idUser) => {
     return newTicket;
 }
 
-const checkticket = async (tickets) => {
+// const checkticket = async (tickets) => {
     
-    const screening = await screeningService.getScreeingById(tickets.id_screening);
+//     const screening = await screeningService.getScreeingById(tickets.id_screening);
 
-    if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
-        throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
-    }
+//     if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
+//         throw new Error("Suất chiếu không tồn tại hoặc không còn hoạt động")
+//     }
 
-    const rooms = await screeningService.screeningRoom(tickets.id_screening);
-    const isExist = tickets.seat.some(seat => {
+//     const rooms = await screeningService.screeningRoom(tickets.id_screening);
+//     const isExist = tickets.seat.some(seat => {
 
-        const row = seat[0];
-        const seatNumber = parseInt(seat.slice(1));
-        const selected = rooms.room.diagram.element_selected?.[row];
-        return Array.isArray(selected) && selected.includes(seatNumber);
+//         const row = seat[0];
+//         const seatNumber = parseInt(seat.slice(1));
+//         const selected = rooms.room.diagram.element_selected?.[row];
+//         return Array.isArray(selected) && selected.includes(seatNumber);
 
-    });
+//     });
 
-    if (isExist) {
-        throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
-    }
+//     if (isExist) {
+//         throw new Error("Ghế đã được đặt! Vui lòng chọn ghế khác.");
+//     }
 
-}
+// }
 
 const cancelTicket = async (id) => {
     const ticket = await ticketModel.findById(id);

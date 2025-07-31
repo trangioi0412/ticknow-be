@@ -89,7 +89,7 @@ router.post('/receive-hook', async (req, res) => {
 
     let ticket = await ticketModel.findOne({ code: data.orderCode });
 
-    await ticketService.checkticket(ticket)
+    // await ticketService.checkticket(ticket)
 
     if (data.code != "00") {
         console.log('Thanh toán thất bại');
