@@ -425,7 +425,7 @@ const screeningRoomAddTicket = async (id) => {
 
 const expireRatesBasedOnScreening = async () => {
     const now = new Date();
-    const screenings = await screeningModel.find({ status: { $ne: 1 } }).select('id_movie time_end date');
+    const screenings = await screeningModel.find().select('id_movie time_end date');
     const expiredIds = []
 
     for (const screening of screenings) {
