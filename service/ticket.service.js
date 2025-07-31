@@ -227,7 +227,7 @@ const addTicket = async (tickets, idUser) => {
     return newTicket;
 }
 
-const checkticket = async (tickets, idUser) => {
+const checkticket = async (tickets) => {
     
     const screening = await screeningService.getScreeingById(tickets.id_screening);
 

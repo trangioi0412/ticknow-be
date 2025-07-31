@@ -158,7 +158,7 @@ router.get('/cancel-payment', async (req, res) => {
 
         await ticketService.cancelTicket(ticket._id);
 
-        return res.redirect(`http://localhost:3000/booking-failed?orderCode=${orderCode}`);
+        return res.redirect(`http://ticknow.xyz/booking-failed?orderCode=${orderCode}`);
     } catch (error) {
         console.error(error);
         return res.status(500).send('Lỗi xử lý hủy thanh toán');
