@@ -346,4 +346,5 @@ const cancelRefund = async (id) => {
 
 }
 
-module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, checkticket, cancelTicket, cancelRefund }
+// checkticket
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail , cancelTicket, cancelRefund }
