@@ -6,7 +6,6 @@ const movieService = require('../service/movie.service')
 cron.schedule('* * * * *', async () => {
     try {
        const result = await screeningService.expireRatesBasedOnScreening();
-       console.log("đã thay đôi rate",result)
     } catch (error) {
         console.error('Cron job lỗi:', error);
     }
