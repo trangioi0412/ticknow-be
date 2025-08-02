@@ -83,6 +83,7 @@ const checkVouchers = async (code, user) => {
 const expireVoucher = async () => {
     const now = new Date();
     const vouchers = await voucherModel.find({ is_active: true });
+
     const expiredIds = [];
 
     for (const voucher of vouchers) {
@@ -100,9 +101,12 @@ const expireVoucher = async () => {
         if (isExpired || isUsedUp) {
             expiredIds.push(voucher._id);
         }
+
     }
 
-    if (expiredIds.length === 0) return 0;
+    if (expiredIds.length === 0) {
+        return 0
+    };
 
     const result = await voucherModel.updateMany(
         { _id: { $in: expiredIds } },
@@ -130,7 +134,9 @@ const activateVoucher = async () => {
         }
     }
 
-    if (activateIds.length === 0) return 0;
+    if (expiredIds.length === 0) {
+        return 0
+    };
 
     const result = await voucherModel.updateMany(
         { _id: { $in: activateIds } },
