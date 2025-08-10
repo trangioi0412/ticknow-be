@@ -7,6 +7,8 @@ router.get('/revenue', statisticalControler.revenue)
 
 router.get('/revenueYear', statisticalControler.revenueYear)
 
+router.get('/revenueMonth', statisticalControler.revenueMonth)
+
 router.get('/newUser', statisticalControler.revenueUser)
 
 router.get('/cinema', statisticalControler.revenueCinema)

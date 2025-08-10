@@ -99,6 +99,54 @@ const revenueEachMonthInYear = async (year) => {
     return fullMonthData
 }
 
+const revenueEachDayInMonth = async (year, month) => {
+    const startOfMonth = new Date(`${year}-${String(month).padStart(2, '0')}-01T00:00:00.000Z`);
+    const endOfMonth = new Date(`${year}-${String(month).padStart(2, '0')}-01T00:00:00.000Z`);
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+
+    const ticket = await ticketModel.aggregate([
+        {
+            $match: {
+                type: 2,
+                createdAt: {
+                    $gte: startOfMonth,
+                    $lt: endOfMonth
+                }
+            }
+        },
+        {
+            $project: {
+                day: { $dayOfMonth: "$createdAt" },
+                price: { $toInt: "$price" }
+            }
+        },
+        {
+            $group: {
+                _id: "$day",
+                totalRevenue: { $sum: "$price" },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { "_id": 1 }
+        }
+    ]);
+
+    const daysInMonth = new Date(year, month, 0).getDate();
+
+    const fullDayData = Array.from({ length: daysInMonth }, (_, index) => {
+        const data = ticket.find(item => item._id === index + 1);
+        return {
+            day: index + 1,
+            totalRevenue: data ? data.totalRevenue : 0,
+            count: data ? data.count : 0
+        };
+    });
+
+    return fullDayData;
+};
+
+
 const newUserDay = async (type, value) => {
     let filter = {}
     let start, end;
@@ -297,4 +345,4 @@ const statisticalMovie = async (startDay, endDay, pages, limits) => {
 
 }
 
-module.exports = { statisticalByType, revenueEachMonthInYear, newUserDay, statisticalCinema, statisticalMovie }
+module.exports = { statisticalByType, revenueEachMonthInYear, newUserDay, statisticalCinema, statisticalMovie, revenueEachDayInMonth }

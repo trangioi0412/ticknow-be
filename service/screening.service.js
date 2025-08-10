@@ -433,7 +433,7 @@ const expireRatesBasedOnScreening = async () => {
 
         const fullEndTime = new Date(`${dateStr}T${screening.time_end}:00`);
 
-        if (fullEndTime > now) {
+        if (fullEndTime >    now) {
             expiredIds.push(screening.id_movie);
         }
     }

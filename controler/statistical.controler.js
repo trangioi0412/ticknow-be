@@ -62,6 +62,28 @@ const revenueYear = async (req, res, next) => {
     }
 }
 
+const revenueMonth = async (req, res, next) => {
+    try {
+        const { year, month } = req.query;
+
+        if (!year) {
+            return res.status(400).json({ status: false, message: "Thiếu năm cần thống kê" });
+        }
+
+        if (!month) {
+            return res.status(400).json({ status: false, message: "Thiếu tháng cần thống kê" });
+        }
+
+        const data = await statisticalService.revenueEachDayInMonth(year, month);
+
+        return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
 const revenueCinema = async (req, res, next) => {
     try {
 
@@ -92,4 +114,4 @@ const revenueMovie = async (req, res, next) => {
 }
 
 
-module.exports = { revenue, revenueYear, revenueUser, revenueCinema, revenueMovie }
+module.exports = { revenue, revenueYear, revenueUser, revenueCinema, revenueMovie, revenueMonth }

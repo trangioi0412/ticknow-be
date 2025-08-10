@@ -134,7 +134,7 @@ const activateVoucher = async () => {
         }
     }
 
-    if (expiredIds.length === 0) {
+    if (activateIds.length === 0) {
         return 0
     };
 

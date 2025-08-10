@@ -6,7 +6,7 @@ const postService = require('../service/post.service')
 cron.schedule('* * * * *', async () => {
     try {
         const result = await voucherService.expireVoucher();
-        // console.log("đã thay đôi",result)
+        console.log("đã thay đổi voucher: ",result)
     } catch (error) {
         console.error('Cron job lỗi:', error);
     }
@@ -15,7 +15,7 @@ cron.schedule('* * * * *', async () => {
 cron.schedule('* * * * *', async () => {
     try {
         const result = await voucherService.activateVoucher();
-        // console.log("đã thay đôi",result)
+        console.log("đã thay đổi voucher",result)
     } catch (error) {
         console.error('Cron job lỗi:', error);
     }
@@ -24,7 +24,7 @@ cron.schedule('* * * * *', async () => {
 cron.schedule('* * * * *', async () => {
     try {
         const result = await postService.expirepost();
-        console.log("đã thay đôi",result)
+        console.log("đã thay đôi post",result)
     } catch (error) {
         console.error('Cron job lỗi:', error);
     }
@@ -33,7 +33,7 @@ cron.schedule('* * * * *', async () => {
 cron.schedule('* * * * *', async () => {
     try {
         const result = await postService.activatepost();
-        console.log("đã thay đôi",result)
+        console.log("đã thay đôi post",result)
     } catch (error) {
         console.error('Cron job lỗi:', error);
     }
