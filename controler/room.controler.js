@@ -80,6 +80,23 @@ const updateRoom = async (req, res, next) => {
     }
 }
 
+const getRoomScreening = async (req, res, next) => {
+    try {
+
+        const data = req.body;
+        const result = await roomService.getRoom(data);
+
+        if (!result) {
+            return res.status(200).json({ status: true, message: 'Lấy dữ liệu thành công' })
+        }
+
+        res.status(200).json({ data: result, status: true, message: "sửa phòng chiếu thành công" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
 const roomId = async (req, res, next) => {
     try {
         const { id } = req.params
@@ -97,6 +114,6 @@ const roomId = async (req, res, next) => {
     }
 }
 
-module.exports = { getRooms, addRoom, updateRoom, roomId };
+module.exports = { getRooms, addRoom, updateRoom, roomId, getRoomScreening };
 
 

@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const moment = require('moment');
+
 const paginate = require('../utils/pagination')
 
 const roomModel = require('../model/room.model');
@@ -83,6 +86,67 @@ const roomId = async (id) => {
         cinema: cinema.name,
         location: cinema.location
     };
+};
+
+const getRoom = async (data) => {
+    const movieService = require('../service/movie.service');
+
+    let { movie, cinema, timeStart, date } = data
+
+    const room = await roomModel.find().select("_id");
+    const roomIds = room.map(r => r._id);
+
+    timeStart = moment(timeStart, "HH:mm").format("HH:mm");
+
+    const movies = await movieService.getMovieById(movie);
+
+
+    let timeEnd = moment(timeStart, "HH:mm").add(movies.duration, 'minutes').format("HH:mm");
+
+    let day = new Date(`${date}T00:00:00.000Z`);
+
+    // const conflict = await screeningModel.find({
+    //     id_room: { $in: roomIds },
+    //     date: day,
+    //     time_start: { $lt: timeEnd },
+    //     time_end: { $gt: timeStart }
+    // }).select("id_room");
+
+    const availableRooms = await roomModel.aggregate([
+        {
+            $match: { id_cinema: new mongoose.Types.ObjectId(cinema) }
+        },
+        {
+            $lookup: {
+                from: "screenings",
+                localField: "_id",
+                foreignField: "id_room",
+                as: "screenings"
+            }
+        },
+        {
+            $match: {
+                $or: [
+                    { screenings: { $size: 0 } },
+                    {
+                        screenings: {
+                            $not: {
+                                $elemMatch: {
+                                    date: day,
+                                    time_start: { $lt: timeEnd },
+                                    time_end: { $gt: timeStart }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    console.log(availableRooms);
+
+    return availableRooms
 }
 
 const roomByIdCinema = async (id) => {
@@ -96,7 +160,7 @@ const roomByIdCinema = async (id) => {
 }
 
 const addRoom = async (roomData) => {
-    
+
     const rooms = await roomModel.findOne({
         id_cinema: roomData.id_cinema,
 
@@ -108,7 +172,7 @@ const addRoom = async (roomData) => {
 
     code_room = 1;
 
-    if ( rooms && rooms.code_room > 0 ) {
+    if (rooms && rooms.code_room > 0) {
         code_room = parseInt(rooms.code_room) + 1;
     }
 
@@ -213,4 +277,4 @@ const updateRoom = async (roomData, id) => {
 };
 
 
-module.exports = { getAll, roomById, roomId, roomByIdCinema, addRoom, updateRoom };
+module.exports = { getAll, roomById, roomId, roomByIdCinema, addRoom, updateRoom, getRoom };
