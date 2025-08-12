@@ -476,7 +476,7 @@ const expireScreening = async () => {
 };
 
 const screeningRoomId = async (room) => {
-    const screening = await screeningModel.find({id_room: room});
+    const screening = await screeningModel.find({id_room: room, status: 2});
     return screening
 }
 
