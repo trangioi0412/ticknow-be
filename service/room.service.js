@@ -227,6 +227,8 @@ const updateRoom = async (roomData, id) => {
     const roomCheck = await roomModel.findById(id);
 
     const screening = await screeningRoom(id);
+    
+    console.log(screening);
 
     if (screening != null || screening != undefined || screening) {
         throw new Error("Hiện tại phòng đang chiếu");
