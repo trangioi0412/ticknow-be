@@ -32,6 +32,8 @@ const expiresInMs = 60 * 60 * 1000;
 router.post('/create-payment-link', async (req, res) => {
 
     try {
+        const expiredAt = Math.floor(Date.now() / 1000) + 5 * 60;
+
         const authHeader = req.headers.authorization;
 
         if (!authHeader) throw new Error('Không có token');
@@ -60,7 +62,8 @@ router.post('/create-payment-link', async (req, res) => {
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
             cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`,
-            callbackUrl: 'http://ticknow-be.onrender.com/payos/payos/receive-hook'
+            callbackUrl: 'http://ticknow-be.onrender.com/payos/payos/receive-hook',
+            expiredAt
         };
 
         const paymentLink = await payos.createPaymentLink(order);
@@ -118,9 +121,9 @@ router.post('/receive-hook', async (req, res) => {
         transition.addTransition(transitionData);
 
         let voucherData = {};
-        
+
         if (ticket.id_voucher) {
-            
+
             voucherData = {
 
                 userCount: 0
@@ -134,7 +137,7 @@ router.post('/receive-hook', async (req, res) => {
         rateData.id_ticket = ticket._id;
         const screening = await screeningService.getScreeingById(ticket.id_screening);
         rateData.id_movie = screening.id_movie;
-        
+
         rateService.addRate(rateData);
 
         emitRoomDataChanged(screening);
