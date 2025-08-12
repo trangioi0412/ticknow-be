@@ -475,6 +475,11 @@ const expireScreening = async () => {
     return result.modifiedCount;
 };
 
+const screeningRoomId = async (room) => {
+    const screening = await screeningModel.find({id_room: room});
+    return screening
+}
+
 
 const addSceening = async (screeningData) => {
 
@@ -609,5 +614,6 @@ module.exports = {
     addSceening,
     updateSceening,
     expireScreening,
-    screeningRoomAddTicket
+    screeningRoomAddTicket,
+    screeningRoomId
 }

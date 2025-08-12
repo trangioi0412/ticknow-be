@@ -222,13 +222,13 @@ const updateRoom = async (roomData, id) => {
     }
 
 
-    const { screeningRoom } = require('./screening.service');
+    const { screeningRoomId } = require('./screening.service');
 
     const roomCheck = await roomModel.findById(id);
 
     console.log(roomCheck._id);
 
-    const screening = await screeningRoom(roomCheck._id);
+    const screening = await screeningRoomId(roomCheck._id);
     
     console.log(screening);
 
