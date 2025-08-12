@@ -62,7 +62,6 @@ router.post('/create-payment-link', async (req, res) => {
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
             cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`,
-            callbackUrl: 'http://ticknow-be.onrender.com/payos/payos/receive-hook',
             expiredAt
         };
 
