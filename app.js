@@ -78,6 +78,7 @@ module.exports = app;
 // cron-node
 require('./cron/expireRates.job');
 require('./cron/auto-update.job');
+require('./cron/auto-cancelTicket');
 
 app.get('/', function (req, res) {
   res.send('<h1>hello</h1>')
