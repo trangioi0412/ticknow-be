@@ -226,7 +226,9 @@ const updateRoom = async (roomData, id) => {
 
     const roomCheck = await roomModel.findById(id);
 
-    const screening = await screeningRoom(id);
+    console.log(roomCheck._id);
+
+    const screening = await screeningRoom(roomCheck._id);
     
     console.log(screening);
 
