@@ -50,7 +50,7 @@ const getTickets = async (req, res, next) => {
         }
 
         if (voucher) {
-            const voucherArray = Array.isArray(voucher) ? voucher : voucher.split(',').map(id => id.trim())
+            const voucherArray = Array.isArray(voucher) ? voucher :     voucher.split(',').map(id => id.trim())
             filter.id_voucher = { $in: voucherArray };
         }
 
