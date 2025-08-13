@@ -64,13 +64,14 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         ticket = ticket.skip(skip).limit(limit);
     }
 
-    console.log(limit);
-
+    
     if (sort) {
         ticket = ticket.sort(sort);
     }
-
+    
     const ticketDocs = await ticket;
+    
+    console.log(ticketDocs.length);
 
     const tickets = ticketDocs.map(item => {
         const id_user = item.id_user?._id || null;
