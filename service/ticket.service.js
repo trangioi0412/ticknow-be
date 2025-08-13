@@ -69,6 +69,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
 
     const ticketDocs = await ticket;
 
+    console.log(ticketDocs.length);
 
     const tickets = ticketDocs.map(item => {
         const id_user = item.id_user?._id || null;
@@ -108,7 +109,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         };
     });
 
-    if(movieId){
+    if (movieId) {
         total = tickets.length;
     }
 
@@ -228,7 +229,7 @@ const addTicket = async (tickets, idUser) => {
 }
 
 // const checkticket = async (tickets) => {
-    
+
 //     const screening = await screeningService.getScreeingById(tickets.id_screening);
 
 //     if (!screening || (typeof screening === 'object' && Object.keys(screening).length === 0) || screening.status !== 2) {
@@ -347,4 +348,4 @@ const cancelRefund = async (id) => {
 }
 
 // checkticket
-module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail , cancelTicket, cancelRefund }
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, cancelTicket, cancelRefund }
