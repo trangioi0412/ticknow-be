@@ -33,13 +33,14 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
 
     let screeningIds = undefined;
 
-    let total = await ticketModel.countDocuments(filter);
 
     if (movieId) {
         const screenings = await screeningModel.find({ id_movie: movieId }, '_id');
         screeningIds = screenings.map(s => s._id);
         filter.id_screening = { $in: screeningIds };
     }
+
+    let total = await ticketModel.countDocuments(filter);
 
     let ticket = ticketModel.find(filter)
         .populate([
@@ -64,14 +65,12 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         ticket = ticket.skip(skip).limit(limit);
     }
 
-    
+
     if (sort) {
         ticket = ticket.sort(sort);
     }
-    
+
     const ticketDocs = await ticket;
-    
-    console.log(ticketDocs.length);
 
     const tickets = ticketDocs.map(item => {
         const id_user = item.id_user?._id || null;
@@ -111,9 +110,9 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
         };
     });
 
-    if (movieId) {
-        total = tickets.length;
-    }
+    // if (movieId) {
+    //     total = tickets.length;
+    // }
 
     const totalPages = Math.ceil(total / limit);
 
