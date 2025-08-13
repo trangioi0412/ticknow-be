@@ -59,12 +59,12 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
             { path: 'rates', select: 'is_active' }
         ]);
 
-    const count = await ticketModel.countDocuments(filter);
-    console.log(count);
 
     if (limit !== null) {
         ticket = ticket.skip(skip).limit(limit);
     }
+
+    console.log(limit);
 
     if (sort) {
         ticket = ticket.sort(sort);
