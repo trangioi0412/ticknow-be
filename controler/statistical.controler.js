@@ -104,14 +104,10 @@ const revenueMovie = async (req, res, next) => {
     try {
         let { start, end, page, limit, month, sort } = req.query;
 
-        if (month) {
-            start = checkDay(month).start
-            end = checkDay(month).end
-        }
-
-        if (start && end) {
-            start = start;
-            end = end;
+        if (!(start && end) && month) {
+            const result = checkDay(month);
+            start = result.start;
+            end = result.end;
         }
 
         const data = await statisticalService.statisticalMovie(start, end, page, limit, sort);
