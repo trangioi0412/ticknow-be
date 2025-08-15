@@ -324,6 +324,16 @@ const updateMovie = async (movieData, file, id) => {
         genre = convertGenreIds(genreIds);
     }
 
+    if (movieData.status) {
+        const screeningModel = require('../model/screening.model');
+
+        const screening = await screeningModel.find({ id_movie: id });
+
+        if (screening && screening.length > 0) {
+            throw new Error('Phim Đang Còn Suất Chiếu');
+        }
+    }
+
 
     if (file?.image?.[0]) {
         const imageFile = file.image[0];
