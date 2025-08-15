@@ -32,7 +32,7 @@ const expiresInMs = 60 * 60 * 1000;
 router.post('/create-payment-link', async (req, res) => {
 
     try {
-        const expiredAt = Math.floor(Date.now() / 1000) + 5 * 60;
+        const expiredAt = Math.floor(Date.now() / 1000) + 2 * 60;
 
         const authHeader = req.headers.authorization;
 
