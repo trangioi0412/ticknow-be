@@ -14,7 +14,7 @@ const ticketSchema = new Schema({
     autoDeleteAt: { type: Date, required: false }
 }, { versionKey: false, timestamps: true })
 
-ticketSchema.index({ autoDeleteAt: 1 }, { autoDeleteAt: 0 });
+ticketSchema.index({ autoDeleteAt: 1 }, { expireAfterSeconds: 120 });
 
 ticketSchema.virtual('rates', {
     ref: 'rate',

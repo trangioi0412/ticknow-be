@@ -61,7 +61,8 @@ router.post('/create-payment-link', async (req, res) => {
             description: 'Thanh toán vé xem phim',
             orderCode: code,
             returnUrl: `${YOUR_DOMAIN}/booking-successful`,
-            cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`
+            cancelUrl: `http://ticknow-be.onrender.com/payos/cancel-payment?orderCode=${code}`,
+            expiresAt: new Date(Date.now() + 2 * 60 * 1000)
         };
 
         const paymentLink = await payos.createPaymentLink(order);
