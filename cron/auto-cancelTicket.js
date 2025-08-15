@@ -6,7 +6,7 @@ const ticketService = require('../service/ticket.service');
 cron.schedule('* * * * *', async () => {
     const now = new Date();
     const expiredOrders = await ticketModel.find({
-        status: 1,
+        type: 1,
         autoDeleteAt: { $lte: now }
     });
 
