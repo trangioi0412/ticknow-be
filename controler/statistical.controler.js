@@ -1,4 +1,5 @@
 const statisticalService = require('../service/statistical.service');
+const { checkDay } = require('../utils/startEndDay');
 
 const revenue = async (req, res, next) => {
     try {
@@ -101,9 +102,14 @@ const revenueCinema = async (req, res, next) => {
 
 const revenueMovie = async (req, res, next) => {
     try {
-        const { start, end, page, limit } = req.query;
+        let { start, end, page, limit, month, sort } = req.query;
 
-        const data = await statisticalService.statisticalMovie(start, end, page, limit);
+        if (month) {
+            start = checkDay(month).start
+            end = checkDay(month).end
+        }
+
+        const data = await statisticalService.statisticalMovie(start, end, page, limit, sort);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
 

@@ -10,7 +10,7 @@ const getRooms = async (req, res, next) => {
         const limit = parseInt(req.query.limit);
         const page = parseInt(req.query.page);
 
-        const { status, cinema } = req.query
+        const { status, cinema, empty } = req.query
 
         const filter = {};
 

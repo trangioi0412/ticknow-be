@@ -269,7 +269,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
     };
 }
 
-const statisticalMovie = async (startDay, endDay, pages, limits) => {
+const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = false) => {
 
     let filter = {};
 
@@ -288,6 +288,7 @@ const statisticalMovie = async (startDay, endDay, pages, limits) => {
                 path: 'id_movie',
             }
         });
+
 
     const movieRevenueMap = {};
 
@@ -312,6 +313,13 @@ const statisticalMovie = async (startDay, endDay, pages, limits) => {
     });
 
     let result = Object.values(movieRevenueMap);
+
+    if (sort) {
+        result = result.sort((a, b) => b.totalRevenue - a.totalRevenue);
+    }
+
+    console.log(sort);
+
 
     const total = result.length;
 
