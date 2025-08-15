@@ -318,8 +318,6 @@ const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = fals
         result = result.sort((a, b) => b.totalRevenue - a.totalRevenue);
     }
 
-    console.log(sort);
-
 
     const total = result.length;
 

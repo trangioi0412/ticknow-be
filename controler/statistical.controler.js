@@ -109,6 +109,11 @@ const revenueMovie = async (req, res, next) => {
             end = checkDay(month).end
         }
 
+        if (start && end) {
+            start = start;
+            end = end;
+        }
+
         const data = await statisticalService.statisticalMovie(start, end, page, limit, sort);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
