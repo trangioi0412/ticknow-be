@@ -324,7 +324,7 @@ const updateMovie = async (movieData, file, id) => {
         genre = convertGenreIds(genreIds);
     }
 
-    if (movieData.status) {
+    if (movieData.status && movieData.status != movieId.status) {
         const screeningModel = require('../model/screening.model');
 
         const screening = await screeningModel.find({ id_movie: id });
