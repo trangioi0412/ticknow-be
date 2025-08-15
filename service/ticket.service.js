@@ -224,6 +224,8 @@ const addTicket = async (tickets, idUser) => {
         newTickets.id_voucher = mongoose.Types.ObjectId.isValid(id_voucher) ? id_voucher : null;
     }
 
+    newTickets.autoDeleteAt = new Date(Date.now() + 120 * 1000)
+
     const newTicket = await ticketModel.create(newTickets);
 
     return newTicket;
