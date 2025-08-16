@@ -6,7 +6,9 @@ const ticketService = require('../service/ticket.service');
 
 const mongoose = require('mongoose');
 
-const userService = require('./user.service')
+const userService = require('./user.service');
+
+const { geminiApi } = require('../utils/gemini_api');
 
 
 const getAll = async (filter, page, limit, sort) => {
@@ -146,32 +148,60 @@ const addRate = async (rateData) => {
 }
 
 const updateRate = async (rateData) => {
-
     const movieService = require('../service/movie.service');
 
     const movie = await movieService.getMovieId(rateData.movie);
-
     if (!movie) {
-        throw new Error("Phim Không hợp lệ");
+        throw new Error("Phim không hợp lệ");
     }
 
     const rates = await rateModel.findOne({
         id_movie: new mongoose.Types.ObjectId(movie._id),
         id_ticket: new mongoose.Types.ObjectId(rateData.ticket)
-    })
+    });
 
-    if (!rateData.score && rateData.score <= 0) {
-        throw new Error("vui Lòng chọn số sao và số dưới phải lớn hơn 0.5");
+    if (!rates) {
+        throw new Error("Không tìm thấy đánh giá để cập nhật");
     }
 
-    rateData.is_active = 3
+    if (!rateData.score || rateData.score <= 0) {
+        throw new Error("Vui lòng chọn số sao và số phải lớn hơn 0");
+    }
+
+    rateData.is_active = 3;
+
+    if (rateData.comment) {
+        const message = `
+        Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
+        "${rateData.comment}"
+        Trả về JSON hợp lệ:
+        { "is_active": 3 } nếu bình thường,
+        hoặc { "is_active": 4, "reason": "lý do" } nếu phản cảm/thô tục.
+        `;
+
+        try {
+            const reply = await geminiApi(message);
+            const cleaned = reply
+                .replace(/```json/g, "")
+                .replace(/```/g, "")
+                .trim();
+
+            const output = JSON.parse(cleaned);
+
+            if (output && output.is_active) {
+                rateData.is_active = output.is_active;
+            }
+        } catch (err) {
+            console.error("Lỗi kiểm duyệt Gemini:", err);
+        }
+    }
 
     const rate = await rateModel.findByIdAndUpdate(rates._id, rateData, { new: true });
 
     await movieService.updateRate(rateData.movie);
 
     return rate;
-
 }
+
 
 module.exports = { getAll, getByIdMovie, addRate, updateRate }
