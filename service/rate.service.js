@@ -156,6 +156,7 @@ const updateRate = async (rateData) => {
     }
 
     const rates = await rateModel.findOne({
+        _id: new mongoose.Types.ObjectId(rateData._id),
         id_movie: new mongoose.Types.ObjectId(movie._id),
         id_ticket: new mongoose.Types.ObjectId(rateData.ticket)
     });
@@ -170,7 +171,7 @@ const updateRate = async (rateData) => {
 
     rateData.is_active = 3;
 
-    if (rateData.comment) {
+    if (rateData.comment && rateData.comment != "") {
         const message = `
         Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
         "${rateData.comment}"

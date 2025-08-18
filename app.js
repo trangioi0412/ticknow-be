@@ -79,29 +79,28 @@ module.exports = app;
 require('./cron/expireRates.job');
 require('./cron/auto-update.job');
 require('./cron/auto-cancelTicket');
+require('./cron/auto-remind');
 
 app.get('/', function (req, res) {
   res.send('<h1>hello</h1>')
 
 })
 
-const { geminiApi } = require('./utils/gemini_api');
+async function test() {
+  const { geminiApi } = require('./utils/gemini_api');
 
-// Ví dụ chạy thử
+  const comment = "Phim này hay cực 😍😍"
+  const message = `
+  Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
+  "${comment}"
+  Trả về JSON hợp lệ:
+  { "is_active": 3 } nếu bình thường,
+  hoặc { "is_active": 4, "reason": "lý do" } nếu phản cảm/thô tục.
+`;
 
-(async () => {
-  const comment = "phim vcl"
-  const reply = await geminiApi(`
-    Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
-    "${comment}"
-    Trả về JSON với cấu trúc: { "is_active": 3 } nếu bình thường,
-    hoặc { "is_active": 4, "reason": "lý do" } nếu phản cảm/thô tục.
-    `);
-  const text = JSON.parse(reply
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim()
-  );
-  console.log(text);
-  // const text = reply.response.text();
-})();
+  const reply = await geminiApi(message);
+
+  console.log('người nói:',comment ,'Gemini nói: ', reply)
+}
+
+test();

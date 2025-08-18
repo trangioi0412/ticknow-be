@@ -185,6 +185,53 @@ const getDetail = async (id) => {
 
 }
 
+const remindTicket = async () => {
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+
+    const tickets = await ticketModel.aggregate([
+        {
+            $lookup: {
+                from: 'screenings',
+                localField: 'id_screening',
+                foreignField: '_id',
+                as: 'screening'
+            }
+        },
+        { $unwind: '$screening' },
+        {
+            $match: {
+                'screening.time_start': {
+                    $gte: now,
+                    $lte: oneHourLater
+                }
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'id_user',
+                foreignField: '_id',
+                as: 'user'
+            }
+        },
+        { $unwind: '$user' },
+        {
+            $project: {
+                _id: 1,
+                id_screening: 1,
+                'screening.time_start': 1,
+                'user.email': 1
+            }
+        }
+    ]);
+
+    console.log(tickets);
+
+
+
+}
+
 const addTicket = async (tickets, idUser) => {
 
     const user = await usersService.getUserDetail(idUser);
@@ -351,4 +398,4 @@ const cancelRefund = async (id) => {
 }
 
 // checkticket
-module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, cancelTicket, cancelRefund }
+module.exports = { getTicket, filterTicket, getTicketId, addTicket, getDetail, cancelTicket, cancelRefund, remindTicket }
