@@ -2,7 +2,7 @@ const cron = require('node-cron');
 
 const ticketService = require('../service/ticket.service');
 
-cron.schedule('*/1 * * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     try {
         const result = await ticketService.remindTicket();
         console.log("đã gửi mail nhắc nhở vé xem phim: ",result)

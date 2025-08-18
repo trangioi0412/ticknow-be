@@ -85,22 +85,3 @@ app.get('/', function (req, res) {
   res.send('<h1>hello</h1>')
 
 })
-
-async function test() {
-  const { geminiApi } = require('./utils/gemini_api');
-
-  const comment = "Phim này hay cực 😍😍"
-  const message = `
-  Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
-  "${comment}"
-  Trả về JSON hợp lệ:
-  { "is_active": 3 } nếu bình thường,
-  hoặc { "is_active": 4, "reason": "lý do" } nếu phản cảm/thô tục.
-`;
-
-  const reply = await geminiApi(message);
-
-  console.log('người nói:',comment ,'Gemini nói: ', reply)
-}
-
-test();

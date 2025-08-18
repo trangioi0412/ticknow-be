@@ -73,17 +73,19 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
     const ticketDocs = await ticket;
 
     const tickets = ticketDocs.map(item => {
+
         const id_user = item.id_user?._id || null;
         const userName = item.id_user?.name || null;
         const movie = item.id_screening.id_movie.name;
+        const id_movie = item.id_screening.id_movie._id;
         const room = {
             id: item.id_screening.id_room._id,
             code: item.id_screening.id_room.code_room
         }
 
         const cinema = {
-            id: item.id_screening.id_movie._id,
-            name: item.id_screening.id_movie.name
+            id: item.id_screening.id_room.id_cinema._id,
+            name: item.id_screening.id_room.id_cinema.name
         }
 
         const id_screening = item.id_screening._id
@@ -101,6 +103,7 @@ const getTicket = async (filter, page = "", limit = "", sort, movieId = "") => {
             id_ticket: item.id_ticket?._id,
             id_user,
             userName,
+            id_movie: id_movie,
             movie: movie,
             id_screening,
             screeningTime,

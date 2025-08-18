@@ -189,8 +189,8 @@ const updateRate = async (rateData) => {
 
             const output = JSON.parse(cleaned);
 
-            if (output && output.is_active) {
-                rateData.is_active = output.is_active;
+            if (output && output.is_active || output.is_active == 4) {
+                throw new Error(output.reason);
             }
         } catch (err) {
             console.error("Lỗi kiểm duyệt Gemini:", err);
