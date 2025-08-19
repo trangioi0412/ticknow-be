@@ -32,8 +32,6 @@ const io = new Server(server, {
 
 initTicketSocket(io)
 
-
-
 // connect Mongo DB
 CONNECT_DB();
 
