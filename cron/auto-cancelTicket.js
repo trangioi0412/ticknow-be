@@ -13,5 +13,5 @@ cron.schedule('*/1 * * * * *', async () => {
     for (const ticket of expiredOrders) {
         await ticketService.cancelTicket(ticket._id);
     }
-    console.log("So luong ve da doi ", expiredOrders.length);
+    // console.log("So luong ve da doi ", expiredOrders.length);
 });
