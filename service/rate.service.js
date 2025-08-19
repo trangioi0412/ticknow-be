@@ -170,7 +170,7 @@ const updateRate = async (rateData) => {
 
     rateData.is_active = 3;
 
-    if (rateData.comment && rateData.comment != "") {
+    if (rateData.comment?.trim()) {
         const message = `
         Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
         "${rateData.comment}"
@@ -188,8 +188,8 @@ const updateRate = async (rateData) => {
 
             const output = JSON.parse(cleaned);
 
-            if ((output && output.is_active) || (output.is_active == 4)) {
-                throw new Error(output.reason);
+            if (output?.is_active === 4) {
+                throw new Error(output.reason || "Comment không hợp lệ");
             }
 
         } catch (err) {
