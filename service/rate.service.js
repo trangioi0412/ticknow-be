@@ -162,6 +162,7 @@ const updateRate = async (rateData) => {
     });
 
     console.log(rateData._id);
+    console.log(rateData);
 
     if (!rates) {
         throw new Error("Không tìm thấy đánh giá để cập nhật");
