@@ -156,13 +156,9 @@ const updateRate = async (rateData) => {
     }
 
     const rates = await rateModel.findOne({
-        _id: new mongoose.Types.ObjectId(rateData._id),
         id_movie: new mongoose.Types.ObjectId(movie._id),
         id_ticket: new mongoose.Types.ObjectId(rateData.ticket)
     });
-
-    console.log(rateData._id);
-    console.log(rateData);
 
     if (!rates) {
         throw new Error("Không tìm thấy đánh giá để cập nhật");
