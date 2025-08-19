@@ -171,6 +171,7 @@ const updateRate = async (rateData) => {
     rateData.is_active = 3;
 
     if (rateData.comment?.trim()) {
+        console.log(1);
         const message = `
         Bạn là hệ thống kiểm duyệt. Hãy phân loại comment sau:
         "${rateData.comment}"
@@ -180,6 +181,7 @@ const updateRate = async (rateData) => {
         `;
 
         try {
+            console.log(2);
             const reply = await geminiApi(message);
             const cleaned = reply
                 .replace(/```json/g, "")
@@ -188,7 +190,9 @@ const updateRate = async (rateData) => {
 
             const output = JSON.parse(cleaned);
 
-            if (output?.is_active === 4) {
+            if (output?.is_active == 4) {
+                console.log(3);
+
                 throw new Error(output.reason || "Comment không hợp lệ");
             }
 
