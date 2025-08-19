@@ -161,6 +161,8 @@ const updateRate = async (rateData) => {
         id_ticket: new mongoose.Types.ObjectId(rateData.ticket)
     });
 
+    console.log(rateData._id);
+
     if (!rates) {
         throw new Error("Không tìm thấy đánh giá để cập nhật");
     }
