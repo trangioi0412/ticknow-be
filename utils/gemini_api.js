@@ -9,7 +9,6 @@ async function geminiApi(message) {
         const prompt = `${message}`;
         const result = await model.generateContent(prompt);
 
-        // Lấy text trả về từ Gemini
         const response = result.response.text();
         return response;
     } catch (error) {
