@@ -188,8 +188,6 @@ const updateRate = async (rateData) => {
         const output = JSON.parse(cleaned);
 
         if (output?.is_active == 4) {
-            console.log(3);
-
             throw new Error(output.reason || "Comment không hợp lệ");
         }
 
@@ -199,6 +197,7 @@ const updateRate = async (rateData) => {
 
         return rate;
     }
+}
 
 
     module.exports = { getAll, getByIdMovie, addRate, updateRate }
