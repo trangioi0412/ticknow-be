@@ -190,7 +190,7 @@ const getDetail = async (id) => {
 
 const remindTicket = async () => {
     const now = new Date();
-    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+    const oneHourLater = new Date(now.getTime() + 35 * 60 * 1000);
 
     const tickets = await ticketModel.aggregate([
         {
