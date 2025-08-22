@@ -189,49 +189,87 @@ const getDetail = async (id) => {
 }
 
 const remindTicket = async () => {
-    const now = new Date();
-    const oneHourLater = new Date(now.getTime() + 35 * 60 * 1000);
 
-    const tickets = await ticketModel.aggregate([
-        {
-            $lookup: {
-                from: 'screenings',
-                localField: 'id_screening',
-                foreignField: '_id',
-                as: 'screening'
-            }
-        },
-        { $unwind: '$screening' },
-        {
-            $match: {
-                'screening.time_start': {
-                    $gte: now,
-                    $lte: oneHourLater
+    const now = new Date(new Date().getTime() + 7 * 60 * 60 * 1000);
+    const in30Minutes = new Date(now.getTime() + 30 * 60 * 1000);
+
+    const hours = String(in30Minutes.getUTCHours()).padStart(2, "0");
+    const minutes = String(in30Minutes.getUTCMinutes()).padStart(2, "0");
+    const time = `${hours}:${minutes}`;
+
+    const year = in30Minutes.getUTCFullYear();
+    const month = String(in30Minutes.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(in30Minutes.getUTCDate()).padStart(2, "0");
+    const dayISO = `${year}-${month}-${day}T00:00:00.000Z`;
+
+    const tickets = await ticketModel.find()
+        .populate({
+            path: "id_screening",
+            match: { time_start: time, date: dayISO },
+            populate: [
+                { path: "id_movie" },
+                {
+                    path: "id_room",
+                    populate: [
+                        {
+                            path: 'id_cinema',
+                        }
+                    ]
                 }
-            }
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'id_user',
-                foreignField: '_id',
-                as: 'user'
-            }
-        },
-        { $unwind: '$user' },
-        {
-            $project: {
-                _id: 1,
-                id_screening: 1,
-                'screening.time_start': 1,
-                'user.email': 1
-            }
+            ]
+        })
+        .populate("id_user");
+
+    const result = tickets.filter(t => t.id_screening !== null);
+    
+    if (result.length > 0) {
+        for ( let ticket of result){
+            await sendMail({
+                email: ticket.id_user.email,
+                subject: "🎬 TICKNOW - Nhắc nhở suất chiếu phim của bạn sắp bắt đầu",
+                html: `
+                  <div style="font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px; color: #333;">
+                    <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                      
+                      <div style="background-color: #1976d2; color: #fff; padding: 20px; text-align: center;">
+                        <h2 style="margin: 0;">🎬 Nhắc nhở suất chiếu sắp bắt đầu</h2>
+                      </div>
+                      
+                      <div style="padding: 25px;">
+                        <p style="font-size: 16px;">Xin chào <strong>${ticket.id_user.name || "Quý khách"}</strong>,</p>
+                        
+                        <p style="font-size: 15px;">Suất chiếu phim mà bạn đã đặt vé sắp diễn ra. Vui lòng đến rạp sớm để làm thủ tục và ổn định chỗ ngồi.</p>
+                        
+                        <div style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                          <p style="margin: 5px 0; font-size: 15px;"><strong>📽️ Phim:</strong> ${ticket.id_screening.id_movie.name}</p>
+                          <p style="margin: 5px 0; font-size: 15px;"><strong>📅 Ngày:</strong> ${ticket.id_screening.date}</p>
+                          <p style="margin: 5px 0; font-size: 15px;"><strong>⏰ Giờ chiếu:</strong> ${ticket.id_screening.time_start}</p>
+                          <p style="margin: 5px 0; font-size: 15px;"><strong>🏢 Rạp:</strong> ${ticket.id_screening.id_room.id_cinema.name}</p>
+                          <p style="margin: 5px 0; font-size: 15px;"><strong>💺 Ghế:</strong> ${ticket.seat.join(", ")}</p>
+                        </div>
+                        
+                        <p style="font-size: 15px;">⏳ Xin lưu ý: Quầy soát vé sẽ đóng trước giờ chiếu 10 phút. Vui lòng có mặt đúng giờ để trải nghiệm phim trọn vẹn.</p>
+                        
+                        <p style="margin-top: 30px; font-size: 15px;">Chúc bạn có một buổi xem phim thật vui vẻ! 🍿</p>
+                        
+                        <p style="margin-top: 20px; font-size: 15px;">--<br>
+                          <strong style="color: #1976d2;">TickNow</strong><br>
+                          📧 Email: <a href="mailto:trangioi04122005@gmail.com" style="color: #1976d2; text-decoration: none;">trangioi04122005@gmail.com</a><br>
+                          ☎️ Hotline: <a href="tel:0375837534" style="color: #1976d2; text-decoration: none;">0375 837 534</a>
+                        </p>
+                      </div>
+                      
+                      <div style="background-color: #f1f1f1; text-align: center; padding: 10px; font-size: 13px; color: #666;">
+                        © 2025 TickNow. Cảm ơn bạn đã đồng hành cùng chúng tôi.
+                      </div>
+                    </div>
+                  </div>
+                `
+            });
         }
-    ]);
+    }
 
-    console.log(tickets);
-
-
+    return result.length
 
 }
 
