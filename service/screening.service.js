@@ -13,6 +13,9 @@ const paginate = require('../utils/pagination');
 const ratesModel = require('../model/rates.model');
 
 const getScreeings = async (filter, page, limit, sort) => {
+
+    const ticketModel = require("../model/ticket.model");
+
     let skip = 0;
 
     if (page && limit) {
@@ -48,26 +51,30 @@ const getScreeings = async (filter, page, limit, sort) => {
         screening = screening.sort(sort);
     }
 
-
     const screeningQuery = await screening;
 
-    const result = screeningQuery.map(item => {
-        const id_room = item.id_room?._id || null;
-        const roomCode = item.id_room?.code_room || null;
-        const id_movie = item.id_movie?._id || null;
-        const movieName = item.id_movie?.name;
-        const plain = item.toObject();
-        delete plain.id_room;
-        delete plain.id_movie;
+    const result = await Promise.all(
+        screeningQuery.map(async (item) => {
+            const id_room = item.id_room?._id || null;
+            const roomCode = item.id_room?.code_room || null;
+            const id_movie = item.id_movie?._id || null;
+            const movieName = item.id_movie?.name;
+            const plain = item.toObject();
+            const ticketCount = await ticketModel.countDocuments({ id_screening: item._id });
 
-        return {
-            ...plain,
-            id_room,
-            roomCode,
-            id_movie,
-            movieName
-        }
-    })
+            delete plain.id_room;
+            delete plain.id_movie;
+
+            return {
+                ...plain,
+                id_room,
+                roomCode,
+                id_movie,
+                movieName,
+                ticketCount
+            };
+        })
+    );
 
     const totalPages = Math.ceil(total / limit);
 
