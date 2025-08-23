@@ -269,7 +269,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
     };
 }
 
-const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = false, filter = {}) => {
+const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = false, filter = {}, movie) => {
 
     filter.type = 2
 
@@ -284,6 +284,9 @@ const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = fals
             path: 'id_screening',
             populate: {
                 path: 'id_movie',
+                match:{
+                    name: new RegExp(movie, 'i')
+                }
             }
         });
 

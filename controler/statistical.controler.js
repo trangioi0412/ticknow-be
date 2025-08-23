@@ -111,11 +111,7 @@ const revenueMovie = async (req, res, next) => {
             end = result.end;
         }
 
-        if(movie) {
-            filter.id_movie = movie;
-        }
-
-        const data = await statisticalService.statisticalMovie(start, end, page, limit, sort, filter);
+        const data = await statisticalService.statisticalMovie(start, end, page, limit, sort, filter, movie);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
 
