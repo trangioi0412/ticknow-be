@@ -13,8 +13,6 @@ const paginate = require('../utils/pagination');
 const ratesModel = require('../model/rates.model');
 
 const getScreeings = async (filter, page, limit, sort) => {
-    const movieService = require('../service/movie.service');
-
     let skip = 0;
 
     if (page && limit) {
@@ -40,6 +38,7 @@ const getScreeings = async (filter, page, limit, sort) => {
         }
     ]);
 
+
     if (limit !== null) {
         screening = screening.skip(skip).limit(limit);
     }
@@ -49,9 +48,10 @@ const getScreeings = async (filter, page, limit, sort) => {
         screening = screening.sort(sort);
     }
 
+
     const screeningQuery = await screening;
 
-    const screenings = screeningQuery.map(item => {
+    const result = screeningQuery.map(item => {
         const id_room = item.id_room?._id || null;
         const roomCode = item.id_room?.code_room || null;
         const id_movie = item.id_movie?._id || null;
@@ -72,7 +72,7 @@ const getScreeings = async (filter, page, limit, sort) => {
     const totalPages = Math.ceil(total / limit);
 
     return {
-        screenings,
+        result,
         pagination: {
             total,
             totalPages,
@@ -80,7 +80,6 @@ const getScreeings = async (filter, page, limit, sort) => {
             limit
         }
     }
-
 }
 
 const getScreeingById = async (id) => {
