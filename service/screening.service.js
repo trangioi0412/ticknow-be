@@ -13,61 +13,78 @@ const paginate = require('../utils/pagination');
 const ratesModel = require('../model/rates.model');
 
 const getScreeings = async (filter, page, limit, sort) => {
-    try {
-        const movieService = require('../service/movie.service');
+    const movieService = require('../service/movie.service');
 
-        const movies = await movieService.getMovies();
-        const movieMap = new Map()
+    let skip = 0;
 
-        movies.movie.forEach(movie => {
+    if (page && limit) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+        skip = (page - 1) * limit;
 
-            movieMap.set(movie._id.toString(), movie.name);
+    } else {
+        page = 1;
+        limit = null
+    }
 
-        });
+    let total = await screeningModel.countDocuments(filter);
 
-        const rooms = await roomService.getAll();
-        const roomMap = new Map();
+    let screening = screeningModel.find(filter).populate([
+        {
+            path: 'id_movie',
+            select: '_id name'
+        },
+        {
+            path: 'id_room',
+            select: '_id code_room'
+        }
+    ]);
 
-        rooms.room.forEach(room => {
+    if (limit !== null) {
+        screening = screening.skip(skip).limit(limit);
+    }
 
-            roomMap.set(room._id.toString(), room.code_room);
 
-        });
+    if (sort) {
+        screening = screening.sort(sort);
+    }
 
-        const { data, pagination } = await paginate.paginateQuery(
-            screeningModel,
-            filter,
-            page,
-            limit,
-            sort
-        );
+    const screeningQuery = await screening;
 
-        const result = data.map(screening => {
-            const movieId = screening.id_movie.toString();
-            const roomId = screening.id_room.toString();
-
-            const movieName = movieMap.get(movieId);
-            const roomCode = roomMap.get(roomId);
-            return {
-                ...screening.toObject(),
-                movieName: movieName,
-                roomCode: roomCode,
-            }
-        })
+    const screenings = screeningQuery.map(item => {
+        const id_room = item.id_room?._id || null;
+        const roomCode = item.id_room?.code_room || null;
+        const id_movie = item.id_movie?._id || null;
+        const movieName = item.id_movie?.name;
+        const plain = item.toObject();
+        delete plain.id_room;
+        delete plain.id_movie;
 
         return {
-            result,
-            pagination
-        };
+            ...plain,
+            id_room,
+            roomCode,
+            id_movie,
+            movieName
+        }
+    })
 
-    } catch (error) {
-        console.error(error)
-        throw new Error("Lấy dữ liệu không thành công");
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+        screenings,
+        pagination: {
+            total,
+            totalPages,
+            page,
+            limit
+        }
     }
+
 }
 
 const getScreeingById = async (id) => {
-    
+
     if (!id) {
         throw new Error('Vui Lòng truyền id');
     }
@@ -433,7 +450,7 @@ const expireRatesBasedOnScreening = async () => {
 
         const fullEndTime = new Date(`${dateStr}T${screening.time_end}:00`);
 
-        if (fullEndTime >    now) {
+        if (fullEndTime > now) {
             expiredIds.push(screening.id_movie);
         }
     }
@@ -476,7 +493,7 @@ const expireScreening = async () => {
 };
 
 const screeningRoomId = async (room) => {
-    const screening = await screeningModel.find({id_room: room, status: 2});
+    const screening = await screeningModel.find({ id_room: room, status: 2 });
     return screening
 }
 

@@ -102,7 +102,8 @@ const revenueCinema = async (req, res, next) => {
 
 const revenueMovie = async (req, res, next) => {
     try {
-        let { start, end, page, limit, month, sort } = req.query;
+        let { start, end, page, limit, month, sort, movie } = req.query;
+        let filter = {};
 
         if (!(start && end) && month) {
             const result = checkDay(month);
@@ -110,7 +111,11 @@ const revenueMovie = async (req, res, next) => {
             end = result.end;
         }
 
-        const data = await statisticalService.statisticalMovie(start, end, page, limit, sort);
+        if(movie) {
+            filter.id_movie = movie;
+        }
+
+        const data = await statisticalService.statisticalMovie(start, end, page, limit, sort, filter);
 
         return res.status(200).json({ data, status: true, message: "Lấy dữ liệu thành công" });
 

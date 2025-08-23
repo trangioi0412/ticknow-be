@@ -269,9 +269,7 @@ const statisticalCinema = async (startDay, endDay, pages, limits) => {
     };
 }
 
-const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = false) => {
-
-    let filter = {};
+const statisticalMovie = async (startDay, endDay, pages = 1, limits, sort = false, filter = {}) => {
 
     filter.type = 2
 
