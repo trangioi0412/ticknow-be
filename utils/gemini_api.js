@@ -45,7 +45,7 @@ async function geminiChatbox(message) {
         {
           message: lời chào của bạn đến khách hàng một cách thanh lịch, trang trọng, tên của rạp là TickNow và giống như một support.
         }
-      5. Nếu người dùng hỏi "làm sao để đặt vé xem phim hoặc liên quan tới chưa biết cách đặt vé" thì trả về: 
+      5. Nếu người dùng hỏi "làm sao để đặt vé xem phim hoặc liên quan tới chưa biết cách đặt vé, cách đặt vé" thì trả về: 
         {
           message: "
             1️⃣ Đặt vé ngay  🎟️
