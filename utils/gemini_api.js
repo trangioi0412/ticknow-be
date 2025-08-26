@@ -48,12 +48,9 @@ async function geminiChatbox(message) {
         }
       5. Nếu người dùng hỏi "làm sao để đặt vé xem phim hoặc liên quan tới chưa biết cách đặt vé, cách đặt vé" thì trả về: 
         {
-          message: [ " Các bước mua vé: 
-            1️⃣ Chọn phim 🎬
-            2️⃣ Tìm suất ℹ️
-            3️⃣ Chọn Ghế📍
-            4️⃣ Thanh toán 🎟️
-          "]
+          message: [
+            "Các bước mua vé:\n 1️⃣ Chọn phim 🎬\n 2️⃣ Tìm suất ℹ️\n 3️⃣ Chọn Ghế📍\n 4️⃣ Thanh toán 🎟️"
+          ]
         }
       6. Phim nào đang hot tuần này? hoặc phim nào đang hot trả về:
         + thêm một thuộc tính nằm trong entities là star: true và limit: 1;
