@@ -90,7 +90,9 @@ router.use('/payos', require('./payos.router'));
 
 router.use('/contact', require('./contact.router'));
 
-router.use('/statistical', require('./statistical.router'))
+router.use('/statistical', require('./statistical.router'));
+
+router.use('/chat', require('./chatBox.router'))
 
 
 module.exports = router;
