@@ -16,8 +16,6 @@ const chat = async (req, res, next) => {
             return res.status(200).json({ status: true, data : {role: "bot", message: ask.message }})
         }
 
-        console.log(ask)
-
         const result = await chatBoxService.findMoviesAggregate(ask.entities);
 
         return res.status(200).json({ status: true, data : {role: "bot", data: result }})

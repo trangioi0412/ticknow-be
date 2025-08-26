@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config()
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY_GEMINI);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
 async function geminiApi(message) {
   try {
@@ -18,6 +18,7 @@ async function geminiApi(message) {
 }
 
 async function geminiChatbox(message) {
+  const today = new Date().toISOString().split("T")[0];
   const prompt = `
       Bạn là một AI Assistant chuyên phân tích yêu cầu của khách hàng.
       Nhiệm vụ của bạn là:
@@ -73,11 +74,12 @@ async function geminiChatbox(message) {
         + trả về khoảng thời gian tương ứng với khách hàng yêu cầu ví dụ sáng: 08:00 - 12:00
         + nếu chiều thì trả về khoảng thời gian của buổi trưa
 
-      - Trường "date" trả về ngày hiện tại là 2025/08/01.- Nếu người dùng nói "hôm nay hoặc nay" → trả về "2025/08/01".
-        + Nếu người dùng nói "ngày mai hoặc mai" → trả về "2025/08/02".
-        + Nếu người dùng nói "ngày kia hoặc kia" → trả về "2025/08/03".
-        + Nếu người dùng nói thứ trong tuần (thứ 2, thứ 3, ...), hãy tính toán ngày tương ứng gần nhất và trả về đúng định dạng YYYY/MM/DD.
-        + Nếu không có yêu cầu của người dùng thì không cần trả về 
+      - Trường "date" chỉ trả về ngày nếu người dùng yêu cầu. Quy tắc:
+        + Nếu người dùng nói "hôm nay" hoặc "nay" → trả về ngày hiện tại ${today};
+        + Nếu nói "ngày mai" hoặc "mai" → trả về ngày hiện tại +1 ngày.
+        + Nếu nói "ngày kia" hoặc "kia" → trả về ngày hiện tại +2 ngày.
+        + Nếu nói thứ trong tuần (thứ 2, thứ 3, ..., chủ nhật) → trả về ngày gần nhất tương ứng
+        + Nếu người dùng không đề cập đến thời gian → không trả về trường "date".
       người dùng : ${message}
     `;
 
