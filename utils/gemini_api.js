@@ -40,7 +40,8 @@ async function geminiChatbox(message) {
           "time": "...",
           "tickets": 0,
           "genre": "...",
-        }
+          "message": "ở đây 1 câu trả lời khách hàng theo yêu cầu của họ. ví dụ: đây là những bộ phim đang chiếu trong ngày hôm nay"
+        },
       }
       4. nếu khách hàng chào bạn thì bạn hãy chào lại và chỉ cần trả về 
         {
@@ -55,6 +56,7 @@ async function geminiChatbox(message) {
       6. Phim nào đang hot tuần này? hoặc phim nào đang hot trả về:
         + thêm một thuộc tính nằm trong entities là star: true và limit: 1;
         + nếu số lượng là nhiều thì vẫn star: true nhưng limit : 5
+      7. 
       ⚠️ Quy tắc bắt buộc:
       - nếu câu hỏi của người dùng không có ý nghĩa gì thì trả về :
         {
