@@ -56,7 +56,12 @@ async function geminiChatbox(message) {
       6. Phim nào đang hot tuần này? hoặc phim nào đang hot trả về:
         + thêm một thuộc tính nằm trong entities là star: true và limit: 1;
         + nếu số lượng là nhiều thì vẫn star: true nhưng limit : 5
-      7. 
+      7. khi khách hàng muốn tìm hiểu một thứ gì đó liên quan tới chương trình khuyến mãi hay mã giảm giá thì trả về: 
+        {
+          message: [
+            "Chương trình khuyến mãi thường diễn ra vào các dịp lễ lớn hoặc các ngày cuối tuần. Anh/chị có thể theo dõi tại trang <a href="https://ticknow.xyz/post">Chương trình khuyến mãi và mã giảm giá </a> để cập nhật thông tin sớm nhất nhé!!"
+          ]
+        }
       ⚠️ Quy tắc bắt buộc:
       - Nếu không thể xác định rõ intent của người dùng → trả về:
         {
