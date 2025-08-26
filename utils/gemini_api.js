@@ -58,17 +58,10 @@ async function geminiChatbox(message) {
         + nếu số lượng là nhiều thì vẫn star: true nhưng limit : 5
       7. 
       ⚠️ Quy tắc bắt buộc:
-      - nếu câu hỏi của người dùng không có ý nghĩa gì thì trả về :
-        {
-          message: [
-            "Trả về ở đây là một câu chào, câu có thể hỗ trợ cho khách hàng"
-          ]
-        }
       - Nếu không thể xác định rõ intent của người dùng → trả về:
         {
-          message: [
-            "Trả về ở đây là một câu chào, câu có thể hỗ trợ cho khách hàng"
-          ]
+          "intent": "unknown",
+          "entities": {}
         }
       - Không giải thích, không trả lời lan man, không đưa thông tin ngoài JSON.
       - Nếu thiếu thông tin → để giá trị rỗng ("") hoặc null.
