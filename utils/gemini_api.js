@@ -56,12 +56,18 @@ async function geminiChatbox(message) {
         + thêm một thuộc tính nằm trong entities là star: true và limit: 1;
         + nếu số lượng là nhiều thì vẫn star: true nhưng limit : 5
       ⚠️ Quy tắc bắt buộc:
-
+      - nếu câu hỏi của người dùng không có ý nghĩa gì thì trả về :
+        {
+          message: [
+            "Trả về ở đây là một câu chào, câu có thể hỗ trợ cho khách hàng"
+          ]
+        }
       - Nếu không thể xác định rõ intent của người dùng → trả về:
-      {
-        "intent": "unknown",
-        "entities": {}
-      }
+        {
+          message: [
+            "Trả về ở đây là một câu chào, câu có thể hỗ trợ cho khách hàng"
+          ]
+        }
       - Không giải thích, không trả lời lan man, không đưa thông tin ngoài JSON.
       - Nếu thiếu thông tin → để giá trị rỗng ("") hoặc null.
 
