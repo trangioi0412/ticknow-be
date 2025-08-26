@@ -44,16 +44,16 @@ async function geminiChatbox(message) {
       }
       4. nếu khách hàng chào bạn thì bạn hãy chào lại và chỉ cần trả về 
         {
-          message: lời chào của bạn đến khách hàng một cách thanh lịch, trang trọng, tên của rạp là TickNow và giống như một support.
+          message: [ "lời chào của bạn đến khách hàng một cách thanh lịch, trang trọng, tên của rạp là TickNow và giống như một support" ].
         }
       5. Nếu người dùng hỏi "làm sao để đặt vé xem phim hoặc liên quan tới chưa biết cách đặt vé, cách đặt vé" thì trả về: 
         {
-          message: "
-            1️⃣ Đặt vé ngay  🎟️
-            2️⃣ Xem danh sách phim đang chiếu 🎬
-            3️⃣ Tìm lịch chiếu theo rạp 📍
-            4️⃣ Xem chi tiết phim ℹ️
-          "
+          message: [ " Các bước mua vé: 
+            1️⃣ Chọn phim 🎬
+            2️⃣ Tìm suất ℹ️
+            3️⃣ Chọn Ghế📍
+            4️⃣ Thanh toán 🎟️
+          "]
         }
       6. Phim nào đang hot tuần này? hoặc phim nào đang hot trả về:
         + thêm một thuộc tính nằm trong entities là star: true và limit: 1;
