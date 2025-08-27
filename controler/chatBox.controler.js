@@ -21,10 +21,16 @@ const chat = async (req, res, next) => {
         switch (ask.intent) {
             case "cinema":
                 cinema = await chatBoxService.findLocationAggregate(ask.entities);
+                if(cinema.length <= 0 ){
+                    ask.entities.message = `Xin lỗi quý khách!! Hiện tại Ticknow chưa phát triển tại ${ask.entities.location}. 😢😢`
+                }
                 break;
 
             case "movie":
                 movie = await chatBoxService.findMoviesAggregate(ask.entities);
+                if(movie.length <= 0 ){
+                    ask.entities.message = `Xin lỗi quý khách!! Hiện tại phim đang mong chờ không có suất chiếu hoặc chưa có trên hệ thống . 😢😢`
+                }
                 break;
 
             default:
