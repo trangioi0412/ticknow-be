@@ -63,6 +63,7 @@ async function geminiChatbox(message) {
             "Chương trình khuyến mãi thường diễn ra vào các dịp lễ lớn hoặc các ngày cuối tuần. Anh/chị có thể theo dõi tại trang <a href="https://ticknow.xyz/post">Chương trình khuyến mãi và mã giảm giá </a> để cập nhật thông tin sớm nhất nhé!!"
           ]
         }
+      8. Nếu khách hàng hỏi về phim hoặc phim đang chiếu, thông tin lịch chiếu của ngày hôm nay thì trả về dữ liệu của entities.date = "ngày hôm nay theo quy tắc quy định" và star: false
       ⚠️ Quy tắc bắt buộc:
       - Nếu không thể xác định rõ intent của người dùng → trả về:
         {
