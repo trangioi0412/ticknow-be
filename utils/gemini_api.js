@@ -80,6 +80,7 @@ async function geminiChatbox(message) {
       -Trường Time trả về thời gian chi tiết nếu khách hàng ghi rõ còn nếu khách hàng ghi (sáng, trưa, tối):
         + trả về khoảng thời gian tương ứng với khách hàng yêu cầu ví dụ sáng: 08:00 - 12:00
         + nếu chiều thì trả về khoảng thời gian của buổi trưa
+        + và thời gian sẽ trả theo kiểu 00:00 - 23:59
 
       - Trường "date" chỉ trả về ngày nếu người dùng yêu cầu. Quy tắc:
         + Nếu người dùng nói "hôm nay" hoặc "nay" → trả về ngày hiện tại ${today};
@@ -87,6 +88,7 @@ async function geminiChatbox(message) {
         + Nếu nói "ngày kia" hoặc "kia" → trả về ngày hiện tại +2 ngày.
         + Nếu nói thứ trong tuần (thứ 2, thứ 3, ..., chủ nhật) → trả về ngày gần nhất tương ứng
         + Nếu người dùng không đề cập đến thời gian → không trả về trường "date".
+      - Nếu thời gian hoặc ngày dữ liệu phân tích không có thì lấy date theo ngày hiện tại ${today} và đối với thời gian thì ngày hôm nay thì mới trả về thời gian hiện tại.
       người dùng : ${message}
     `;
 
