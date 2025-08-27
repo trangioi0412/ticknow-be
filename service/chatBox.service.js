@@ -8,6 +8,8 @@ const roomModel = require('../model/room.model');
 
 async function findMoviesAggregate(entities) {
 
+    const movieService = require('./movie.service');
+
     const movieCondition = {}
     const genreCondition = {}
     const locationCondition = {}
@@ -51,22 +53,74 @@ async function findMoviesAggregate(entities) {
         movieQuery = movieQuery.sort({ star: -1 }).limit(entities.limit);
     }
 
-    const movie = await movieQuery;
+    const movies = await movieQuery;
 
     if (entities.star) {
-        return movie;
+        return movies;
     }
 
-    const movieIds = movie.map(m => m._id);
+    const movieIds = movies.map(m => m._id);
 
     screeningCondition.id_movie = { $in: movieIds };
 
 
     const screening = await screeningModel.find(screeningCondition);
     const screeningIds = screening.map(s => s.id_movie);
-    const movies = await movieModel.find({ _id: { $in: screeningIds }, status: 1 });
+    const { movie } = await movieService.getMovies({ _id: { $in: screeningIds }, status: 1 });
 
-    return movies
+    return movie
 }
 
-module.exports = { findMoviesAggregate }
+async function findLocationAggregate(entities) {
+    const movieService = require('./movie.service');
+    const cinemaService = require('./cinema.service');
+
+    const movieCondition = {}
+    const locationCondition = {}
+    const screeningCondition = {}
+
+
+    // if (entities.movie_name) {
+    //     movieCondition.name = new RegExp(entities.movie_name, "i");
+    // }
+
+    let cinemas;
+
+    if (entities.location) {
+        locationCondition.name = new RegExp(entities.location, "i");
+        let location = await locationModel.find(locationCondition);
+        let { cinema } = await cinemaService.getCinema({ "location.id_location": location[0]._id });
+        cinemas = cinema
+    }
+    
+    // const room = await roomModel.find({ id_cinema: cinemaData[0]._id })
+    // const roomIds = room.map(r => r._id);
+    // screeningCondition.id_room = { $in: roomIds };
+
+    // if (entities.date) {
+    //     screeningCondition.date = `${entities.date}T00:00:00.000+00:00`;
+    // }
+
+    // if (entities.time) {
+    //     const [start, end] = entities.time.split('-');
+    //     screeningCondition.time_start = start;
+    //     screeningCondition.time_end = end;
+    // }
+
+    // let movieQuery = movieModel.find(movieCondition);
+
+    // const movies = await movieQuery;
+
+    // const movieIds = movies.map(m => m._id);
+
+    // screeningCondition.id_movie = { $in: movieIds };
+
+
+    // const screening = await screeningModel.find(screeningCondition);
+    // const screeningIds = screening.map(s => s.id_movie);
+    // const { movie } = await movieService.getMovies({ _id: { $in: screeningIds }, status: 1 });
+
+    return cinemas
+}
+
+module.exports = { findMoviesAggregate, findLocationAggregate }

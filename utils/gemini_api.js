@@ -22,7 +22,8 @@ async function geminiChatbox(message) {
   const prompt = `
       Bạn là một AI Assistant chuyên phân tích yêu cầu của khách hàng.
       Nhiệm vụ của bạn là:
-      1. Hiểu ý định (intent) của khách hàng: ví dụ "book_ticket", "find_movie", "recommend_movie".
+      (*) phân tích bạn hãy làm rõ: người dùng yêu cầu location về nhu cầu thuộc phim thì intent là movie, còn không liên quan tới phim thì intent sẽ là cinema
+      1. Hiểu ý định (intent) của khách hàng: ví dụ "movie", "cinema".
       2. Trích xuất các thông tin cần thiết (entities) từ yêu cầu của khách hàng:
          - movie_name
          - location: 
@@ -66,7 +67,9 @@ async function geminiChatbox(message) {
       - Nếu không thể xác định rõ intent của người dùng → trả về:
         {
           "intent": "unknown",
-          "entities": {}
+          "message": [
+            "Xin lỗi😢! bạn có thể nói rõ hơn về nhu cầu của bạn không❤️❤️. ví dụ: bạn muốn xem phim gì 🎬, ở đâu 📍, thời gian nào🕛"
+          ]
         }
       - Không giải thích, không trả lời lan man, không đưa thông tin ngoài JSON.
       - Nếu thiếu thông tin → để giá trị rỗng ("") hoặc null.

@@ -140,30 +140,25 @@ const filterMovie = async (req, res, next) => {
 
 const filterSChedule = async (req, res, next) => {
     try {
-        // query host
-
+        
         const { status, date, cinema, movie } = req.query;
 
         const limit = parseInt(req.query.limit);
 
         const page = parseInt(req.query.page);
 
-        // create variable storage
         let filter = {};
 
         let result
 
-        // check variable  
         if (status) filter.status = status;
 
         if (date) filter.date = check.checkDate(date);
 
         if (movie) filter.id_movie = movie;
 
-        // get data
         result = await movieService.filterSchedule(filter, cinema, limit, page);
 
-        // check data
         if (!result) {
             return res.status(404).json({ status: false, message: 'Lấy dữ liệu thất bại' })
         }

@@ -9,16 +9,30 @@ const { geminiChatbox } = require('../utils/gemini_api');
 const chat = async (req, res, next) => {
     try {
         let { message } = req.body;
-        
+
         const ask = await geminiChatbox(message);
-        
-        if(ask.message){
-            return res.status(200).json({ status: true, data : {role: "bot", message: ask.message }})
+
+        if (ask.message) {
+            return res.status(200).json({ status: true, data: { role: "bot", message: ask.message } })
         }
 
-        const result = await chatBoxService.findMoviesAggregate(ask.entities);
+        let movie = [], cinema = [];
 
-        return res.status(200).json({ status: true, data : {role: "bot", data: result, message: [`${ask.entities.message}`]}})
+        switch (ask.intent) {
+            case "cinema":
+                cinema = await chatBoxService.findLocationAggregate(ask.entities);
+                break;
+
+            case "movie":
+                movie = await chatBoxService.findMoviesAggregate(ask.entities);
+                break;
+
+            default:
+
+        }
+
+
+        return res.status(200).json({ status: true, data: { role: "bot", data: { movie, cinema }, message: [`${ask.entities.message}`] } })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: false, message: error.message })
