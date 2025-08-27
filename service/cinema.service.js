@@ -12,9 +12,6 @@ const cinemaModel = require('../model/cinemas.model');
 const roomModel = require('../model/room.model');
 
 const paginate = require('../utils/pagination');
-const { saveImageToDisk, deleteImageFromDisk } = require('../utils/saveFile');
-
-
 
 const getCinema = async (filter, page = "", limit = "", sort) => {
     const locations = await locationService.getAll();

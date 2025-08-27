@@ -18,6 +18,12 @@ async function geminiApi(message) {
 }
 
 async function geminiChatbox(message) {
+
+  const now = new Date(new Date().getTime() + 7 * 60 * 60 * 1000);
+  const hours = String(now.getUTCHours()).padStart(2, "0");
+  const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+  const time = `${hours}:${minutes}`;
+
   const today = new Date().toISOString().split("T")[0];
   const prompt = `
       Bạn là một AI Assistant chuyên phân tích yêu cầu của khách hàng.
@@ -78,9 +84,9 @@ async function geminiChatbox(message) {
       - Trường location trả về chỉ có địa chỉ ví dụ: "Thành phố Hồ Chí Minh" trả về Hồ Chí Minh
 
       -Trường Time trả về thời gian chi tiết nếu khách hàng ghi rõ còn nếu khách hàng ghi (sáng, trưa, tối):
-        + trả về khoảng thời gian tương ứng với khách hàng yêu cầu ví dụ sáng: 08:00 - 12:00
+        + trả về khoảng thời gian tương ứng với khách hàng yêu cầu ví dụ sáng: 08:00-12:00
         + nếu chiều thì trả về khoảng thời gian của buổi trưa
-        + và thời gian sẽ trả theo kiểu 00:00 - 23:59
+        + và thời gian sẽ trả theo kiểu 00:00-23:59
 
       - Trường "date" chỉ trả về ngày nếu người dùng yêu cầu. Quy tắc:
         + Nếu người dùng nói "hôm nay" hoặc "nay" → trả về ngày hiện tại ${today};
@@ -88,7 +94,7 @@ async function geminiChatbox(message) {
         + Nếu nói "ngày kia" hoặc "kia" → trả về ngày hiện tại +2 ngày.
         + Nếu nói thứ trong tuần (thứ 2, thứ 3, ..., chủ nhật) → trả về ngày gần nhất tương ứng
         + Nếu người dùng không đề cập đến thời gian → không trả về trường "date".
-      - Nếu thời gian hoặc ngày dữ liệu phân tích không có thì lấy date theo ngày hiện tại ${today} và đối với thời gian thì ngày hôm nay thì mới trả về thời gian hiện tại.
+      - Nếu thời gian hoặc ngày dữ liệu phân tích không có thì lấy date theo ngày hiện tại ${today} và đối với thời gian thì ngày hôm nay thì mới trả về thời gian hiện tại time:"${time}-23:59".
       người dùng : ${message}
     `;
 

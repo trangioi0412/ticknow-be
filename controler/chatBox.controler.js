@@ -18,6 +18,8 @@ const chat = async (req, res, next) => {
 
         let movie = [], cinema = [];
 
+        console.log(ask)
+
         switch (ask.intent) {
             case "cinema":
                 cinema = await chatBoxService.findLocationAggregate(ask.entities);
