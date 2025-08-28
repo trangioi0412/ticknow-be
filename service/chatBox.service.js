@@ -43,8 +43,8 @@ async function findMoviesAggregate(entities) {
 
     if (entities.time) {
         const [start, end] = entities.time.split('-');
-        screeningCondition.time_start = start;
-        screeningCondition.time_end = end;
+        screeningCondition.time_start = { $gte: start};
+        screeningCondition.time_end = {$lte: end};
     }
 
     let movieQuery = movieModel.find(movieCondition);
@@ -63,8 +63,8 @@ async function findMoviesAggregate(entities) {
 
     screeningCondition.id_movie = { $in: movieIds };
 
-
     const screening = await screeningModel.find(screeningCondition);
+
     const screeningIds = screening.map(s => s.id_movie);
     const { movie } = await movieService.getMovies({ _id: { $in: screeningIds }, status: 1 });
 
